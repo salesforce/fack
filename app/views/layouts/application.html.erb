@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fack</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <%= favicon_link_tag 'favicon.ico' %>
+  </head>
+  <body class=" ">
+    <header class="p-4">
+      <div class="flex container mx-auto justify-between items-center">
+        <div class="flex font-mono">
+          <a href="/questions/new" class="flex items-center text-2xl font-light text-stone-800 hover:text-sky-600">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 text-sky-500 ">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+            </svg>
+            Fack</a>
+        </div>
+        <% if current_user %>
+          <div class="relative inline-block text-left">
+            <button class="text-black py-2 rounded-lg focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            <div class="hidden origin-top-right absolute right-0 mt-0 w-64 rounded-md shadow-lg bg-white border-2 border-sky-200" >
+              <div class="block px-4 py-2 text-black text-sm text-stone-500"> <%= current_user.email %></div>
+              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
+                <a href="/sessions/logout" class="block px-4 py-2 text-black hover:bg-gray-100">Logout
+                </a>
+                <% if session[:debug] == "true" then %>
+                  <a href="/sessions/set_debug?debug=false" class="block px-4 py-2 text-black hover:bg-gray-100">Disable Debug Mode
+                  </a>
+                <% else %>
+                  <a href="/sessions/set_debug?debug=true" class="block px-4 py-2 text-black hover:bg-gray-100">Enable Debug Mode
+                  </a>
+                <% end %>
+                <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens
+                </a>
+              </div>
+            </div>
+          </div>
+          <script>
+            document.getElementById('menu-button').addEventListener('click', function() {
+            const menu = this.nextElementSibling;
+            menu.classList.toggle('hidden');
+            });
+          </script>
+        <% else %>
+        <% end %>
+      </div>
+    </header>
+    <div class="px-4 py-2">
+      <div class="text-stone-900 flex mx-auto container justify-between items-center">
+        <% if current_user %>
+          <nav>
+            <ul class="flex space-x-4 font-light">
+              <li><a href="/questions/new" class="hover:border-sky-300 hover:border-b-2">Ask</a></li>
+              <li><a href="/questions" class="<%= controller_name == 'questions' ? "border-sky-500 border-b-2" : ""%> hover:border-sky-300 hover:border-b-2  hover:">Questions</a></li>
+              <li><a href="/libraries" class="<%= controller_name == 'libraries' ? "border-sky-500 border-b-2" : ""%> hover:border-sky-300 hover:border-b-2  hover:">Libraries</a></li>
+              <li><a href="/documents" class="<%= controller_name == 'documents' ? "border-sky-500 border-b-2" : ""%> hover:border-sky-300 hover:border-b-2  hover:">Documents</a></li>
+            </ul>
+          </nav>
+        <% else %>
+        <% end %>
+      </div>
+    </div>
+    <main class="p-4">
+      <!--<div id="flash_messages">
+        <% flash.each do |type, message| %>
+          <div class="flash <%= type %>">
+            <%= message %>
+          </div>
+        <% end %>
+      </div>-->
+      <div class="mx-auto container">
+        <%= yield %>
+      </div>
+    </main>
+    <footer class="bg-gray-800 text-white p-4">
+      <div class="container mx-auto text-center">
+        <a href="https://github.com/sfdc/fack" target="github" class="hover:text-gray-300">
+          <svg class="inline-block h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.207 11.385 0.6 0.113 0.793-0.258 0.793-0.577 0-0.285-0.01-1.04-0.015-2.04-3.338 0.724-4.042-1.605-4.042-1.605-0.546-1.387-1.334-1.756-1.334-1.756-1.091-0.747 0.084-0.732 0.084-0.732 1.205 0.085 1.841 1.234 1.841 1.234 1.07 1.835 2.807 1.305 3.492 0.998 0.108-0.775 0.418-1.305 0.762-1.605-2.665-0.304-5.466-1.332-5.466-5.93 0-1.31 0.469-2.382 1.236-3.222-0.124-0.303-0.536-1.524 0.117-3.176 0 0 1.008-0.322 3.3 1.23 0.957-0.266 1.983-0.399 3.004-0.404 1.02 0.005 2.047 0.138 3.004 0.404 2.29-1.552 3.297-1.23 3.297-1.23 0.653 1.652 0.242 2.873 0.118 3.176 0.768 0.84 1.235 1.912 1.235 3.222 0 4.61-2.804 5.625-5.476 5.922 0.43 0.371 0.824 1.102 0.824 2.222 0 1.606-0.015 2.897-0.015 3.293 0 0.321 0.192 0.694 0.801 0.576C20.565 22.092 24 17.596 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+          GitHub
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

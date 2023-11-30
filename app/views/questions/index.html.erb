@@ -1,0 +1,6 @@
+<p style="color: green"><%= notice %></p>
+<div class="">
+  <h1 class="font-bold text-3xl text-sky-800">Questions</h1>
+  <%= paginate @questions %>
+  <%= render 'question_list',  questions: @questions %>
+</div>

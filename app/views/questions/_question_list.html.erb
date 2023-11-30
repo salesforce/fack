@@ -1,0 +1,17 @@
+<ul class="space-y-4">
+  <% questions.each do |question| %>
+    <li class="bg-white p-4 rounded shadow hover:bg-stone-50">
+      <details class="text-base">
+        <summary class="font-light text-md cursor-pointer ">
+          <%= question.question %>
+          <span class="text-stone-400 text-xs"><%= time_ago_in_words(question.created_at) %> ago</span>
+        </summary>
+        <p>
+          <%= link_to "View Details", question, class: "text-sky-500 underline", "data-turbo-frame": "_top" %>
+        </p>
+        <p class="mt-2"><%= render_markdown(question.answer.gsub(/^\s*\n/, '')) if question.answer  %>
+        </p>
+      </details>
+    </li>
+  <% end %>
+</ul>

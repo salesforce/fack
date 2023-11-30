@@ -1,0 +1,30 @@
+<div id="<%= dom_id document %>">
+  <div class="border rounded-lg">
+    <div class="text-xs rounded-t-lg text-stone-900">
+      <h1 class="text-3xl font-light p-4 rounded-t bg-sky-800 text-sky-200"><%= document.title %></h1>
+      <div class="p-3">
+        <% if document.url %>
+          <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500 py-4",target:"_source" %></p>
+        <% end %>
+        <p class="text-xs ">Stored in <%= link_to document.library.name, document.library, class:"text-sky-500 py-4" if document.library_id %> library</p>
+        <p class=" text-xs italic">Created <%= time_ago_in_words(document.created_at) %> ago</p>
+      </div>
+    </div>
+    <div class="px-3 py-5 text-stone-800 bg-stone-50">
+      <%= render_markdown(document.document.gsub(/^\s*\n/, '')) %>
+    </div>
+    <div class="text-xs p-3 text-stone-500 border border-stone-100 rounded-b-lg">
+      <p class="text-stone-400">AI info for nerds:</p>
+      <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%></p>
+      <p class=""></p>
+    </div>
+  </div>
+  <% if session[:debug] == "true" then %>
+    <h1 class="text-3xl font-light py-4 text-stone-500">Embedding</h1>
+    <div class="markdown-content leading-5">
+      <div class="whitespace-pre-wrap break-words font-mono p-5 border border-sky-600 rounded-lg bg-stone-200">
+<%= document.embedding unless document.embedding.nil? %>
+      </div>
+    </div>
+  <% end %>
+</div>

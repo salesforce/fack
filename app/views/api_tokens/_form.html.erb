@@ -1,0 +1,21 @@
+<%= form_with(model: api_token, class: "contents") do |form| %>
+  <% if api_token.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(api_token.errors.count, "error") %> prohibited this api_token from being saved:</h2>
+
+      <ul>
+        <% api_token.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="my-5">
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit "Save", class: "rounded-lg py-3 px-5 bg-sky-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

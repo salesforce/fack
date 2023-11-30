@@ -1,0 +1,26 @@
+<p style="color: green"><%= notice %></p>
+<div class="">
+  <h1 class="font-bold text-3xl text-sky-800">Documents</h1>
+  <div class="text-sm text-stone-400">
+    <% if params[:library_id] %>
+      From <%= link_to @library.name, @library, class:"text-sky-500" %>
+    <% end %>
+  </div>
+  <%= paginate @documents %>
+  <ul class="space-y-4">
+    <% @documents.each do |document| %>
+      <li class="bg-white p-4 rounded shadow hover:bg-stone-50">
+        <details class="text-base">
+          <summary class="text-md cursor-pointer <%=  'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
+            <%= document.title %>
+            (<%= document.library.name %>)
+          </summary>
+          <span class="text-stone-400 text-sm"><%= time_ago_in_words(document.created_at) %> ago</span>
+          <p class="mt-2"><%= link_to "View Details", document, class:"text-sky-500 underline" %></p>
+          <p class="text-stone-700 rounded-b"><%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document  %>
+          </p>
+        </details>
+      </li>
+    <% end %>
+  </div>
+</div>

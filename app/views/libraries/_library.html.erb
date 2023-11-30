@@ -1,0 +1,9 @@
+<div id="<%= dom_id library %>">
+  <div class="flex justify-between my-3">
+    <h2 class="w-1/4"><%= link_to library.name, library, class: "hover:underline text-sky-500 font-medium" %></h2>
+    <div>Created <%= time_ago_in_words(library.created_at) %> ago</div>
+    <div class="w-1/4">
+      <%= link_to library.documents.count.to_s + " documents", library_documents_path(library.id), class:"text-sky-500 hover:underline" %>
+    </div>
+  </div>
+</div>

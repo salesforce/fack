@@ -1,0 +1,7 @@
+<div id="<%= dom_id api_token %>">
+  <h1 class="text-2xl font-light my-3">Token Name: <%= api_token.name%></h1>
+  <%= render 'shared/labelled_field', label: "Created ", data: api_token.created_at %>
+  <%= render 'shared/labelled_field', label: "User ", data: api_token.user.email %>
+  <%= render 'shared/labelled_field', label: "Last used ", data: api_token.last_used %>
+  <%= render 'shared/labelled_field', label: "Token ", data: @show_token ? api_token.token + " (Copy this token.  It is shown only once.)" : "..." + api_token.token.last(4) %>
+</div>

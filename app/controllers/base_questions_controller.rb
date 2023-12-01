@@ -70,7 +70,7 @@ class BaseQuestionsController < ApplicationController
       # Make sure we don't exceed the max document tokens limit
       next unless (token_count + doc.token_count.to_i) < ENV['MAX_PROMPT_DOC_TOKENS'].to_i
 
-      prompt += "\n\nDocument #{_index}, URL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
+      prompt += "\n\nDocument #{_index + 1}, URL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
       prompt += doc.to_json(only: %i[id name document title])
       token_count += doc.token_count.to_i
     end.empty?

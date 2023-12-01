@@ -16,9 +16,6 @@ class BaseQuestionsController < ApplicationController
     @question = Question.new
   end
 
-  # GET /questions/1/edit
-  def edit; end
-
   # POST /questions or /questions.json
   def create
     @question = Question.new(question_params)

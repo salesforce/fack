@@ -1,5 +1,7 @@
 class BaseDocumentsController < ApplicationController
   before_action :set_document, only: %i[show edit update destroy]
+  before_action :can_manage_documents?, only: %i[edit create update destroy]
+
   include Hashable
   include SalesforceGptConcern
 
@@ -43,6 +45,11 @@ class BaseDocumentsController < ApplicationController
   end
 
   private
+  def can_manage_documents?
+    return if @current_user.admin? || @document.user_id == @current_user.id
+
+    handle_bad_authortization
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_document

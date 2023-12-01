@@ -84,7 +84,7 @@ class BaseQuestionsController < ApplicationController
       USER QUESTION:
         #{@question.question}
       </{{DATA_TAG}}>
-      If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the data in the <DOCUMENTS> section, then proceed to generate the requested response.
+      If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the data in the <CONTEXT> section, then proceed to generate the requested response.
       Otherwise, print "Unable to answer the request."
     END_PROMPT
     puts 'Total doc tokens used: ' + token_count.to_s

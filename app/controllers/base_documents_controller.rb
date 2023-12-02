@@ -16,6 +16,20 @@ class BaseDocumentsController < ApplicationController
     @documents = @documents.page(params[:page])
   end
 
+  def update
+    if params[:toggle_disabled]
+      @document.update(disabled: !@document.disabled)
+    else
+      # Standard update logic
+      @document.update(document_params)
+    end
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to documents_path }
+    end
+  end
+
   # POST /documents or /documents.json
   def create
     @document = Document.new(document_params)

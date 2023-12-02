@@ -1,0 +1,4 @@
+<!-- app/views/documents/toggle_disabled.turbo_stream.erb -->
+<%= turbo_stream.replace @document do %>
+  <%= render 'document', document: @document %>
+<% end %>

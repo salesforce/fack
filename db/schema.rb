@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_17_214918) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_02_074559) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -54,6 +54,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_17_214918) do
     t.integer "token_count"
     t.bigint "library_id"
     t.bigint "user_id"
+    t.boolean "disabled"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["user_id"], name: "index_documents_on_user_id"

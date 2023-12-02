@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Document, type: :model do
-  # Association tests
-  # Validation tests
-  # ...
-
   describe '#calculate_length' do
     it 'calculates the length of the document' do
       document = build(:document)

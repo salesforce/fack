@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   resources :api_tokens
   resources :sessions, only: [:new, :create, :destroy]
-  resources :users, only: [:new, :create] # For registration
+  #resources :users, only: [:new, :create] # For registration
 
   get '/sessions/logout', to: 'sessions#logout'
   get '/sessions/set_debug', to: 'sessions#set_debug'

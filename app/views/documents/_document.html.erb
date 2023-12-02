@@ -5,9 +5,9 @@
       <div class="flex justify-between items-center p-3">
         <div class="w-1/3">
           <% if document.url %>
-            <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500 py-4",target:"_source" %></p>
+            <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500",target:"_source" %></p>
           <% end %>
-          <p class="text-xs ">Stored in <%= link_to document.library.name, document.library, class:"text-sky-500 py-4" if document.library_id %> library</p>
+          <p class="text-xs ">Stored in <%= link_to document.library.name, document.library, class:"text-sky-500" if document.library_id %> library</p>
           <p class=" text-xs italic">Created <%= time_ago_in_words(document.created_at) %> ago</p>
         </div>
         <div class="w-1/8 justify-right">

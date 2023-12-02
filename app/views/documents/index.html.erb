@@ -2,7 +2,9 @@
 <div class="">
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-3xl text-sky-800">Documents</h1>
-    <%= link_to 'New', new_document_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <% if current_user.admin? %>
+      <%= link_to 'New', new_document_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <% end %>
   </div>
   <div class="text-sm text-stone-400">
     <% if params[:library_id] %>

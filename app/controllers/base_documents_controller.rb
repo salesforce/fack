@@ -1,6 +1,7 @@
 class BaseDocumentsController < ApplicationController
+  helper_method :can_manage_documents?
   before_action :set_document, only: %i[show edit update destroy]
-  before_action :can_manage_documents?, only: %i[edit create update destroy]
+  before_action :can_manage_documents?, only: %i[edit new create update destroy]
 
   include Hashable
   include SalesforceGptConcern
@@ -60,7 +61,11 @@ class BaseDocumentsController < ApplicationController
 
   private
   def can_manage_documents?
-    return if @current_user.admin? || @document.user_id == @current_user.id
+    return true if current_user.admin?
+
+    if @document
+      return true if @document.user_id == @current_user.id
+    end
 
     handle_bad_authortization
   end

@@ -1,6 +1,7 @@
 class Document < ApplicationRecord
   has_neighbors :embedding
   belongs_to :library
+  belongs_to :user
 
   validates :library, presence: true
 

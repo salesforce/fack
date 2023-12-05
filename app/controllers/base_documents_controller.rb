@@ -61,7 +61,7 @@ class BaseDocumentsController < ApplicationController
 
   private
   def can_manage_documents?
-    return true if current_user.admin?
+    return true if @current_user.admin?
 
     handle_bad_authortization
   end

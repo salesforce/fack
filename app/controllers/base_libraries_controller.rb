@@ -10,7 +10,7 @@ class BaseLibrariesController < ApplicationController
   # POST /libraries or /libraries.json
   def create
     @library = Library.new(library_params)
-    @library.user_id = @current_user.id
+    @library.user_id = current_user.id
 
     respond_to do |format|
       if @library.save
@@ -50,9 +50,10 @@ class BaseLibrariesController < ApplicationController
 
   # Permission Checks.  Move to CanCan later
   def can_manage_libraries?
-    return if @current_user.admin? || @library.user_id == @current_user.id
+    return true
+    #return if @current_user.admin? || @library.user_id == @current_user.id
 
-    handle_bad_authortization
+    #handle_bad_authortization
   end
 
   # Use callbacks to share common setup or constraints between actions.

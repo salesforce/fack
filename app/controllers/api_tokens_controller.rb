@@ -2,14 +2,20 @@ class ApiTokensController < ApplicationController
   before_action :set_api_token, only: %i[show edit update destroy]
   before_action :can_manage_tokens?
 
+  def can_manage_tokens?
+    return if current_user.admin?
+
+    handle_bad_authortization
+  end
+
   # GET /api_tokens or /api_tokens.json
   def index
-    @api_tokens = ApiToken.all.where(user_id: @current_user.id)
+    @api_tokens = ApiToken.all.where(user_id: current_user.id)
   end
 
   # GET /api_tokens/1 or /api_tokens/1.json
   def show
-    return if @api_token.user.id != @current_user.id
+    return if @api_token.user.id != current_user.id
 
     # Mark the token shown so we only show it once
     return if @api_token.shown_once

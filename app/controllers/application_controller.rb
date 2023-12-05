@@ -22,16 +22,6 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-
-
-  def can_manage_tokens?
-    return if @current_user.admin?
-
-    handle_bad_authortization
-  end
-
-
-
   def logged_in?
     !!current_user
   end

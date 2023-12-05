@@ -78,6 +78,8 @@ group :test do
   gem 'faker'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+
+  gem 'rails-controller-testing'
 end
 
 gem 'neighbor'

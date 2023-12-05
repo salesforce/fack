@@ -8,7 +8,7 @@ class EmbedDocumentJob < ApplicationJob
       begin
         document.update(embedding: get_embedding(document.document))
       rescue StandardError => e
-        puts "Error calling Salesforce Connect GPT."
+        Rails.logger.error("Error calling Salesforce Connect GPT.")
       end
     end
   end

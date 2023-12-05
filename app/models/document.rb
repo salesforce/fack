@@ -6,7 +6,7 @@ class Document < ApplicationRecord
   validates :library, presence: true
 
   # Prevent DDOS and generally excessively large docs
-  validates :token_count, presence: true, numericality: { less_than: 10000 }
+  validates :token_count, presence: true, numericality: { less_than: 10_000 }
 
   validates :length, presence: true
 
@@ -17,14 +17,18 @@ class Document < ApplicationRecord
 
   def calculate_length
     # Calculate the length of the 'document' column and store it in the 'length' column
+    return unless document
+
     self.length = document.length
   end
 
   def calculate_tokens
-    self.token_count = count_tokens(document)
+    self.token_count = (count_tokens(document) if document)
   end
 
   def calculate_hash
+    return unless document
+
     # get shasum to detect duplicates
     sha = Digest::SHA2.hexdigest(document)
     self.check_hash = sha

@@ -5,7 +5,7 @@ RSpec.describe LibrariesController, type: :controller do
   let(:user) { User.create!(email: "vijay@gmail.com", password: "Password1!") }
 
   before do
-    allow_any_instance_of(BaseLibrariesController).to receive(:current_user).and_return(user)
+    allow_any_instance_of(LibrariesController).to receive(:current_user).and_return(user)
   end
 
   describe "POST #create" do

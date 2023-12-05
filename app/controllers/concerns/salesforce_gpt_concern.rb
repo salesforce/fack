@@ -44,7 +44,7 @@ module SalesforceGptConcern
       response_data = JSON.parse(response.body)
       return response_data['embeddings'][0]['embedding']
     else
-      puts "Error calling Salesforce Connect GPT: #{response.body.message}"
+      Rails.logger.error("Error calling Salesforce Connect GPT: #{response.body.message}")
     end
 
     null

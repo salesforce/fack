@@ -34,7 +34,7 @@ class BaseDocumentsController < ApplicationController
   # POST /documents or /documents.json
   def create
     @document = Document.new(document_params)
-    @document.user_id = @current_user.id
+    @document.user_id = current_user.id
 
     respond_to do |format|
       if @document.save
@@ -61,7 +61,7 @@ class BaseDocumentsController < ApplicationController
 
   private
   def can_manage_documents?
-    return true if @current_user.admin?
+    return true if current_user.admin?
 
     handle_bad_authortization
   end

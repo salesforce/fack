@@ -36,9 +36,10 @@ class ApplicationController < ActionController::Base
 
       if current_api_token
         @current_user = current_api_token.user
-
         current_api_token.last_used = DateTime.now
         current_api_token.save!
+
+        session[:user_id] = @current_user.id
 
         return true
       end

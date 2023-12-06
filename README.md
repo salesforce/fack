@@ -98,6 +98,14 @@ rails s
 
 Open http://localhost:3000
 
+## Testing
+```
+bundle exec rspec
+```
+
+The tests are located under the `spec` directory.
+
+
 # Usage
 
 # UI

@@ -50,10 +50,9 @@ class BaseLibrariesController < ApplicationController
 
   # Permission Checks.  Move to CanCan later
   def can_manage_libraries?
-    return true
-    #return if @current_user.admin? || @library.user_id == @current_user.id
+    return true if current_user.admin?
 
-    #handle_bad_authortization
+    handle_bad_authortization
   end
 
   # Use callbacks to share common setup or constraints between actions.

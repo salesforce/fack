@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe SessionsController, type: :controller do
-  let(:user) { create(:user) } # Assuming you have a factory for user
+  let(:user) { create(:user) }
 
   describe 'GET #index' do
     it 'returns a successful response' do
-      api_sign_in # Signs in a user
+      sign_in
       expect(response).to be_successful
     end
   end

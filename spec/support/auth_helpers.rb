@@ -1,6 +1,7 @@
 # spec/support/auth_helpers.rb
 module AuthHelpers
-  def sign_in(user)
+  def sign_in(user = nil)
+    user ||= create(:user)
     session[:user_id] = user.id
   end
 

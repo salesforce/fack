@@ -34,5 +34,4 @@ RSpec.describe ApiToken, type: :model do
     end
   end
 
-  # Additional tests for custom methods, if any, go here
 end

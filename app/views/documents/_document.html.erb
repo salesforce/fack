@@ -8,7 +8,7 @@
             <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500",target:"_source" %></p>
           <% end %>
           <p class="text-xs ">Stored in <%= link_to document.library.name, document.library, class:"text-sky-500" if document.library_id %> library</p>
-          <p class=" text-xs italic">Created <%= time_ago_in_words(document.created_at) %> ago</p>
+          <p class=" text-xs text-stone-400">Created <%= time_ago_in_words(document.created_at) %> ago | Updated <%= time_ago_in_words(document.updated_at) %> ago</p>
         </div>
         <div class="w-1/8 justify-right">
           <%= button_to document_path(@document, toggle_disabled: true),
@@ -20,12 +20,12 @@
         </div>
       </div>
     </div>
-    <div class="px-3 py-5 text-stone-800 bg-stone-50">
+    <div class="px-3 py-5 text-stone-800 bg-stone-100">
       <%= render_markdown(document.document.gsub(/^\s*\n/, '')) %>
     </div>
     <div class="text-xs p-3 text-stone-500 border border-stone-100 rounded-b-lg">
-      <p class="text-stone-400">AI info for nerds:</p>
-      <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%></p>
+      <p class="text-stone-400">Info for nerds:</p>
+      <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%>  | External id <%= document.external_id.present? ? document.external_id : " not provided"%></p>
       <p class=""></p>
     </div>
   </div>

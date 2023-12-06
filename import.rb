@@ -1,6 +1,8 @@
 require 'net/http'
 require 'json'
 require 'optparse'
+require 'digest'
+
 
 # Define the API endpoint URL
 options = {}
@@ -69,10 +71,12 @@ def process_directory(directory_path, library_id, api_url, headers)
       file_content = File.read(file_path)
 
       # Create a hash with the file content
+      external_id = Digest::MD5.hexdigest(File.expand_path(file_path))
       document_data = {
         document: {
           document: file_content.force_encoding('ISO-8859-1').encode('UTF-8'),
           title: file_name,
+          external_id: ,
           library_id:
         }
       }
@@ -93,7 +97,7 @@ def process_directory(directory_path, library_id, api_url, headers)
 
       # Check the response status code
       if response.code.to_i == 201
-        puts "Document '#{file_path}' has been created successfully."
+        puts "Document '#{file_path}' uploaded successfully."
       else
         puts "Failed to create document '#{file_path}'. Error message: #{response.body[0..20_000]}"
       end

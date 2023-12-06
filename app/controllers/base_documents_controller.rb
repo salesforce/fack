@@ -41,13 +41,13 @@ class BaseDocumentsController < ApplicationController
       @document = Document.new(document_params)
       @document.user_id = current_user.id
     else
-      @document.update(document_params)
+      @document.assign_attributes(document_params)
     end
 
     respond_to do |format|
       if @document.save
-        # TODO Check if document is changing before reembedding to save cost
-        EmbedDocumentJob.perform_later(@document.id) 
+        # TODO: Check if document is changing before reembedding to save cost
+        EmbedDocumentJob.perform_later(@document.id) if @document.previous_changes.include?('check_hash')
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
         format.json { render :show, status: :created, location: @document }

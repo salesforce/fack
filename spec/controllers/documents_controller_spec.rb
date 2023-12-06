@@ -23,8 +23,11 @@ RSpec.describe DocumentsController, type: :controller do
 
       it 'links to the existing document with the same external ID' do
         existing_document = Document.create!(valid_attributes.merge(external_id: 'existing_id'))
-        post :create, params: { document: valid_attributes.merge(external_id: 'existing_id') }
+        post :create,
+             params: { document: valid_attributes.merge(title: 'new doc', document: 'new document body',
+                                                        external_id: 'existing_id') }
         expect(assigns(:document)).to eq(existing_document)
+        expect(Document.last.title).to eq('new doc')
       end
     end
 
@@ -76,5 +79,4 @@ RSpec.describe DocumentsController, type: :controller do
       end
     end
   end
-
 end

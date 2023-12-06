@@ -40,10 +40,13 @@ class BaseDocumentsController < ApplicationController
     if @document.nil?
       @document = Document.new(document_params)
       @document.user_id = current_user.id
+    else
+      @document.update(document_params)
     end
 
     respond_to do |format|
       if @document.save
+        # Check if checksum is changing before reembedding
         EmbedDocumentJob.perform_later(@document.id)
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
@@ -80,6 +83,6 @@ class BaseDocumentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def document_params
-    params.require(:document).permit(:document, :title, :external_id, :url, :length, :library_id)
+    params.require(:document).permit(:document, :title, :external_id, :url, :library_id)
   end
 end

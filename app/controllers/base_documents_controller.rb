@@ -33,8 +33,14 @@ class BaseDocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    @document = Document.new(document_params)
-    @document.user_id = current_user.id
+    # check if external id present
+    external_id = document_params[:external_id]
+    @document = Document.find_by_external_id(external_id) if external_id.present?
+
+    if @document.nil?
+      @document = Document.new(document_params)
+      @document.user_id = current_user.id
+    end
 
     respond_to do |format|
       if @document.save
@@ -51,7 +57,7 @@ class BaseDocumentsController < ApplicationController
 
   # DELETE /documents/1 or /documents/1.json
   def destroy
-    #@document.destroy
+    # @document.destroy
 
     respond_to do |format|
       format.html { redirect_to documents_url, notice: 'Document was successfully destroyed.' }
@@ -60,6 +66,7 @@ class BaseDocumentsController < ApplicationController
   end
 
   private
+
   def can_manage_documents?
     return true if current_user.admin?
 
@@ -73,6 +80,6 @@ class BaseDocumentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def document_params
-    params.require(:document).permit(:document, :title, :url, :length, :library_id)
+    params.require(:document).permit(:document, :title, :external_id, :url, :length, :library_id)
   end
 end

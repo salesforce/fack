@@ -46,8 +46,8 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        # Check if checksum is changing before reembedding
-        EmbedDocumentJob.perform_later(@document.id)
+        # TODO Check if document is changing before reembedding to save cost
+        EmbedDocumentJob.perform_later(@document.id) 
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
         format.json { render :show, status: :created, location: @document }

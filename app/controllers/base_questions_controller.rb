@@ -41,7 +41,7 @@ class BaseQuestionsController < ApplicationController
         4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
         5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
         6. Use the "# ANSWER" heading to label your answer.  
-        8. In the "# DOCUMENTS" heading, list the title and urls of all the document(s) in the <CONTEXT> section.
+        7. Under the "# DOCUMENTS" heading, list the title and urls of each document in the <CONTEXT> section.
 
         Example Response:
         # ANSWER

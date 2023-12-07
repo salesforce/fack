@@ -43,7 +43,7 @@ class BaseQuestionsController < ApplicationController
 
       <{{PROGRAM_TAG}}>
         You are a helpful assistant which answers a user's question based on provided documents.
-        1. Read the documents in the <DOCUMENTS> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
+        1. Read the documents in the <CONTEXT> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
         2. Read the USER QUESTION in the <{{DATA_TAG}}> section
         3. Try to answer the USER QUESTION using only the documents.  Format your answer in markdown.
         4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."

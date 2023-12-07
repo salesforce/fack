@@ -2,15 +2,15 @@
   <div class="border rounded-lg">
     <div class="text-xs rounded-t-lg text-stone-900">
       <h1 class="text-3xl font-light p-3 rounded-t bg-sky-800 text-sky-200"><%= document.title %></h1>
-      <% if @document.disabled %>
+      <% if !@document.enabled %>
         <div class="text-white bg-stone-800 p-4"><span class="font-bold text-red-500">Document disabled.</span>  It will not be used to answer questions.</div>
       <% end %>
       <div class="px-3">
         <%= button_to document_path(@document, toggle_disabled: true),
                 method: :patch,
                 data: { turbo_frame: dom_id(@document) },
-                class: (@document.disabled ? 'text-green-500' : 'text-stone-400')  + " bg-stone-800 block p-2 rounded-lg my-2 border-2 hover:border-stone-500 border-stone-300" do %>
-          <% if @document.disabled %>
+                class: (!@document.enabled ? 'text-green-500' : 'text-stone-400')  + " bg-stone-800 block p-2 rounded-lg my-2 border-2 hover:border-stone-500 border-stone-300" do %>
+          <% if !@document.enabled %>
             <span class="flex items-center space-x-2">
               Enable
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

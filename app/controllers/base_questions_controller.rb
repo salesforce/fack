@@ -15,7 +15,7 @@ class BaseQuestionsController < ApplicationController
     # Get answer from GPT
     question_embedding = get_embedding(@question.question)
 
-    related_docs = related_documents_from_embedding(question_embedding).where.not(disabled: true)
+    related_docs = related_documents_from_embedding(question_embedding).where(enabled:true)
     related_docs = related_docs.where(library_id: @question.library_id) if @question.library_id.present?
 
     related_docs = related_docs.first(10)

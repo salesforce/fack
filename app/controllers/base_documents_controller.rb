@@ -19,7 +19,7 @@ class BaseDocumentsController < ApplicationController
 
   def update
     if params[:toggle_disabled]
-      @document.update(disabled: !@document.disabled)
+      @document.update(enabled: !@document.enabled)
     else
       @document.update(document_params)
     end

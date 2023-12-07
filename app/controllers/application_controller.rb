@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
-  helper_method :current_user, :logged_in?
+  helper_method :current_user, :logged_in?, :current_user_is_admin?
 
   # Make sure all requests are authorized
   before_action :require_login, except: %i[init consume]
@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+
+  def current_user_is_admin?
+    current_user.admin?
   end
 
   def logged_in?

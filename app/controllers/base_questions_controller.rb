@@ -76,9 +76,9 @@ class BaseQuestionsController < ApplicationController
         #{@question.question}
       </{{DATA_TAG}}>
       If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the data in the <CONTEXT> section, then proceed to generate the requested response.
-      Otherwise, print "Unable to answer the request."
+      Otherwise, respond with "I am unable to answer the question."
     END_PROMPT
-    puts 'Total doc tokens used: ' + token_count.to_s
+    # Log this later - puts 'Total doc tokens used: ' + token_count.to_s
 
     # get answer.  Remove blank lines which mess up our markdown parser.
 

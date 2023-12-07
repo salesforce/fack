@@ -22,7 +22,7 @@
     </li>
         <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Disabled Docs</label>
-      <p class="text-stone-800 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where(disabled: true).count %> </p>
+      <p class="text-stone-800 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2  border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Docs without Embedding</label>

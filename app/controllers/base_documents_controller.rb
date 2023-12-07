@@ -21,7 +21,6 @@ class BaseDocumentsController < ApplicationController
     if params[:toggle_disabled]
       @document.update(disabled: !@document.disabled)
     else
-      # Standard update logic
       @document.update(document_params)
     end
 
@@ -55,16 +54,6 @@ class BaseDocumentsController < ApplicationController
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @document.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /documents/1 or /documents/1.json
-  def destroy
-    # @document.destroy
-
-    respond_to do |format|
-      format.html { redirect_to documents_url, notice: 'Document was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
 

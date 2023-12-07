@@ -8,14 +8,6 @@ class BaseQuestionsController < ApplicationController
     @questions = Question.order(created_at: :desc).page(params[:page])
   end
 
-  # GET /questions/1 or /questions/1.json
-  def show; end
-
-  # GET /questions/new
-  def new
-    @question = Question.new
-  end
-
   # POST /questions or /questions.json
   def create
     @question = Question.new(question_params)
@@ -23,7 +15,7 @@ class BaseQuestionsController < ApplicationController
     # Get answer from GPT
     question_embedding = get_embedding(@question.question)
 
-    related_docs = related_documents_from_embedding(question_embedding)
+    related_docs = related_documents_from_embedding(question_embedding).where.not(disabled: true)
     related_docs = related_docs.where(library_id: @question.library_id) if @question.library_id.present?
 
     related_docs = related_docs.first(10)

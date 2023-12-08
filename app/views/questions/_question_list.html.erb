@@ -4,20 +4,23 @@
       <details class="text-base">
         <summary class="font-light text-md cursor-pointer flex items-center">
           <!-- Inline SVG icon -->
-          <% if question.able_to_answer %>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-green-500 w-6 h-6 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          <% else %>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-            </svg>
-          <% end %>
-          <%= question.question %>
+          <div>
+            <% if question.able_to_answer %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="text-green-500 w-6 h-6 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            <% else %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+            <% end %>
+          </div>
+          <%= question.question.truncate(150) %>
           <span class="text-stone-400 text-xs ml-2"><%= time_ago_in_words(question.created_at) %> ago</span>
         </summary>
+
         <p class="mt-3">
-          <%= link_to "View Details", question, class: "hover:bg-stone-700 border bg-stone-500 text-white p-1 rounded", "data-turbo-frame": "_top" %>
+          <%= link_to question.question, question, class: "text-sky-600 mt-2 text-xl font-bold hover:underline", "data-turbo-frame": "_top" %>
         </p>
         <p class="mt-2"><%= render_markdown(question.answer.gsub(/^\s*\n/, '')) if question.answer %>
         </p>

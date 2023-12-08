@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_07_075302) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_08_014203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -78,7 +78,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_075302) do
     t.datetime "updated_at", null: false
     t.bigint "library_id"
     t.text "prompt"
+    t.bigint "user_id"
     t.index ["library_id"], name: "index_questions_on_library_id"
+    t.index ["user_id"], name: "index_questions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -94,4 +96,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_07_075302) do
   add_foreign_key "documents", "users"
   add_foreign_key "libraries", "users"
   add_foreign_key "questions", "libraries"
+  add_foreign_key "questions", "users"
 end

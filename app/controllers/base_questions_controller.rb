@@ -11,6 +11,7 @@ class BaseQuestionsController < ApplicationController
   # POST /questions or /questions.json
   def create
     @question = Question.new(question_params)
+    @question.user_id = current_user.id
 
     # Get answer from GPT
     question_embedding = get_embedding(@question.question)

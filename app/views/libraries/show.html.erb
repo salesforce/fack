@@ -11,22 +11,22 @@
     Created <span class="text-stone-500 font-light  "><%= time_ago_in_words(@library.created_at) %> ago</span> |
     ID <span class="p-2 font-light border-2 border-stone-500 text-stone-700 rounded"><%= @library.id %></span>
   </div>
-  <ul class="flex bg-stone-50 my-3 rounded-lg border">
+  <ul class="flex bg-stone-800 my-3 rounded-lg border">
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Documents</label>
-      <p class="text-stone-800 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
+      <p class="text-stone-100 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Average Token Count</label>
-      <p class="text-stone-800 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
+      <p class="text-stone-100 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
     </li>
         <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Disabled Docs</label>
-      <p class="text-stone-800 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
+      <p class="text-stone-100 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2  border-stone-300 text-center">
       <label class="font-bold text-stone-500 text-xs">Docs without Embedding</label>
-      <p class="text-stone-800 text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
+      <p class="text-stone-100 text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
     </li>
   </ul>
   <h2 class="text-xl text-stone-600 pt-4">Documents</h2>

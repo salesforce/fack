@@ -1,6 +1,6 @@
 <ul class="space-y-4 text-sm">
   <% docs.each_with_index do |document, index| %>
-    <li class="bg-white p-2 rounded shadow leading-8  hover:bg-stone-100">
+    <li class="bg-white p-2 rounded shadow leading-8  hover:bg-stone-50">
       <div class="block">
         <span class="text-stone-500 border border-sky-800 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
         <%= link_to document.title, document, class:"text-sky-500 hover:underline"%>

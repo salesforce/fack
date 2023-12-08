@@ -14,18 +14,25 @@
   <%= paginate @documents %>
   <ul class="space-y-4">
     <% @documents.each do |document| %>
-      <li class="bg-white p-4 rounded shadow hover:bg-stone-50">
+      <li class="bg-white p-4 rounded shadow group">
         <details class="text-base">
-          <summary class="text-md cursor-pointer <%=  'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
-            <%= document.title %>
-            (<%= document.library.name %>)
+          <summary class="text-md cursor-pointer  <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
+            <span><%= document.title %> (<%= document.library.name %>)</span>
+            <a href="<%= url_for(document) %>" class="text-sky-500 ml-4 hover:text-sky-600 hidden group-hover:inline">
+              View
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </a>
           </summary>
-          <span class="text-stone-400 text-sm"><%= time_ago_in_words(document.created_at) %> ago</span>
-          <p class="mt-2"><%= link_to "View Details", document, class:"text-sky-500 underline" %></p>
-          <p class="text-stone-700 rounded-b"><%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document  %>
+          <p class="mt-2 text-stone-700 rounded-b">
+            <span class="text-stone-400 text-xs"><%= time_ago_in_words(document.created_at) %> ago</span>
           </p>
+          <div class="bg-stone-100 p-2 rounded-lg">
+            <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+          </div>
         </details>
       </li>
     <% end %>
-  </div>
+  </ul>
 </div>

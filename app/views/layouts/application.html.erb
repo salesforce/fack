@@ -58,13 +58,7 @@
       <div class="text-stone-900 flex mx-auto container justify-between items-center">
         <% if current_user %>
           <nav>
-            <ul class="flex space-x-4 font-light text-stone-500">
-              <li>
-                <a href="/questions/new" class="hover:border-sky-400 hover:border-b-2 flex items-center p-1">
-                  <!-- Add your chosen SVG icon for 'Ask' here -->
-                  Ask
-                </a>
-              </li>
+            <ul class="flex font-light text-stone-500">
               <li>
                 <a href="/questions" class="<%= controller_name == 'questions' ? 'border-sky-500 border-b-2' : '' %> hover:border-sky-400 hover:border-b-2 flex items-center  p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">

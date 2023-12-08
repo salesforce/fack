@@ -4,7 +4,7 @@ class BaseLibrariesController < ApplicationController
 
   # GET /libraries or /libraries.json
   def index
-    @libraries = Library.all
+    @libraries = Library.all.order(documents_count: :desc)
   end
 
   # POST /libraries or /libraries.json

@@ -36,13 +36,13 @@ class BaseQuestionsController < ApplicationController
 
       <{{PROGRAM_TAG}}>
         You are a helpful assistant which answers a user's question based on provided documents.
-        1. Read the documents in the <CONTEXT> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
-        2. Read the USER QUESTION in the <{{DATA_TAG}}> section
-        3. Try to answer the USER QUESTION using only the documents.  Format your answer in markdown.
+        1. Read the USER QUESTION in the <{{DATA_TAG}}> section
+        2. Read the documents in the <CONTEXT> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
+        3. Try to answer the USER QUESTION using only the documents.
         4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
         5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
         6. Use the "# ANSWER" heading to label your answer.  
-        7. Under the "# DOCUMENTS" heading, list the title and urls of each document in the <CONTEXT> section.
+        7. Under the "# DOCUMENTS" heading, list the title and urls of each document from the <CONTEXT> section.
 
         Example Response:
         # ANSWER
@@ -52,7 +52,13 @@ class BaseQuestionsController < ApplicationController
         1. (Doc 1)[http://host/doc/x]
         2. (Doc 2)[http://host/doc/y]
         3. (Doc 3)[http://host/doc/z]
-        ...
+        4. (Doc 4)[http://host/doc/z]
+        5. (Doc 5)[http://host/doc/z]
+        6. (Doc 6)[http://host/doc/z]
+        7. (Doc 7)[http://host/doc/z]
+        8. (Doc 8)[http://host/doc/z]
+        9. (Doc 9)[http://host/doc/z]
+        10. (Doc 10)[http://host/doc/z]
         
         </{{PROGRAM_TAG}}>
     PROMPT

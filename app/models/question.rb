@@ -8,7 +8,7 @@ class Question < ApplicationRecord
   private
 
   def check_unable_to_answer
-    return unless answer&.include?('I am unable')
+    return unless answer&.include?('I am unable to answer the question')
 
     self.able_to_answer = false
   end

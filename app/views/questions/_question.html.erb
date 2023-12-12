@@ -2,11 +2,14 @@
   <div class="border rounded-lg">
     <h1 class="text-3xl font-light p-4 rounded-t bg-sky-800 text-sky-200"><%= question.question %></h1>
     <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="">
-      <%= time_ago_in_words(question.created_at) %> ago</span></span>
+        <%= time_ago_in_words(question.created_at) %> ago</span>
     </p>
     <div class="markdown-content leading-5 font-light p-4 bg-stone-50">
       <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
     </div>
+    <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">
+      Generation Time <%= question.generation_time %> seconds
+    </p>
   </div>
   <% if session[:debug] == "true" then %>
     <h1 class="text-3xl font-light py-4 text-stone-500">Prompt</h1>

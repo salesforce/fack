@@ -91,9 +91,15 @@ class BaseQuestionsController < ApplicationController
 
     prompt = replace_tag_with_random(prompt, "{{PROGRAM_TAG}}")
     prompt = replace_tag_with_random(prompt, "{{DATA_TAG}}")
-    @question.answer = get_generation(prompt)
-
     @question.prompt = prompt
+    
+    start_time = Time.now
+    @question.answer = get_generation(prompt)    
+    end_time = Time.now
+    
+    generation_time = end_time - start_time    
+    
+    @question.generation_time = generation_time
 
     respond_to do |format|
       if @question.save

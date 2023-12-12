@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_08_191102) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_12_005745) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -81,6 +81,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_08_191102) do
     t.text "prompt"
     t.bigint "user_id"
     t.boolean "able_to_answer", default: true
+    t.float "generation_time"
     t.index ["library_id"], name: "index_questions_on_library_id"
     t.index ["user_id"], name: "index_questions_on_user_id"
   end

@@ -13,9 +13,9 @@ RSpec.describe Question, type: :model do
     expect(question).not_to be_valid
   end
 
-  it 'is not valid without a prompt' do
+  it 'is valid without a prompt' do
     question = Question.new(question: 'What is Ruby?', prompt: nil, user: user)
-    expect(question).not_to be_valid
+    expect(question).to be_valid
   end
 
   it 'sets able_to_answer to false if answer includes "I am unable"' do

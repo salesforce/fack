@@ -12,15 +12,15 @@ class BaseQuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
     @question.user_id = current_user.id
-    @question.status = "pending"
-    
+    @question.status = 'pending'
+
     respond_to do |format|
       if @question.save
         GenerateAnswerJob.perform_later(@question.id)
 
         format.html { redirect_to question_url(@question), notice: 'Question was successfully created.' }
         format.json { render :show, status: :created, location: @question }
-        format.turbo_stream 
+        format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @question.errors, status: :unprocessable_entity }

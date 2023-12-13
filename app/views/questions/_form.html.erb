@@ -21,7 +21,7 @@
           </button>
         </div>
         <div>
-          <%= form.collection_select :library_id, Library.all, :id, :name, {prompt: 'Limit Answers to Library (Optional)'}, { class: 'mt-1 pl-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' } %>
+          <%= form.collection_select :library_id, Library.all, :id, :name, {prompt: 'Limit Answers to Library (Optional)'}, { class: 'mt-1 pl-3 py-2 text-base border-gray-300 hover:text-stone-600 text-stone-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md' } %>
         </div>
       </form>
     </div>

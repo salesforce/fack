@@ -2,7 +2,6 @@ class Question < ApplicationRecord
   enum status: { pending: 0, generating: 1, generated: 2, failed: 3 }
 
   validates :question, presence: true
-  validates :prompt, presence: true
   belongs_to :user, optional: true
 
   before_save :check_unable_to_answer

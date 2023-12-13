@@ -1,5 +1,4 @@
-<%= turbo_stream.replace "questions_list" do %>
-  <turbo-frame id="questions_list">
+<%= turbo_stream.replace "question_show" do %>
+  <turbo-frame id="question_show" src="<%= question_path(@question) %>">
   </turbo-frame>
-  <%= render @question, locals: { question: @question }  %>
 <% end %>

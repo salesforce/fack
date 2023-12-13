@@ -4,11 +4,24 @@
     <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="">
         <%= time_ago_in_words(question.created_at) %> ago</span>
     </p>
-    <div class="markdown-content leading-5 font-light p-4 bg-stone-50">
-      <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
+    <div class="markdown-content font-light p-4 bg-stone-50">
+      <% if @question.pending? || @question.generating? %>
+        <div class="animate-pulse flex space-x-4">
+          <div class="flex-1 space-y-2">
+            <div class="text-2xl font-mono "><%= @question.status%></div>
+            <div class="space-y-3">
+              <div class="h-2 bg-slate-200 rounded"></div>
+              <div class="h-2 bg-slate-200 rounded"></div>
+              <div class="h-2 bg-slate-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
+      <% end %>
     </div>
     <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">
-      Generation Time <%= question.generation_time %> seconds
+      Generation time <%= question.generation_time || "..." %> seconds
     </p>
   </div>
   <% if session[:debug] == "true" then %>

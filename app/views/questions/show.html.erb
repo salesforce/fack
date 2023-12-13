@@ -1,4 +1,19 @@
 <div>
-<p style="color: green"><%= notice %></p>
+  <p style="color: green"><%= notice %></p>
 </div>
-<%= render @question %>
+<turbo-frame id="question_show">
+  <%= render @question %>
+  <script>
+    //This is to refresh the frame until the answer is ready.
+    //Seems hacky, but we can clean up later
+    if (<%= @question.pending? || @question.generating? %>) {
+      setTimeout(function() {
+          console.log("Answer pending...");
+          let frame = document.getElementById("question_show");
+          frame.setAttribute('src', "<%= question_path(@question) %>")
+          console.log("complete.");
+          //Turbo.visit("<%= question_path(@question) %>");
+      }, 5000);
+    }
+  </script>
+</turbo-frame>

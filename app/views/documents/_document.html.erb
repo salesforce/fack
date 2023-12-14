@@ -1,11 +1,11 @@
 <div id="<%= dom_id document %>">
-  <div class="border rounded-lg">
-    <div class="flex justify-between p-3 bg-sky-800 rounded-t">
+  <div class="text-xs text-stone-500 border border-stone-100 rounded-t-lg">
+    <div class="flex justify-between p-3 bg-sky-800 rounded-t-lg">
       <h1 class="text-3xl font-light text-sky-200"><%= document.title %></h1>
       <%= button_to document_path(@document, toggle_disabled: true),
             method: :patch,
             data: { turbo_frame: dom_id(@document) },
-            class: (!@document.enabled ? 'text-green-500' : 'text-stone-400') + " bg-stone-800 block px-2 py-1 text-sm rounded-lg border hover:border-stone-300 border-stone-500" do %>
+            class: (!@document.enabled ? 'text-green-500' : 'text-stone-400') + " bg-stone-800 block px-2 py-1 text-sm rounded-lg border hover:border-stone-300" do %>
         <% if !@document.enabled %>
           <span class="flex items-center space-x-2">
             Enable

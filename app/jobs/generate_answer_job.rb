@@ -37,7 +37,7 @@ class GenerateAnswerJob < ApplicationJob
         4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
         5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
         6. Use the "# ANSWER" heading to label your answer.#{'  '}
-        7. Under the "# DOCUMENTS" heading, list the title and urls of each document from the <CONTEXT> section.
+        7. Under the "# DOCUMENTS" heading, list the title and urls of each document from the <CONTEXT> section.  List all documents whether your answer uses them or not.
 
         Example Response:
         # ANSWER

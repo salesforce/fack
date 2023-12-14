@@ -12,7 +12,7 @@
     <% end %>
     <div>
       <form class="flex" action="#" method="post">
-        <%= form.text_area :question, id:"text-field" ,placeholder:"I can answer questions about " + Library.all.order(documents_count: :desc).limit(4).pluck(:name).join(", ") + ", and more.  What would you like to know?",class:"bg-white placeholder-gray-400 focus:outline-none text-stone-700 py-2 px-3 rounded border-0 focus:outline-none focus:border-0 w-full" %>
+        <%= form.text_area :question, id:"text-field" ,placeholder:"I can answer questions about " + Library.all.order(documents_count: :desc).limit(4).pluck(:name).join(", ") + ", and more.",class:"bg-white placeholder-gray-400 focus:outline-none text-stone-700 py-2 px-3 rounded border-0 focus:outline-none focus:border-0 w-full" %>
         <div class="float-right">
           <button type="submit" id="submit-button" class="mt-1 bg-sky-500 text-stone-200 rounded hover:bg-sky-600 text-white py-2 px-5" >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

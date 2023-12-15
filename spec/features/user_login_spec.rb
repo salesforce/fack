@@ -8,7 +8,7 @@ RSpec.feature 'User login', type: :feature do
 
     fill_in 'Email', with: 'user@example.com'
     fill_in 'Password', with: 'Password1!'
-    click_button 'Login'
+    click_button 'Sign In'
 
     expect(page).to have_text('Logout') # Or any other indication of a successful login
   end
@@ -18,7 +18,7 @@ RSpec.feature 'User login', type: :feature do
 
     fill_in 'Email', with: 'wrong@example.com'
     fill_in 'Password', with: 'wrongpassword'
-    click_button 'Login'
+    click_button 'Sign In'
 
     expect(page).to have_text('Error logging in') # Or the error message you display
   end

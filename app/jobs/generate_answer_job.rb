@@ -1,5 +1,5 @@
 class GenerateAnswerJob < ApplicationJob
-  include SalesforceGptConcern  # Include the concern here
+  include SalesforceGptConcern
   include NeighborConcern
   include Rails.application.routes.url_helpers
 
@@ -8,10 +8,10 @@ class GenerateAnswerJob < ApplicationJob
   def perform(question_id)
     question = Question.find(question_id)
 
-    # Get answer from GPT
-    question_embedding = get_embedding(question.question)
+    # Get embedding from GPT
+    question.embedding = get_embedding(question.question)
 
-    related_docs = related_documents_from_embedding(question_embedding).where(enabled: true)
+    related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
     related_docs = related_docs.where(library_id: question.library_id) if question.library_id.present?
 
     related_docs = related_docs.first(10)
@@ -82,8 +82,6 @@ class GenerateAnswerJob < ApplicationJob
       Otherwise, respond with "I am unable to answer the question."
     END_PROMPT
     # Log this later - puts 'Total doc tokens used: ' + token_count.to_s
-
-    # get answer.  Remove blank lines which mess up our markdown parser.
     
     prompt = replace_tag_with_random(prompt, '{{PROGRAM_TAG}}')
     prompt = replace_tag_with_random(prompt, '{{DATA_TAG}}')

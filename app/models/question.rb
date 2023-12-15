@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  has_neighbors :embedding
+  
   enum status: { pending: 0, generating: 1, generated: 2, failed: 3 }
 
   validates :question, presence: true

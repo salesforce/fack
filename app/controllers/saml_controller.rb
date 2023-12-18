@@ -10,6 +10,7 @@ class SamlController < ApplicationController
     request = OneLogin::RubySaml::Authrequest.new
     response.settings = saml_settings
     if response.is_valid?
+      puts response.inspect
       session[:authenticated] = true
       redirect_to root_path
     else

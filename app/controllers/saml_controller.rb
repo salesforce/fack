@@ -11,6 +11,7 @@ class SamlController < ApplicationController
     response.settings = saml_settings
     if response.is_valid?
       puts response.inspect
+      puts "EMAIL" +_response.name_id
       session[:authenticated] = true
       redirect_to root_path
     else

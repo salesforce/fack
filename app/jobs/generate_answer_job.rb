@@ -44,16 +44,16 @@ class GenerateAnswerJob < ApplicationJob
         This is the answer to your question.
 
         # DOCUMENTS
-        1. (Doc 1)[http://host/doc/x]
-        2. (Doc 2)[http://host/doc/y]
-        3. (Doc 3)[http://host/doc/z]
-        4. (Doc 4)[http://host/doc/z]
-        5. (Doc 5)[http://host/doc/z]
-        6. (Doc 6)[http://host/doc/z]
-        7. (Doc 7)[http://host/doc/z]
-        8. (Doc 8)[http://host/doc/z]
-        9. (Doc 9)[http://host/doc/z]
-        10. (Doc 10)[http://host/doc/z]
+        1. (Document Title 1)[http://host/doc/x]
+        2. (Document Title 2)[http://host/doc/y]
+        3. (Document Title 3)[http://host/doc/z]
+        4. (Document Title 4)[http://host/doc/z]
+        5. (Document Title 5)[http://host/doc/z]
+        6. (Document Title 6)[http://host/doc/z]
+        7. (Document Title 7)[http://host/doc/z]
+        8. (Document Title 8)[http://host/doc/z]
+        9. (Document Title 9)[http://host/doc/z]
+        10. (Document Title 10)[http://host/doc/z]
       #{'  '}
         </{{PROGRAM_TAG}}>
     PROMPT

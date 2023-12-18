@@ -1,6 +1,6 @@
 class BaseLibrariesController < ApplicationController
   before_action :set_library, only: %i[show edit update destroy]
-  before_action :can_manage_libraries?, only: %i[edit create update destroy]
+  before_action :can_manage_libraries?, only: %i[edit new create update destroy]
 
   # GET /libraries or /libraries.json
   def index

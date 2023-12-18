@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
   
   get 'auth/saml/init', to: 'saml#init'
-  post 'auth/saml/callback', to: 'saml#callback'
+  post 'auth/saml/consume', to: 'saml#consume'
   get 'auth/saml/metadata', to: 'saml#metadata'
 
 end

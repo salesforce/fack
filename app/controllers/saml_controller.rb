@@ -28,10 +28,11 @@ class SamlController < ApplicationController
   def saml_settings
     idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
     # Returns OneLogin::RubySaml::Settings pre-populated with IdP metadata
+    # TODO - Cache This
     settings = idp_metadata_parser.parse_remote(ENV['SSO_METADATA_URL'])
 
-    settings.assertion_consumer_service_url = "http://#{request.host}/auth/saml/consume"
-    settings.sp_entity_id                   = "http://#{request.host}/auth/saml/metadata"
+    settings.assertion_consumer_service_url = "https://#{request.host}/auth/saml/consume"
+    settings.sp_entity_id                   = "https://#{request.host}/auth/saml/metadata"
 
     settings
   end

@@ -31,16 +31,6 @@ class BaseQuestionsController < ApplicationController
   # PATCH/PUT /questions/1 or /questions/1.json
   def update; end
 
-  # DELETE /questions/1 or /questions/1.json
-  def destroy
-    @question.destroy
-
-    respond_to do |format|
-      format.html { redirect_to questions_url, notice: 'Question was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.

@@ -226,6 +226,7 @@ GEM
     rdoc (6.5.0)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
+    redis (4.8.1)
     regexp_parser (2.8.1)
     reline (0.3.8)
       io-console (~> 0.5)
@@ -344,6 +345,7 @@ DEPENDENCIES
   rails (~> 7.0.7)
   rails-controller-testing
   redcarpet
+  redis (~> 4.0)
   rspec-rails (~> 5.0.0)
   rubocop
   ruby-saml

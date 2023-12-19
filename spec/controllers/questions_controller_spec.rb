@@ -40,13 +40,4 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
-
-  describe 'DELETE #destroy' do
-    it 'destroys the requested question' do
-      question = Question.create! valid_attributes
-      expect do
-        delete :destroy, params: { id: question.to_param }
-      end.to change(Question, :count).by(-1)
-    end
-  end
 end

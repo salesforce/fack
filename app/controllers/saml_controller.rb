@@ -36,7 +36,7 @@ class SamlController < ApplicationController
 
       # Setting the session logs the user in.  Need to make some methods for this.
       if user
-        session[:user_id] = user.id
+        login_user(user)
       else
         notice = 'Login failed.  Please contact an admin for help.'
       end

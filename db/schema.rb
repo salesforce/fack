@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_14_081659) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_19_060256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -95,6 +95,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_14_081659) do
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.boolean "admin"
+    t.datetime "last_login"
   end
 
   add_foreign_key "api_tokens", "users"

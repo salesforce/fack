@@ -22,6 +22,11 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
+  def login_user(user)
+    session[:user_id] = user.id
+    user.update(last_login: DateTime.now)
+  end
+
   def current_user_is_admin?
     current_user.admin?
   end

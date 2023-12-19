@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by_email(params[:session][:email])
     if user&.authenticate(params[:session][:password])
-      session[:user_id] = user.id
+      login_user(user)
       redirect_to root_path
     else
       redirect_to new_session_url, notice: "Error logging in."

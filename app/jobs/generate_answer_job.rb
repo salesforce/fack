@@ -14,7 +14,7 @@ class GenerateAnswerJob < ApplicationJob
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
     related_docs = related_docs.where(library_id: question.library_id) if question.library_id.present?
 
-    related_docs = related_docs.first(10)
+    related_docs = related_docs.first(7)
 
     token_count = 0
 
@@ -51,9 +51,6 @@ class GenerateAnswerJob < ApplicationJob
         5. (Document Title 5)[http://host/doc/z]
         6. (Document Title 6)[http://host/doc/z]
         7. (Document Title 7)[http://host/doc/z]
-        8. (Document Title 8)[http://host/doc/z]
-        9. (Document Title 9)[http://host/doc/z]
-        10. (Document Title 10)[http://host/doc/z]
       #{'  '}
         </{{PROGRAM_TAG}}>
     PROMPT

@@ -34,9 +34,7 @@
     </div>
   </div>
   <div class="px-3 py-5 text-stone-800 bg-stone-100">
-    <% cache document do %>
-      <%= render partial: 'shared/markdown', locals: {text: document.document } %>
-    <% end %>
+    <%= render partial: 'shared/markdown', locals: {text: document.document } %>
   </div>
   <div class="text-xs p-3 text-stone-500 border border-stone-100 rounded-b-lg">
     <p class="text-stone-400">Info for nerds:</p>

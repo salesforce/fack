@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_19_060256) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_19_225932) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -69,6 +69,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_060256) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.integer "documents_count", default: 0, null: false
+    t.string "source_url"
     t.index ["user_id"], name: "index_libraries_on_user_id"
   end
 

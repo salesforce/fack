@@ -80,7 +80,7 @@ SALESFORCE_CONNECT_CLIENT_SECRET=
 SALESFORCE_CONNECT_USERNAME=
 SALESFORCE_CONNECT_PASSWORD=
 
-# https://fack.yourdomain/com
+# https://fack.yourdomain.com.  Used to generate URLs in the answers.
 ROOT_URL=
 
 # OPTIONAL

@@ -24,7 +24,10 @@ Rails.application.routes.draw do
     end
   end
 
-  
+  namespace :admin do
+    get 'dashboard', to: 'dashboard#index'
+  end
+
   get 'auth/saml/init', to: 'saml#init'
   post 'auth/saml/consume', to: 'saml#consume'
   get 'auth/saml/metadata', to: 'saml#metadata'

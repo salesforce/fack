@@ -1,42 +1,44 @@
-<div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 border border-sky-800 rounded-lg w-1/2 mx-auto bg-sky-100">
   <div class="max-w-md w-full space-y-8">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <h2 class="mt-3 text-center text-3xl font-extrabold text-gray-900">
         Login
       </h2>
     </div>
-    <%= form_for :session, url: sessions_path, method: :post, class: "mt-8 space-y-6" do |f| %>
-      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <div class="rounded-md shadow-sm -space-y-px">
-        <% if notice.present? %>
-          <div class="items-center">
-            <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <% if ENV['DISABLE_PASSWORD_LOGIN'] != "true" %>
+      <%= form_for :session, url: sessions_path, method: :post, class: "mt-8 space-y-6" do |f| %>
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <div class="rounded-md shadow-sm -space-y-px">
+          <% if notice.present? %>
+            <div class="items-center">
+              <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+            </div>
+          <% end %>
+          <div>
+            <%= f.label :email, class: "sr-only" %>
+            <%= f.email_field :email, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Email address" %>
           </div>
-        <% end %>
-        <div>
-          <%= f.label :email, class: "sr-only" %>
-          <%= f.email_field :email, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Email address" %>
+          <div>
+            <%= f.label :password, class: "sr-only" %>
+            <%= f.password_field :password, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Password" %>
+          </div>
         </div>
-        <div>
-          <%= f.label :password, class: "sr-only" %>
-          <%= f.password_field :password, class: "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm", placeholder: "Password" %>
-        </div>
-      </div>
-      <!--<div class="flex items-center justify-between">
+        <!--<div class="flex items-center justify-between">
         <div class="flex items-center">
           <%= f.check_box :remember_me, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
           <%= f.label :remember_me, "Remember me", class: "ml-2 block text-sm text-gray-900" %>
         </div>
       </div>-->
-      <div>
-        <%= f.button "Sign In", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-      </div>
-      <div class="item-center">
-        - OR -
-      </div>
-      <div>
-        <%= link_to "Login with SSO", "/auth/saml/init", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-500 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500" %>
-      </div>
+        <div>
+          <%= f.button "Sign In", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-500 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+        <div class="item-center">
+          - OR -
+        </div>
+      <% end %>
     <% end %>
+    <div>
+      <%= link_to "Login with SSO", "/auth/saml/init", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-800 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500" %>
+    </div>
   </div>
 </div>

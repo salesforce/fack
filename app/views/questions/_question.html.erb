@@ -34,5 +34,17 @@
         <%= question.prompt.gsub(/^\s*\n/, '') unless question.prompt.nil? %>
       </div>
     </div>
+    <h1 class="text-3xl font-light py-4 text-stone-500">Raw Answer</h1>
+    <div class="markdown-content leading-5">
+      <div class="whitespace-pre-wrap break-words font-mono p-5 border border-sky-600 rounded-lg bg-stone-200">
+        <%= question.answer %>
+      </div>
+    </div>
+    <h1 class="text-3xl font-light py-4 text-stone-500">Slack Answer</h1>
+    <div class="markdown-content leading-5">
+      <div class="whitespace-pre-wrap break-words font-mono p-5 border border-sky-600 rounded-lg bg-stone-200">
+        <%= question.slack_markdown_answer %>
+      </div>
+    </div>
   <% end %>
 </div>

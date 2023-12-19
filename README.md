@@ -79,9 +79,14 @@ SALESFORCE_CONNECT_CLIENT_ID=
 SALESFORCE_CONNECT_CLIENT_SECRET=
 SALESFORCE_CONNECT_USERNAME=
 SALESFORCE_CONNECT_PASSWORD=
-OKTA_METADATA=
+
+# https://fack.yourdomain/com
+ROOT_URL=
 
 # OPTIONAL
+## SAML/SSO Metadata URL
+SSO_METADATA_URL=
+
 ## Max number of document tokens to send to the GPT prompt. GPT 3.5 can handle 1 
 MAX_PROMPT_DOC_TOKENS=
 
@@ -90,6 +95,9 @@ EGPT_MAX_TOKENS=
 
 ## Which OpenAI model to use.
 EGPT_GEN_MODEL=
+
+## Disable Password Login if you have SSO enabled.  (true/false)
+DISABLE_PASSWORD_LOGIN=
 ```
 5. Start
 ```
@@ -145,6 +153,7 @@ Coming soon
 >{
 >   "id": 226,
 >   "question": "how do i setup falcon?",
+>   "status":"generating",
 >   "answer": "# ANSWER\nTo set up Falcon, you need to install the Falcon CLI. Here are the steps to install the Falcon CLI:\n\n1. For macOS users, install the Falcon CLI with brew:\n   ```\n   brew tap sfdc-falcon/cli git[@git.soma.salesforce.com:sfdc-falcon/>homebrew-cli.git](https://git.soma.salesforce.com/git.soma.salesforce.com:sfdc-falcon/homebrew-cli.git)\n   brew install falcon-cli\n   ```\n\n2.  For Linux users, install the Falcon CLI with `curl`:\n   ```\n   curl -sSL https://sfdc.co/get-falcon-cli | bash\n   ```\n\n3. Verify that you've successfully installed the CLI by logging in:\n   ```\n   falcon login\n   ```\n\nYou can find more information about setting up the Falcon CLI in the [Install the Falcon Command Line Interface (CLI)](https://git.soma.salesforce.com/tech-enablement/falcon-paved-path/blob/main/install-falcon-cli.md) document.\n\n# SOURCES\n- [Install the Falcon Command Line Interface (CLI)](https://git.soma.salesforce.com/tech-enablement/falcon-paved-path/blob/main/install-falcon-cli.md)",
 >   "created_at": "2023-11-03T17:28:43.625Z",
 >   "updated_at": "2023-11-03T17:28:43.625Z",
@@ -165,6 +174,13 @@ Coming soon
 
 
 ##### Responses
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | question  |   | text                    | The question to ask of the documentation   |
+> | status  |   | pending, generating, generated, failed         | The status of the generated answer.  Poll every 5 seconds until the status is generated or failed.   |    
+> | able_to_answer  |   |  boolean        | Was the GPT able to generate an answer? (true/false)  |    
+
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
@@ -201,6 +217,7 @@ Coming soon
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | document  |  required | text                    | The question to ask of the documentation   |
 > | library_id  |  required | valid library id (reference to library)            |  |    
+> | external_id  |  optional | text          | a unique id provided by the client.  If a POST request has the same external_id as an existing record, the record will be updated instead of created.  |    
 
 
 ##### Responses
@@ -297,6 +314,12 @@ Coming soon
 </details>
 
 # Guides
+
+## Setup SSO
+1. Get the SSO Metadata URL from your SSO provider.  i.e. https://company.okta.com/app/xyz/sso/saml/metadata
+2. Set the SSO_METADATA_URL to the url from previous step in your .env file or environment.
+3. Restart your app.
+4. Optionally, disable username/password login with DISABLE_PASSWORD_LOGIN=true environment variable.
 
 ## Importing Your Documents (DRAFT)
 

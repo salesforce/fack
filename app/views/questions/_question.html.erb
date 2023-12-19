@@ -24,7 +24,9 @@
       <% end %>
     </div>
     <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">
-      Generation time <%= question.generation_time || "..." %> seconds
+      <% if question.generation_time %>
+        Generation time <%= question.generation_time.truncate(3) || "..." %> seconds
+      <% end %>
     </p>
   </div>
   <% if session[:debug] == "true" then %>

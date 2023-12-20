@@ -114,16 +114,18 @@
           AI Generated Answers from Your Documentation
         </div>
         <div class="text-left">
-          <span class="text-xs text-stone-300">LAST 7 DAYS</span>
-          <div class="text-sky-300 text-sm ">
-            <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
-          </div>
-          <div class="text-sky-300 text-sm ">
-            <%= (Question.all.where("created_at >= ?", 7.days.ago).where(able_to_answer: true).count.to_f / Question.all.where("created_at >= ?", 7.days.ago).count * 100).round(2) %>% <span class="font-light text-stone-400"> attempted answers</span>
-          </div>
-          <div class="text-sky-300 text-sm ">
-            <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
-          </div>
+          <% cache Question.last do %>
+            <span class="text-xs text-stone-300">LAST 7 DAYS</span>
+            <div class="text-sky-300 text-sm ">
+              <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= (Question.all.where("created_at >= ?", 7.days.ago).where(able_to_answer: true).count.to_f / Question.all.where("created_at >= ?", 7.days.ago).count * 100).round(2) %>% <span class="font-light text-stone-400"> attempted answers</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
+            </div>
+          <% end %>
         </div>
       </div>
     </footer>

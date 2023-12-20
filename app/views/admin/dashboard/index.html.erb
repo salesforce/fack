@@ -1,1 +1,4 @@
 <p>Rails Environment: <%= Rails.env %></p>
+<% cache Question.last do %>
+  <%= Question.last.answer %>
+<% end %>

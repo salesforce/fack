@@ -29,7 +29,9 @@
             <span class="text-stone-400 text-xs"><%= time_ago_in_words(document.created_at) %> ago</span>
           </p>
           <div class="bg-stone-100 p-2 rounded-lg">
-            <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+            <% cache document do %>
+              <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+            <% end %>
           </div>
         </details>
       </li>

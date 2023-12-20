@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_19_225932) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_20_055238) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -57,6 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_225932) do
     t.boolean "disabled"
     t.string "external_id"
     t.boolean "enabled", default: true
+    t.index ["created_at"], name: "index_documents_on_created_at"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
     t.index ["library_id"], name: "index_documents_on_library_id"
@@ -85,6 +86,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_19_225932) do
     t.float "generation_time"
     t.integer "status", default: 2, null: false
     t.vector "embedding", limit: 1536
+    t.index ["created_at"], name: "index_questions_on_created_at"
     t.index ["embedding"], name: "index_questions_on_embedding", opclass: :vector_cosine_ops, using: :ivfflat
     t.index ["library_id"], name: "index_questions_on_library_id"
     t.index ["user_id"], name: "index_questions_on_user_id"

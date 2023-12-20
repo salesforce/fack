@@ -11,7 +11,9 @@
           <%= link_to question.question, question, class: "text-sky-600 mt-2 text-xl font-bold hover:underline", "data-turbo-frame": "_top" %>
         </p>
         <p class="mt-2">
-          <%= render partial: 'shared/markdown', locals: {text: question.answer } %>
+          <% cache question do %>
+            <%= render partial: 'shared/markdown', locals: {text: question.answer } %>
+          <% end %>
         </p>
       </details>
     </li>

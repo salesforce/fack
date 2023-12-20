@@ -10,9 +10,6 @@
 <div class="mt-4">
   <turbo-frame id="questions_list">
     <turbo-frame id="question_show">
-      <!-- TODO make this appear and disappear.  There is a lag after sending the question, 
-        and we should show some indicator. Its causing some issues
-        for now, I am disabling. -->
     </turbo-frame>
     <h2 class="text-2xl text-stone-500 mt-2">Recent Questions</h2>
     <%= render 'question_list',  questions: Question.all.order(created_at: :desc).limit(5) %>

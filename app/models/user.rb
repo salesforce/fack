@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  acts_as_voter
+
   has_secure_password validations: false
   validate :password_strength
 

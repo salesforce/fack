@@ -1,6 +1,9 @@
 class Question < ApplicationRecord
   has_neighbors :embedding
 
+  # Tracking helpful answers
+  acts_as_votable
+
   enum status: { pending: 0, generating: 1, generated: 2, failed: 3 }
 
   validates :question, presence: true

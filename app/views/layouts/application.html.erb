@@ -114,7 +114,7 @@
           AI Generated Answers From <b>Your</b> Documentation
         </div>
         <div class="text-left">
-          <% cache Question.last do %>
+          <% cache "footer", expires_in: 60.seconds do %>
             <span class="text-xs text-stone-300">LAST 7 DAYS</span>
             <div class="text-sky-300 text-sm ">
               <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>

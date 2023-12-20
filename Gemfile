@@ -28,7 +28,7 @@ gem 'stimulus-rails'
 gem 'jbuilder'
 
 # Use Redis adapter to run Action Cable in production
-gem "redis", "~> 4.0"
+gem 'redis', '~> 4.0'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -51,24 +51,7 @@ gem 'bootsnap', require: false
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-end
 
-group :development do
-  # Use console on exceptions pages [https://github.com/rails/web-console]
-  gem 'factory_bot_rails'
-  gem 'faker'
-  gem 'rspec-rails', '~> 5.0.0'
-  gem 'shoulda-matchers', '~> 4.0'
-
-  gem 'web-console'
-  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
-  # gem "rack-mini-profiler"
-
-  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
-end
-
-group :test do
   gem 'shoulda-matchers', '~> 4.0'
 
   gem 'rspec-rails', '~> 5.0.0'
@@ -82,6 +65,18 @@ group :test do
   gem 'rails-controller-testing'
 end
 
+group :development do
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem 'web-console'
+  
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
+  # gem "spring"
+end
+
+# Nearest neighbor searches with vector embeddings
 gem 'neighbor'
 gem 'pgvector'
 
@@ -89,12 +84,14 @@ gem 'dotenv-rails', groups: %i[development test]
 
 gem 'httparty'
 
+# Markdown renderer
 gem 'redcarpet'
 
 gem 'tiktoken_ruby'
 
 gem 'tailwindcss-rails', '~> 2.0'
 
+# For SSO
 gem 'ruby-saml'
 
 gem 'rubocop'
@@ -104,4 +101,9 @@ gem 'kaminari'
 gem 'optparse'
 
 gem 'daemons'
+
+# For the job queueing system.
 gem 'delayed_job_active_record'
+
+# For tracking likes/dislikes on questions/documents
+gem 'acts_as_votable'

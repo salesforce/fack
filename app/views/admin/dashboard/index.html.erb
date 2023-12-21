@@ -1,4 +1,11 @@
 <p>Rails Environment: <%= Rails.env %></p>
-<% cache Question.last do %>
-  <%= Question.last.answer %>
-<% end %>
+
+<h1>Questions</h1>
+<div class="text-sky-300 text-sm ">
+  <%= Question.all.where("created_at >= ?", 30.days.ago).sum { |question| question.get_upvotes.size } %> <span class="font-light text-stone-400"> people found helpful answers</span>
+</div>
+
+<h1>Users</h1>
+<div class="text-sky-300 text-sm ">
+  <%= User.all.where("last_login >= ?", 30.days.ago).count %> <span class="font-light text-stone-400"> users</span>
+</div>

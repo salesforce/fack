@@ -120,9 +120,6 @@
               <%= Question.all.where("created_at >= ?", 30.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
             </div>
             <div class="text-sky-300 text-sm ">
-              <%= Question.all.where("created_at >= ?", 30.days.ago).sum { |question| question.get_upvotes.size } %> <span class="font-light text-stone-400"> people found helpful answers</span>
-            </div>
-            <div class="text-sky-300 text-sm ">
               <%= Document.all.where("updated_at >= ?", 30.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
             </div>
           <% end %>

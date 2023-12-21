@@ -4,7 +4,7 @@
     <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="">
         <%= time_ago_in_words(question.created_at) %> ago</span>
     </p>
-    <div class="markdown-content font-light p-4 bg-stone-50">
+    <div class="markdown-content font-light p-4 bg-stone-50 border-t border-stone-700">
       <% if @question.pending? || @question.generating? %>
         <div class="animate-pulse flex space-x-4">
           <div class="flex-1 space-y-2">
@@ -20,8 +20,7 @@
           </div>
         </div>
       <% else %>
-        <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
-        <div class="py-2 text-stone-500 text-sm border-t border-stone-300">Was this answer helpful?</div>
+       <div class="pb-2 text-stone-500 text-sm border-stone-300">Is this answer helpful?</div>
         <% if current_user.voted_for? @question %>
           <a href="<%= "/questions/" + @question.id.to_s +  "?clear_helpful=1" %>">
             <button class="border border-sky-800 bg-white p-2 text-sky-500 rounded-md mb-2">
@@ -40,6 +39,7 @@
             </button>
           </a>
         <% end %>
+        <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
       <% end %>
     </div>
     <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">

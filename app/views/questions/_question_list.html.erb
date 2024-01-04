@@ -5,7 +5,7 @@
         <summary class="relative font-light text-md cursor-pointer flex items-center justify-between">
           <div class="flex items-center">
             <%= render partial: 'question_status_icon', locals: {question: question} %>
-            <%= question.question.truncate(150) %>
+            <%= question.question.truncate(100) %>
             <span class="text-stone-400 text-xs ml-2"><%= time_ago_in_words(question.created_at) %> ago</span>
           </div>
           <div class="text-sky-600 text-sm">

@@ -41,6 +41,9 @@
             </a>
           <% end %>
         <% end %>
+        <% if @question.votes_for.up.size > 0 %>
+          <div class="text-stone-900 text-xs font-italic"><%= @question.votes_for.up.by_type(User).voters.pluck(:email).join(",") %> found this helpful.</div>
+        <% end %>
         <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
       <% end %>
     </div>

@@ -43,7 +43,6 @@
                   <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens  </a>
                   <a href="/admin/dashboard" class="block px-4 py-2 text-black hover:bg-gray-100">Admin  </a>
                 <% end %>
-
               </div>
             </div>
           </div>
@@ -117,6 +116,14 @@
         </div>
         <div class="text-left">
           <% cache "footer", expires_in: 60.seconds do %>
+            <span class="text-xs text-stone-300">LAST 48 HOURS</span>
+            <div class="text-sky-300 text-sm ">
+              <%= Question.all.where("created_at >= ?", 48.hours.ago).count %> <span class="font-light text-stone-400"> questions</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= Document.all.where("updated_at >= ?", 48.hours.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
+            </div>
+            <hr class="my-3"/>
             <span class="text-xs text-stone-300">LAST 30 DAYS</span>
             <div class="text-sky-300 text-sm ">
               <%= Question.all.where("created_at >= ?", 30.days.ago).count %> <span class="font-light text-stone-400"> questions</span>

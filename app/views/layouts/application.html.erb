@@ -126,6 +126,9 @@
             <div class="text-sky-300 text-sm ">
               <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
             </div>
+            <div class="text-sky-300 text-sm ">
+              <%= User.all.where("last_login >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> visitors</span>
+            </div>
           <% end %>
         </div>
       </div>

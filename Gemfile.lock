@@ -167,7 +167,7 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    nio4r (2.5.9)
+    nio4r (2.7.0)
     nokogiri (1.15.4-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-darwin)
@@ -184,7 +184,7 @@ GEM
     psych (5.1.0)
       stringio
     public_suffix (5.0.3)
-    puma (5.6.7)
+    puma (5.6.8)
       nio4r (~> 2.0)
     racc (1.7.1)
     rack (2.2.8)
@@ -343,7 +343,7 @@ DEPENDENCIES
   optparse
   pg (~> 1.1)
   pgvector
-  puma (~> 5.0)
+  puma (~> 5.6)
   rails (~> 7.0.7)
   rails-controller-testing
   redcarpet

@@ -4,7 +4,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:library) { Library.create!(name: 'My Library', user:) }
 
-  let(:valid_attributes) { { question: 'Sample Question', answer: 'Sample Answer', library_id: library.id } }
+  let(:valid_attributes) { { question: 'Sample Question', answer: 'Sample Answer', library_id: library.id, source_url: "http://slack.com/thread/2" } }
   let(:invalid_attributes) { { question: '', answer: '', library_id: nil } }
 
   before do

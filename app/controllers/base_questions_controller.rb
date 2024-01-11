@@ -40,6 +40,6 @@ class BaseQuestionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def question_params
-    params.require(:question).permit(:question, :answer, :library_id)
+    params.require(:question).permit(:question, :answer, :library_id, :source_url)
   end
 end

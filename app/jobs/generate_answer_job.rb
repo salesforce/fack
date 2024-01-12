@@ -14,7 +14,7 @@ class GenerateAnswerJob < ApplicationJob
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
     related_docs = related_docs.where(library_id: question.library_id) if question.library_id.present?
 
-    related_docs = related_docs.first(7)
+    related_docs = related_docs.first(ENV['MAX_DOCS'] || 7)
 
     token_count = 0
 
@@ -37,7 +37,7 @@ class GenerateAnswerJob < ApplicationJob
         4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
         5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
         6. Use the "# ANSWER" heading to label your answer.#{'  '}
-        7. Under the "# DOCUMENTS" heading, list the title and urls of each document from the <CONTEXT> section.  List all documents whether your answer uses them or not.
+        7. Under the "# DOCUMENTS" heading, list the title and urls of each document referenced from the <CONTEXT> section.
 
         Example Response:
         # ANSWER
@@ -51,7 +51,7 @@ class GenerateAnswerJob < ApplicationJob
         5. (Document Title 5)[http://host/doc/z]
         6. (Document Title 6)[http://host/doc/z]
         7. (Document Title 7)[http://host/doc/z]
-      #{'  '}
+        
         </{{PROGRAM_TAG}}>
     PROMPT
 

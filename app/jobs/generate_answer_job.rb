@@ -14,7 +14,8 @@ class GenerateAnswerJob < ApplicationJob
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
     related_docs = related_docs.where(library_id: question.library_id) if question.library_id.present?
 
-    related_docs = related_docs.first(ENV['MAX_DOCS'].to_i || 7)
+    max_docs = (ENV['MAX_DOCS'] || 7).to_i
+    related_docs = related_docs.first(max_docs)
 
     token_count = 0
 

@@ -65,6 +65,36 @@ RSpec.describe DocumentsController, type: :controller do
         end.to change(Document, :count).by(0)
       end
     end
+
+    context 'when current_user is the user of the associated library' do
+      before do
+        allow_any_instance_of(BaseDocumentsController).to receive(:current_user).and_return(user)
+      end
+
+      it 'creates a new Document' do
+        expect do
+          post :create, params: { document: valid_attributes }
+        end.to change(Document, :count).by(1)
+      end
+    end
+
+    context 'when current_user is not the user of the associated library' do
+      let(:other_user) { User.create!(email: 'otheruser@example.com', password: 'Password1!') }
+      before do
+        allow_any_instance_of(BaseDocumentsController).to receive(:current_user).and_return(other_user)
+      end
+
+      it 'does not create a new Document' do
+        expect do
+          post :create, params: { document: valid_attributes }
+        end.to change(Document, :count).by(0)
+      end
+
+      it 'returns an unauthorized response' do
+        post :create, params: { document: valid_attributes }
+        expect(response).to have_http_status(302)
+      end
+    end
   end
 
   describe 'PUT #update' do

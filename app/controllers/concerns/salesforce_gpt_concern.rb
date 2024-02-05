@@ -26,7 +26,10 @@ module SalesforceGptConcern
 
     new_endpoint_url = "#{instance_url}/services/data/v58.0/einstein/llm/embeddings"
     request_body = {
-      prompts: { wrappedListString: [input] }
+      prompts: { wrappedListString: [input] },
+      additionalConfig: {
+        applicationName: 'fack'
+      }
     }
 
     uri = URI.parse(new_endpoint_url)
@@ -62,6 +65,7 @@ module SalesforceGptConcern
         promptTextorId: prompt_text_or_id,
         provider: 'OpenAI',
         additionalConfig: {
+          applicationName: 'fack',
           maxTokens: ENV['EGPT_MAX_TOKENS'] || 300, # roughly one page worth of an answer
           model: ENV['EGPT_GEN_MODEL'] || 'gpt-4-32k',
           temperature: 0.3,

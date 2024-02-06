@@ -44,7 +44,7 @@ class GenerateAnswerJob < ApplicationJob
             # ANSWER
             This is the answer to your question.
 
-            # RELATED DOCUMENTS
+            # DOCUMENTS
             1. (Document Title 1)[http://host/doc/x]
             2. (Document Title 2)[http://host/doc/y]
             3. (Document Title 3)[http://host/doc/z]
@@ -58,7 +58,7 @@ class GenerateAnswerJob < ApplicationJob
             This is the answer.
             For more details, please read (Document Title 3)[http://host/doc/z] and (Document Title 5)[http://host/doc/z].
 
-            # RELATED DOCUMENTS
+            # DOCUMENTS
             1. (Document Title 1)[http://host/doc/x]
             2. (Document Title 2)[http://host/doc/y]
             3. (Document Title 3)[http://host/doc/z]
@@ -74,7 +74,8 @@ class GenerateAnswerJob < ApplicationJob
       # Make sure we don't exceed the max document tokens limit
       next unless (token_count + doc.token_count.to_i) < ENV['MAX_PROMPT_DOC_TOKENS'].to_i
 
-      prompt += "\n\nDocument #{_index + 1}, URL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
+      #prompt += "\n\nTITLE: #{doc.title}\n"
+      prompt += "\n\nURL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
       prompt += doc.to_json(only: %i[id name document title])
       token_count += doc.token_count.to_i
     end.empty?
@@ -89,7 +90,7 @@ class GenerateAnswerJob < ApplicationJob
         #{question.question}
       </{{DATA_TAG}}>
 
-      If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the data in the <CONTEXT> section, then proceed to generate the requested response.
+      If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the information in the <CONTEXT> section, then proceed to generate the requested response.
       Otherwise, respond with "I am unable to answer the question."
     END_PROMPT
     # Log this later - puts 'Total doc tokens used: ' + token_count.to_s

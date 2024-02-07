@@ -20,7 +20,7 @@
   <div>
     <div>
       <%= form.label :library, style: "display: block" %>
-      <%= form.collection_select :library_id, Library.all, :id, :name, {prompt: 'Select a Library'}, { class: 'block shadow rounded-md border border-gray-200 outline-none px-3 py-2 my-2 w-full' } %>
+      <%= form.collection_select :library_id, Library.all.order(name: :asc), :id, :name, {prompt: 'Select a Library'}, { class: 'block shadow rounded-md border border-gray-200 outline-none px-3 py-2 my-2 w-full' } %>
     </div>
   </div>
   <div class="inline">

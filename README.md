@@ -28,7 +28,7 @@ Vector embeddings, token counting, effective prompting all require thought to ma
 By having a shared service, you can have one service to manage retrieval-augmented search and ask queries.
 
 ### Deduplication
-When managing thousands of documents, managing documents is difficult.  Are their duplicates?  What are the groups of documents?
+When managing thousands of documents, managing documents is difficult.  Are there duplicates?  What are the groups of documents?
 
 ### Document Grouping
 All documents are not equal.  You have different groups within your company and organization.  Different teams need to manage their documents.

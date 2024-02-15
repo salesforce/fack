@@ -19,7 +19,7 @@ class Question < ApplicationRecord
     markdown_regex = /\[([^\]]+)\]\((http[^)]+)\)/
     
     # Replace each Markdown link with Slack's format
-    self.answer.gsub(markdown_regex) do |_match|
+    self.answer.truncate(3000).gsub(markdown_regex) do |_match|
       link_text = ::Regexp.last_match(1)
       url = ::Regexp.last_match(2)
       "<#{url}|#{link_text}>"

@@ -34,7 +34,7 @@ class GenerateAnswerJob < ApplicationJob
             You are a helpful assistant which answers a user's question based on provided documents.
             1. Read the USER QUESTION in the <{{DATA_TAG}}> section
             2. Read the documents in the <CONTEXT> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
-            3. Try to answer the USER QUESTION using only the documents.
+            3. Try to answer the USER QUESTION using only the documents.  If there is conflicting information, reference the conflict and indicate which answer is based on the most recent created date.
             4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
             5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
             6. Use the "# ANSWER" heading to label your answer.#{'  '}
@@ -76,7 +76,7 @@ class GenerateAnswerJob < ApplicationJob
 
       #prompt += "\n\nTITLE: #{doc.title}\n"
       prompt += "\n\nURL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
-      prompt += doc.to_json(only: %i[id name document title])
+      prompt += doc.to_json(only: %i[id name document title created_at])
       token_count += doc.token_count.to_i
     end.empty?
       prompt += "No documents available\n"

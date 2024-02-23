@@ -1,5 +1,4 @@
 <% content_for :title, "Documents" %>
-
 <p style="color: green"><%= notice %></p>
 <div class="">
   <div class="flex justify-between items-center">
@@ -20,6 +19,7 @@
         <details class="text-base">
           <summary class="text-md cursor-pointer  <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
             <span><%= document.title %> (<%= document.library.name %>)</span>
+            <span class="text-stone-400 text-xs ml-2"><%= time_ago_in_words(document.created_at) %> ago</span>
             <a href="<%= url_for(document) %>" class="text-sky-500 ml-4 hover:text-sky-600 hidden group-hover:inline">
               View
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-5 h-5">
@@ -27,10 +27,7 @@
               </svg>
             </a>
           </summary>
-          <p class="mt-2 text-stone-700 rounded-b">
-            <span class="text-stone-400 text-xs"><%= time_ago_in_words(document.created_at) %> ago</span>
-          </p>
-          <div class="bg-stone-100 p-2 rounded-lg">
+          <div class="bg-stone-100 p-2 rounded-lg mt-2">
             <% cache document do %>
               <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
             <% end %>

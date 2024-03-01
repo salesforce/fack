@@ -83,23 +83,31 @@ SALESFORCE_CONNECT_PASSWORD=
 # https://fack.yourdomain.com.  Used to generate URLs in the answers.
 ROOT_URL=
 
-# OPTIONAL
-## SAML/SSO Metadata URL
+## SAML/SSO Metadata URL (OPTIONAL)
 SSO_METADATA_URL=
 
-## Max number of document tokens to send to the GPT prompt. GPT 3.5 can handle 1 
+## Max number of document tokens to send to the GPT prompt. (OPTIONAL)
 MAX_PROMPT_DOC_TOKENS=
 
-## Max tokens to send in the prompt
+## Max tokens to send in the prompt (DEFAULT 10,000)
 EGPT_MAX_TOKENS=
 
-## Which OpenAI model to use.
+## Which OpenAI model to use. (OPTIONAL)
 EGPT_GEN_MODEL=
 
 ## Disable Password Login if you have SSO enabled.  (true/false)
 DISABLE_PASSWORD_LOGIN=
 ```
-5. Start
+
+5. Open a new terminal and start the Background job for AI Calls
+```
+rake jobs:work
+```
+
+You should see:
+[Worker(host:host.something.com pid:89737)] Starting job worker
+
+6. Start web server
 ```
 rails s
 ```

@@ -4,7 +4,9 @@ RSpec.describe QuestionsController, type: :controller do
   let(:user) { create(:user) }
   let(:library) { Library.create!(name: 'My Library', user:) }
 
-  let(:valid_attributes) { { question: 'Sample Question', answer: 'Sample Answer', library_id: library.id, source_url: "http://slack.com/thread/2" } }
+  let(:valid_attributes) do
+    { question: 'Sample Question', answer: 'Sample Answer', library_id: library.id, source_url: 'http://slack.com/thread/2' }
+  end
   let(:invalid_attributes) { { question: '', answer: '', library_id: nil } }
 
   before do
@@ -37,6 +39,19 @@ RSpec.describe QuestionsController, type: :controller do
       it 'fails to create' do
         post :create, params: { question: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context 'with include_libraries params' do
+      let(:additional_library) { Library.create!(name: 'Additional Library', user:) }
+      let(:attributes_with_libraries) do
+        valid_attributes.merge(library_ids_included: [library.id])
+      end
+
+      it 'associates the question with specified libraries' do
+        post :create, params: { question: attributes_with_libraries }
+        question = Question.last
+        expect(question.library_ids_included).to include(library.id.to_s)
       end
     end
   end

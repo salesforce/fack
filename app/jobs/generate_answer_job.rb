@@ -72,7 +72,8 @@ class GenerateAnswerJob < ApplicationJob
     prompt += '<CONTEXT>'
     if related_docs.each_with_index do |doc, _index|
       # Make sure we don't exceed the max document tokens limit
-      next unless (token_count + doc.token_count.to_i) < ENV['MAX_PROMPT_DOC_TOKENS'].to_i
+      max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10000
+      next unless (token_count + doc.token_count.to_i) < max_doc_tokens
 
       #prompt += "\n\nTITLE: #{doc.title}\n"
       prompt += "\n\nURL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"

@@ -66,7 +66,7 @@ module SalesforceGptConcern
         provider: 'OpenAI',
         additionalConfig: {
           applicationName: 'fack',
-          maxTokens: ENV['EGPT_MAX_TOKENS'] || 300, # roughly one page worth of an answer
+          maxTokens: ENV['EGPT_MAX_TOKENS'] || 3000, # roughly one page worth of an answer
           model: ENV['EGPT_GEN_MODEL'] || 'gpt-4-32k',
           temperature: 0.3,
           numGenerations: 1

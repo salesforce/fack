@@ -14,8 +14,6 @@ class BaseQuestionsController < ApplicationController
     @question.user_id = current_user.id
     @question.status = 'pending'
 
-    puts question_params
-
     respond_to do |format|
       if @question.save
         GenerateAnswerJob.perform_later(@question.id)
@@ -42,9 +40,6 @@ class BaseQuestionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def question_params
-    puts "CONTROLLER"
-    puts params
-    params.require(:question).permit(:question, :answer, :library_id, :library_ids_included, :library_ids_excluded,
-                                     :source_url)
+    params.require(:question).permit(:question, :answer, :library_id, :source_url, library_ids_included: [])
   end
 end

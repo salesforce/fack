@@ -45,14 +45,13 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with include_libraries params' do
       let(:additional_library) { Library.create!(name: 'Additional Library', user:) }
       let(:attributes_with_libraries) do
-        valid_attributes.merge(library_ids_included: [1], library_ids_excluded: [library.id])
+        valid_attributes.merge(library_ids_included: [library.id])
       end
 
       it 'associates the question with specified libraries' do
-        puts attributes_with_libraries 
         post :create, params: { question: attributes_with_libraries }
         question = Question.last
-        expect(question.library_ids_included).to include(library.id)
+        expect(question.library_ids_included).to include(library.id.to_s)
       end
     end
   end

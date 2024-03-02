@@ -1,4 +1,12 @@
 class Document < ApplicationRecord
+  include PgSearch::Model
+
+  pg_search_scope :search_by_title_and_document,
+                  against: %i[title document],
+                  using: {
+                    tsearch: { prefix: true } # This option allows partial matches
+                  }
+
   has_neighbors :embedding
   belongs_to :library, counter_cache: true
   belongs_to :user

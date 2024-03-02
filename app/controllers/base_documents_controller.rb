@@ -14,6 +14,9 @@ class BaseDocumentsController < ApplicationController
       @documents = @documents.where(library_id: params[:library_id])
     end
 
+    if params[:contains].present?
+      @documents = @documents.search_by_title_and_document(params[:contains])
+    end
     @documents = @documents.page(params[:page])
   end
 

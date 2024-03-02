@@ -107,3 +107,6 @@ gem 'delayed_job_active_record'
 
 # For tracking likes/dislikes on questions/documents
 gem 'acts_as_votable'
+
+gem 'pg_search'
+

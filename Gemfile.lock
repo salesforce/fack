@@ -180,6 +180,9 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
+    pg_search (2.3.6)
+      activerecord (>= 5.2)
+      activesupport (>= 5.2)
     pgvector (0.2.2)
     psych (5.1.2)
       stringio
@@ -341,6 +344,7 @@ DEPENDENCIES
   neighbor
   optparse
   pg (~> 1.1)
+  pg_search
   pgvector
   puma (~> 6.0)
   rails (~> 7.0.7)

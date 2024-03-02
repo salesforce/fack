@@ -47,6 +47,13 @@ RSpec.describe DocumentsController, type: :controller do
       get :index
       expect(response).to be_successful
     end
+
+    it 'filters documents by the contains parameter' do
+      Document.create!(valid_attributes.merge(title: 'First Document', document: 'Content of the first document'))
+      Document.create!(valid_attributes.merge(title: 'Second Document', document: 'Content including special keyword'))
+      get :index, params: { contains: 'including keyword' }
+      expect(assigns(:documents)).to match_array([Document.find_by(title: 'Second Document')])
+    end
   end
 
   describe 'POST #create' do

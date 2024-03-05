@@ -1,5 +1,5 @@
 class GenerateAnswerJob < ApplicationJob
-  include SalesforceGptConcern
+  include GptConcern
   include NeighborConcern
   include Rails.application.routes.url_helpers
 

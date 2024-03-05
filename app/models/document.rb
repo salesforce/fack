@@ -14,7 +14,8 @@ class Document < ApplicationRecord
   validates :library, presence: true
 
   # Prevent DDOS and generally excessively large docs
-  validates :token_count, presence: true, numericality: { less_than: 10_000 }
+  validates :token_count, presence: true
+  validate :token_count_must_be_less_than
 
   validates :length, presence: true
 
@@ -52,5 +53,11 @@ class Document < ApplicationRecord
     encoding = Tiktoken.encoding_for_model(model)
     tokens = encoding.encode(string)
     tokens.length
+  end
+
+  def token_count_must_be_less_than
+    if token_count.present? && token_count >= 10_000
+      errors.add(:token_count, "is #{token_count} and must be less than 10,000")
+    end
   end
 end

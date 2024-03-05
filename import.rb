@@ -2,17 +2,14 @@ require 'net/http'
 require 'json'
 require 'optparse'
 require 'digest'
+require 'dotenv/load'
 
 
 # Define the API endpoint URL
 options = {}
-required_options = %i[url library_id directory_path token]
+required_options = %i[library_id directory_path]
 opt_parser = OptionParser.new do |opts|
   opts.banner = 'Usage: import.sh [options]'
-
-  opts.on('-u', '--url URL', 'Base url of Fack server (required)') do |value|
-    options[:url] = value
-  end
 
   opts.on('-l', '--library ID', 'Library id which contains documents (required)') do |value|
     options[:library_id] = value
@@ -22,9 +19,6 @@ opt_parser = OptionParser.new do |opts|
     options[:directory_path] = value
   end
 
-  opts.on('-t', '--token TOKEN', 'Provide an Auth Token (required)') do |value|
-    options[:token] = value
-  end
 end
 
 begin
@@ -44,10 +38,15 @@ unless missing_options.empty?
   exit 1
 end
 
-api_url = URI.parse(options[:url] + '/api/v1/documents')
+if ENV['ROOT_URL'].empty?
+  puts "Missing ROOT_URL in .env"
+  exit 1
+end
+
+api_url = URI.parse(ENV['ROOT_URL'] + '/api/v1/documents')
 directory_path = options[:directory_path]
 library_id = options[:library_id]
-auth_token = options[:token]
+auth_token = ENV['IMPORT_API_TOKEN']
 
 # Check if the directory path is provided
 if directory_path.nil? || library_id.nil?

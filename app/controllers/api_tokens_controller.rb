@@ -10,7 +10,7 @@ class ApiTokensController < ApplicationController
 
   # GET /api_tokens or /api_tokens.json
   def index
-    @api_tokens = ApiToken.all.where(user_id: current_user.id)
+    @api_tokens = ApiToken.all.where(user_id: current_user.id).order(last_used: :desc)
   end
 
   # GET /api_tokens/1 or /api_tokens/1.json

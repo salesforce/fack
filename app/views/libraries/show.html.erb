@@ -1,5 +1,4 @@
 <% content_for :title, @library.name %>
-
 <div class="mx-auto">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
@@ -8,27 +7,31 @@
     <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name%></h1>
     <%= link_to 'Edit', edit_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
   </div>
-  <div class="py-2 text-stone-500 font-bold text-xs ">
-    Owner <span class="text-stone-500 font-light "><%= (@library.user.email) %> </span> |
-    Created <span class="text-stone-500 font-light  "><%= time_ago_in_words(@library.created_at) %> ago</span> |
-    ID <span class="p-2 font-light border-2 border-stone-500 text-stone-700 rounded"><%= @library.id %></span>
+  <div class="py-2 text-stone-500 text-xs ">
+    Owner <span class="text-stone-500 font-bold "><%= (@library.user.email) %> </span> |
+    Created <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.created_at) %> ago</span>
+    <% if @library.source_url.present? %>
+      <div class="text-xs mt-2">
+        Source: <%= link_to @library.source_url, @library.source_url, class: "text-sky-500" %>
+      </div>
+    <% end %>
   </div>
-  <ul class="flex bg-stone-300 my-3 rounded-lg border">
+  <ul class="flex bg-sky-800 my-3 rounded-lg border">
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-bold text-stone-500 text-xs">Documents</label>
-      <p class="text-stone-900 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
+      <label class="font-light text-stone-200 text-xs">Documents</label>
+      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-bold text-stone-500 text-xs">Average Token Count</label>
-      <p class="text-stone-900 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
+      <label class="font-light text-stone-200 text-xs">Average Token Count</label>
+      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
     </li>
-        <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-bold text-stone-500 text-xs">Disabled Docs</label>
-      <p class="text-stone-900 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
+    <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
+      <label class="font-light text-stone-200 text-xs">Disabled Docs</label>
+      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2  border-stone-300 text-center">
-      <label class="font-bold text-stone-500 text-xs">Docs without Embedding</label>
-      <p class="text-stone-900 text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
+      <label class="font-light text-stone-200 text-xs">Docs without Embedding</label>
+      <p class="text-stone-200 text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
     </li>
   </ul>
   <h2 class="text-xl text-stone-600 pt-4">Documents</h2>

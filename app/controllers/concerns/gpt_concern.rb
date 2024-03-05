@@ -64,7 +64,7 @@ module GptConcern
       messages: [
         { role: 'user', content: prompt }
       ],
-      model: 'gpt-3.5-turbo-16k',
+      model: ENV['EGPT_GEN_MODEL'] || 'gpt-3.5-turbo-16k',
       # Add additional parameters as required by OpenAI
     }
 

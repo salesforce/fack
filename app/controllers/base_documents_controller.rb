@@ -4,7 +4,6 @@ class BaseDocumentsController < ApplicationController
   before_action :can_manage_documents?, only: %i[edit create update]
 
   include Hashable
-  include SalesforceGptConcern
 
   # GET /documents or /documents.json
   def index

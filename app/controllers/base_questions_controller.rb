@@ -1,6 +1,5 @@
 class BaseQuestionsController < ApplicationController
   before_action :set_question, only: %i[show edit update destroy]
-  include SalesforceGptConcern
   include NeighborConcern
 
   # GET /questions or /questions.json

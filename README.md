@@ -365,6 +365,12 @@ Get the id of the library from the URL.
 You can clone your doc repo or have an directory anywhere on your computer.
 
 ### 4. Run the import script
+Set the variables in .env
+```
+IMPORT_API_TOKEN=<your token>
+ROOT_URL=<root url>  # "http://localhost:3000" if you are testing locally.
+```
+
 ```
 ./import.sh -u http://localhost:3000 -d <path_to_your_docs> -l <library_id> -t <your_token>
 ```

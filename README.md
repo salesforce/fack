@@ -1,11 +1,17 @@
 # What is Fack?
-Fack aims to answer frequently asked questions using Generative AI.
+Fack answers frequently asked questions using Generative AI.
 Here is an example:
 ![question](public/example-question.png)
 
 ## Use Cases
-- Enable ChatGPT-like interface on your internal documents
-- Provide backend for chat bot question/answer service
+At Salesforce, we use fack for internal Q&A.  We feed documents and summarized slack threads to fack.  
+In some channels, we see up to 40% of our support requests receive helpful answers from fack.
+
+We are experiementing with other use cases like:
+- Improving incident resolution by quickly finding suggested solutions
+- Translating between query languages
+
+Almost any RAG-based solution can be quickly implmented in fack.
 
 ## Why is it Called Fack?
 The term FAQ, or Frequently Asked Questions, is often pronounced [fack](https://english.stackexchange.com/questions/4165/what-is-the-commonly-accepted-pronunciation-of-faq).

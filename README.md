@@ -83,14 +83,14 @@ rails db:migrate
 ## OpenAI key from https://platform.openai.com/account/api-keys
 OPENAI_API_KEY=<openai token>
 
-## OR SALESFORCE EINSTEIN
+## OR Salesforce Einstein credentials from your Org
 SALESFORCE_CONNECT_ORG_URL=
 SALESFORCE_CONNECT_CLIENT_ID=
 SALESFORCE_CONNECT_CLIENT_SECRET=
 SALESFORCE_CONNECT_USERNAME=
 SALESFORCE_CONNECT_PASSWORD=
 
-# https://fack.yourdomain.com.  Used to generate URLs in the answers.
+# i.e. https://fack.yourdomain.com or http://localhost:3000 Used to generate URLs in the answers.
 ROOT_URL=
 
 ## SAML/SSO Metadata URL (OPTIONAL)
@@ -99,14 +99,14 @@ SSO_METADATA_URL=
 ## Max number of document tokens to send to the GPT prompt. (OPTIONAL)
 MAX_PROMPT_DOC_TOKENS=
 
-## Max tokens to send in the prompt (DEFAULT 10,000)
+## Max tokens to send in the prompt (OPTIONAL, DEFAULT 10,000)
 EGPT_MAX_TOKENS=
 
 ## Which OpenAI model to use. (OPTIONAL)
 EGPT_GEN_MODEL=
 
-## Disable Password Login if you have SSO enabled.  (true/false)
-DISABLE_PASSWORD_LOGIN=
+## Disable Password Login if you have SSO enabled.  (OPTIONAL)
+DISABLE_PASSWORD_LOGIN=<true/false>
 ```
 
 5. Open a new terminal and start the Background job for AI Calls

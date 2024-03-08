@@ -10,7 +10,7 @@
 unless User.find_by(email: 'admin@fack.com')
     User.create!(
       email: 'admin@fack.com',
-      password: '2Testai!',
+      password: ENV['TEST_PASSWORD'],
       admin: true,
       created_at: Time.now,
       updated_at: Time.now

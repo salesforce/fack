@@ -5,3 +5,14 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+# Check if the admin user already exists to avoid creating duplicates
+unless User.find_by(email: 'admin@fack.com')
+    User.create!(
+      email: 'admin@fack.com',
+      password: ENV['TEST_PASSWORD'],
+      admin: true,
+      created_at: Time.now,
+      updated_at: Time.now
+    )
+  end

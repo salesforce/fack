@@ -79,7 +79,11 @@ rails db:migrate
 ```
 4. Create a .env file in the root directory.  Provide these variables.
 ```
-# REQUIRED
+# LLM AUTH.  You need to provide an OpenAI Key or a Salesforce Einstein Org
+## OpenAI key from https://platform.openai.com/account/api-keys
+OPENAI_API_KEY=<openai token>
+
+## OR SALESFORCE EINSTEIN
 SALESFORCE_CONNECT_ORG_URL=
 SALESFORCE_CONNECT_CLIENT_ID=
 SALESFORCE_CONNECT_CLIENT_SECRET=

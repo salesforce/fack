@@ -76,7 +76,10 @@ bundle
 ```
 rails db:create
 rails db:migrate
+TEST_PASSWORD='<your_password>' rails db:seed
 ```
+Set TEST_PASSWORD to an 8+ character string with a number, uppercase letter and special character.  '2Testai!' as an example.
+
 4. Create a .env file in the root directory.  Provide these variables.
 ```
 # LLM AUTH.  You need to provide an OpenAI Key or a Salesforce Einstein Org
@@ -122,7 +125,7 @@ You should see:
 rails s
 ```
 
-Open http://localhost:3000
+Open http://localhost:3000 and login with admin@fack.com as the username and the TEST_PASSWORD you set earlier.
 
 ## Testing
 ```

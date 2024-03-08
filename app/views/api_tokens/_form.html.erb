@@ -10,9 +10,16 @@
       </ul>
     </div>
   <% end %>
+
   <div class="my-5">
     <%= form.label :name, style: "display: block" %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+
+  <!-- User ID selection -->
+  <div class="my-5">
+    <%= form.label :user_id, style: "display: block" %>
+    <%= form.collection_select :user_id, User.all, :id, :email, { prompt: 'Select User' }, { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
   </div>
 
   <div class="inline">

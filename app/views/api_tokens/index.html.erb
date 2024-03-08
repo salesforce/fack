@@ -15,6 +15,9 @@
         CREATED
       </div>
       <div class="w-1/6 px-2">
+        USER
+      </div>
+      <div class="w-1/6 px-2">
         LAST USED
       </div>
       <div class="w-1/6 px-2">
@@ -31,7 +34,9 @@
         </div>
         <div class="w-1/6 px-2">
           <%= time_ago_in_words(api_token.created_at) %> ago
-          <span class="text-stone-500 text-xs">by <%= api_token.user.email %></span>
+        </div>
+        <div class="w-1/6 px-2">
+          <span class="text-stone-500 text-sm"><%= api_token.user.email %></span>
         </div>
         <div class="w-1/6 px-2 <%= 'font-bold text-green-500' if api_token.last_used && api_token.last_used > 7.days.ago %>">
           <% if api_token.last_used %>
@@ -44,8 +49,10 @@
           ...<%= api_token.token.last(4) %>
         </div>
         <div class="w-1/6 px-2 flex items-center">
-          <%= button_to "Delete", api_token_path(api_token), method: :delete, class: "rounded-lg py-1 px-3 bg-gray-200 hover:bg-gray-300 text-red-500 font-medium" %>
-          <%= link_to "Edit", edit_api_token_path(api_token), class: "rounded-lg ml-2 py-1 px-3 bg-gray-200 hover:bg-gray-300 font-medium" %>
+          <% if current_user_is_admin? %>
+            <%= button_to "Delete", api_token_path(api_token), method: :delete, class: "rounded-lg py-1 px-3 bg-gray-200 hover:bg-gray-300 text-red-500 font-medium" %>
+            <%= link_to "Edit", edit_api_token_path(api_token), class: "rounded-lg ml-2 py-1 px-3 bg-gray-200 hover:bg-gray-300 font-medium" %>
+          <% end %>
         </div>
       </li>
     <% end %>

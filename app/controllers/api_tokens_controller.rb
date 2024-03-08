@@ -10,7 +10,7 @@ class ApiTokensController < ApplicationController
 
   # GET /api_tokens or /api_tokens.json
   def index
-    @api_tokens = ApiToken.all.where(user_id: current_user.id).order(last_used: :desc)
+    @api_tokens = ApiToken.all.order(last_used: :desc)
   end
 
   # GET /api_tokens/1 or /api_tokens/1.json
@@ -43,7 +43,6 @@ class ApiTokensController < ApplicationController
   # POST /api_tokens or /api_tokens.json
   def create
     @api_token = ApiToken.new(api_token_params)
-    @api_token.user_id = current_user.id
 
     respond_to do |format|
       if @api_token.save
@@ -84,6 +83,6 @@ class ApiTokensController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def api_token_params
-    params.require(:api_token).permit(:name)
+    params.require(:api_token).permit(:name, :user_id)
   end
 end

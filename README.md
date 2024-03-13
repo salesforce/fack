@@ -379,7 +379,7 @@ ROOT_URL=<root url>  # "http://localhost:3000" if you are testing locally.
 ```
 
 ```
-./import.sh -u http://localhost:3000 -d <path_to_your_docs> -l <library_id> -t <your_token>
+./import.sh -u http://localhost:3000 -d <path_to_your_docs> -l <library_id>
 ```
 
 ### 5. Verify and Test

@@ -205,7 +205,7 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
@@ -237,22 +237,22 @@ Coming soon
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | document  |  required | text                    | The question to ask of the documentation   |
-> | library_id  |  required | valid library id (reference to library)            |  |    
-> | external_id  |  optional | text          | a unique id provided by the client.  If a POST request has the same external_id as an existing record, the record will be updated instead of created.  |    
+> | document  |  required | text                    | The content of the document   |
+> | library_id  |  required | The ID of the library to which this document will be added            |  
+> | external_id  |  optional | text          | A unique ID provided by the client. If a POST request includes the same external_id as an existing record, the record will be updated instead of created. |    
 
 
 ##### Responses
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `201`         | `text/plain;charset=UTF-8`        | `Document created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Authorization: Bearer <token>" --data @document.json <HOST>/api/v1/documents
+>  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}' <HOST>/api/v1/documents
 > ```
 
 </details>
@@ -271,7 +271,7 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        | `Document created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
@@ -324,7 +324,7 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL

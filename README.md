@@ -513,7 +513,7 @@ Each object in the `documents` array includes:
 ##### Example cURL
 
 >```
->curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries?page=1"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
 >```
 
 >```

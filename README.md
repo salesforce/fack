@@ -201,7 +201,8 @@ Coming soon
 > | question  |   | text                    | The question to ask of the documentation   |
 > | status  |   | pending, generating, generated, failed         | The status of the generated answer.  Poll every 5 seconds until the status is generated or failed.   |    
 > | able_to_answer  |   |  boolean        | Was the GPT able to generate an answer? (true/false)  |    
-
+> | url        |      | text       | URL to access the question                          |
+> | answer        |      | text       | Answer to the question                          |
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
@@ -226,6 +227,71 @@ Coming soon
 >}
 > ```
 
+</details>
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/questions</b></code> <code>List Questions</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| questions |      | array     | An array of question objects, each containing question details |
+
+Each object in the `questions` array includes:
+
+| name       | type | data type  | description                                         |
+|-------------|----------|-----------|----------------------------------------------|
+| id          |          | integer   | The ID of the question                       |
+| question    |          | text      | The content of the question                  |
+| status      |          | text      | The status of the question (e.g., generated) |
+| answer      |          | text      | The answer to the question                   |
+| url         |          | text      | URL to access the question                   |
+| created_at  |          | datetime  | The creation date and time of the question   |
+| updated_at  |          | datetime  | The last update date and time of the question|
+
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of questions     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/questions"
+>```
+
+>```javascript
+> {
+>   "questions": [
+>     {
+>       "id": 226,
+>       "question": "how do i setup a new service?",
+>       "status": "generated",
+>       "answer": "# ANSWER\nTo set up ...",
+>       "created_at": "2023-11-03T17:28:43.625Z",
+>       "updated_at": "2023-11-03T17:28:43.625Z",
+>       "url": "http://localhost:3000/questions/226.json"
+>     },
+>     {
+>       "id": 227,
+>       "question": "how do i use gen ai?",
+>       "status": "generated",
+>       "answer": "# ANSWER\n...",
+>       "url": "http://localhost:3000/questions/227.json",
+>       "created_at": "2023-11-14T01:55:11.731Z",
+>       "updated_at": "2024-03-01T22:58:55.865Z"
+>     }
+>   ]
+> }
+>```
 </details>
      
 #### Documents
@@ -276,10 +342,79 @@ Coming soon
 
 ##### Example cURL
 
-> ```javascript
+> ```
 >  curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/documents/<id>
 > ```
 
+> ```
+> {
+>  "id": 1,
+>  "document": "# QUESTION\nHow do I use gen ai?\n\n# ANSWER\n...",
+>  "url": "http://localhost:3000/documents/1",
+>  "length": 97,
+>  "created_at": "2023-11-14T01:55:11.731Z",
+>  "updated_at": "2024-03-01T22:58:55.865Z"
+> }
+> ```
+</details>
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/documents</b></code> <code>List Documents</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| documents |      | array     | An array of document objects, each containing document details |
+
+Each object in the `documents` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the document                              |
+| document   |      | text       | The content of the document                         |
+| url        |      | text       | URL to access the document                          |
+| created_at |      | datetime   | The creation date and time of the document          |
+| updated_at |      | datetime   | The last update date and time of the document       |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of documents     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/documents?page=1"
+>```
+
+>```javascript
+>{
+>  "documents": [
+>    {
+>      "id": 1,
+>      "document": "# QUESTION\nHow do I use gen ai?\n\n# ANSWER\nThere is no direct answer provided in the conversation.",
+>      "url": "http://localhost:3000/documents/1",
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "document": "# QUESTION\nHow do I integrate API?\n\n# ANSWER\nTo integrate an API, first identify the API you need to integrate with...",
+>      "url": "http://localhost:3000/documents/2",
+>      "created_at": "2023-12-14T02:55:11.731Z",
+>      "updated_at": "2024-01-02T23:58:55.865Z"
+>    }
+>    ...
+>  ]
+>}
+>```
 </details>
 
      
@@ -329,11 +464,79 @@ Coming soon
 
 ##### Example cURL
 
-> ```javascript
+> ```
 > curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/libraries/<id>
 > ```
 
+>```javascript
+>{
+>  "id": 1,
+>  "name": "My Docs",
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/libraries/1"
+>}
+>```
+
 </details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/libraries</b></code> <code>List Libraries</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| libraries |      | array     | An array of library objects, each containing library details |
+
+Each object in the `documents` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the library                              |
+| name        |      | text       | Name of the library                          |
+| created_at |      | datetime   | The creation date and time of the library          |
+| updated_at |      | datetime   | The last update date and time of the library       |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of libraries     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
+>```
+
+>```
+>{
+>  "libraries": [
+>    {
+>      "id": 1,
+>      "name": "My Library",
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "name": "My Second Library",
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
 
 # Guides
 

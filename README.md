@@ -276,10 +276,20 @@ Coming soon
 
 ##### Example cURL
 
-> ```javascript
+> ```
 >  curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/documents/<id>
 > ```
 
+> ```
+> {
+>  "id": 1,
+>  "document": "# QUESTION\nHow do I use gen ai?\n\n# ANSWER\n...",
+>  "url": "http://localhost:3000/documents/1",
+>  "length": 97,
+>  "created_at": "2023-11-14T01:55:11.731Z",
+>  "updated_at": "2024-03-01T22:58:55.865Z"
+> }
+> ```
 </details>
 
      
@@ -329,9 +339,19 @@ Coming soon
 
 ##### Example cURL
 
-> ```javascript
+> ```
 > curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/libraries/<id>
 > ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "name": "My Docs",
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/libraries/1"
+>}
+>```
 
 </details>
 

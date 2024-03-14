@@ -205,7 +205,7 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        |                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
@@ -238,7 +238,7 @@ Coming soon
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | document  |  required | text                    | The content of the document   |
-> | library_id  |  required | The ID of the library to which this document will be added            |  
+> | library_id  |  required | text | The ID of the library to which this document will be added            |  
 > | external_id  |  optional | text          | A unique ID provided by the client. If a POST request includes the same external_id as an existing record, the record will be updated instead of created. |    
 
 
@@ -252,14 +252,14 @@ Coming soon
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}' <HOST>/api/v1/documents
+>  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}' http://localhost:3000/api/v1/documents
 > ```
 
 </details>
     
     
 <details>
- <summary><code>GET</code> <code><b>/api/v1/documents/<id></b></code> <code>Retrieve Document</code></summary>
+ <summary><code>GET</code> <code><b>/api/v1/documents/_id_</b></code> <code>Retrieve Document</code></summary>
 
 ##### Parameters
 
@@ -271,13 +271,13 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `text/plain;charset=UTF-8`        | `Document created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        |                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
->  curl -X GET -H "Authorization: Bearer <token>" <HOST>/api/v1/documents/<id>
+>  curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/documents/<id>
 > ```
 
 </details>
@@ -305,7 +305,7 @@ Coming soon
 ##### Example cURL
 
 > ```javascript
-> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Library Name"}' <HOST>/api/v1/libraries
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Library Name"}' http://localhost:3000/api/v1/libraries
 > ```
 
 </details>
@@ -324,13 +324,13 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
+> | `200`         | `text/plain;charset=UTF-8`        ||
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
-> curl -X GET -H "Authorization: Bearer <token>" <HOST>/api/v1/libraries/<id>
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/libraries/<id>
 > ```
 
 </details>

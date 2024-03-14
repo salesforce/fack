@@ -186,7 +186,7 @@ Coming soon
     
     
 <details>
- <summary><code>GET</code> <code><b>/api/v1/questions/<id></b></code> <code>Retrieve Question</code></summary>
+ <summary><code>GET</code> <code><b>/api/v1/questions/_id_</b></code> <code>Retrieve Question</code></summary>
 
 ##### Parameters
 
@@ -299,20 +299,20 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `201`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Authorization: Bearer <token>" --data @library.json <HOST>/api/v1/libraries
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Library Name"}' <HOST>/api/v1/libraries
 > ```
 
 </details>
     
     
 <details>
- <summary><code>GET</code> <code><b>/api/v1/library/<id></b></code> <code>Retrieve Library</code></summary>
+ <summary><code>GET</code> <code><b>/api/v1/library/_id_</b></code> <code>Retrieve Library</code></summary>
 
 ##### Parameters
 
@@ -324,13 +324,13 @@ Coming soon
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `201`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
->  curl -X GET -H "Authorization: Bearer <token>" <HOST>/api/v1/libraries/<id>
+> curl -X GET -H "Authorization: Bearer <token>" <HOST>/api/v1/libraries/<id>
 > ```
 
 </details>

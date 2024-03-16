@@ -64,7 +64,7 @@ process_directory() {
     elif [[ $file_path == *.md || $file_path == *.mdx ]]; then
       echo -e "\n# Processing: $file_path"
       local file_content=$(<"$file_path")
-      local external_id=$(md5 "$file_path" | cut -d' ' -f1)
+      local external_id=$(md5 -q "$file_path")
       local title=$(basename "$file_path")
       local data_json=$(jq -n \
         --arg doc "$file_content" \

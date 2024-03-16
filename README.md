@@ -574,17 +574,24 @@ Get the id of the library from the URL.
 ### 3. Locate the Directory with your Documents
 You can clone your doc repo or have an directory anywhere on your computer.
 
-### 4. Run the import script
-Set the variables in .env
+### 4. Set the variables in .env
 ```
 IMPORT_API_TOKEN=<your token>
 ROOT_URL=<root url>  # "http://localhost:3000" if you are testing locally.
 ```
+### 5. Install jq
+jq is a dependency.
 
+On mac:
 ```
-./import.sh -u http://localhost:3000 -d <path_to_your_docs> -l <library_id>
+brew install jq
 ```
 
-### 5. Verify and Test
+### 6. Run the import script
+```
+./import.sh -l <library_id> -d <path_to_your_docs>
+```
+
+### 7. Verify and Test
 1. Go to /libraries and click on the library you used.
 2. See if the documents from your import are listed.

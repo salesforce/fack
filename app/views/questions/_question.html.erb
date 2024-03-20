@@ -3,8 +3,16 @@
     <h1 class="text-3xl font-light p-4 rounded-t bg-sky-800 text-sky-200"><%= question.question %></h1>
     <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="">
         <%= time_ago_in_words(question.created_at) %> ago by <%= question.user.email %> </span>
-        <div><%= link_to "Source: " + question.source_url, question.source_url , class: "text-xs text-sky-500 px-4" unless question.source_url.blank?%></div>
+      <div><%= link_to "Source: " + question.source_url, question.source_url , class: "text-xs text-sky-500 px-4" unless question.source_url.blank?%></div>
     </p>
+    <% if @libraries.present? %>
+      <p class="text-xs text-stone-500 px-4 py-2">Libraries Included:
+        <% @libraries.each do |library| %>
+          <span class="bg-stone-800 mx-1 p-1 rounded text-center"><%= link_to library.name, library , class: "text-xs text-sky-500 hover:underline", target: "_new" %>
+          </span>
+        <% end %>
+      </p>
+    <% end %>
     <div class="markdown-content font-light p-4 bg-stone-50 border-t border-stone-700">
       <% if @question.pending? || @question.generating? %>
         <div class="animate-pulse flex space-x-4">

@@ -12,8 +12,12 @@ class GenerateAnswerJob < ApplicationJob
     question.embedding = get_embedding(question.question)
 
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
-    related_docs = related_docs.where(library_id: question.library_id) if question.library_id.present?
-
+    
+    question.library_ids_included.push(question.library_id) if question.library_id
+    if question.library_ids_included.present? && question.library_ids_included.none?(&:nil?) && question.library_ids_included.length > 0
+      related_docs = related_docs.where(library_id: question.library_ids_included)
+    end
+    
     max_docs = (ENV['MAX_DOCS'] || 7).to_i
     related_docs = related_docs.first(max_docs)
 

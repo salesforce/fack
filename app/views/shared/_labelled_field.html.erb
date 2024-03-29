@@ -1,5 +1,4 @@
-    
-<div class="flex">
-  <span class="w-1/4 font-bold items-end text-stone-700"><%= label %> </span> 
-  <%= data %>
+<div class="grid grid-cols-2 gap-4">
+  <div class="font-bold text-stone-700 flex items-end"><%= label %></div>
+  <div class="flex items-start"><%= block_given? ? yield : data %></div>
 </div>

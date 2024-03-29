@@ -1,7 +1,25 @@
-<div id="<%= dom_id api_token %>">
-  <h1 class="text-2xl font-light my-3">Token Name: <%= api_token.name%></h1>
-  <%= render 'shared/labelled_field', label: "Created ", data: api_token.created_at %>
-  <%= render 'shared/labelled_field', label: "User ", data: api_token.user.email %>
-  <%= render 'shared/labelled_field', label: "Last used ", data: api_token.last_used %>
-  <%= render 'shared/labelled_field', label: "Token ", data: @show_token ? api_token.token + " (Copy this token.  It is shown only once.)" : "..." + api_token.token.last(4) %>
+<div id="<%= dom_id(api_token) %>">
+  <h1 class="text-2xl font-light my-3"><%= api_token.name %></h1>
+  <%= render 'shared/labelled_field', label: "Created " do %>
+    <%= api_token.created_at %>
+  <% end %>
+  <%= render 'shared/labelled_field', label: "User " do %>
+    <%= api_token.user.email %>
+  <% end %>
+  <%= render 'shared/labelled_field', label: "Last used " do %>
+    <%= api_token.last_used %>
+  <% end %>
+  <%= render 'shared/labelled_field', label: "Token " do %>
+    <div class="font-mono">
+      <% if @show_token %>
+        <%= api_token.token + ""  %>
+        <button onclick="navigator.clipboard.writeText('<%= api_token.token %>')" class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-1 px-2 rounded">
+          Copy
+        </button>
+        <div class="text-xs text-stone-500">Copy this token. It is shown only once.</div>
+      <% else %>
+        <%= "..." + api_token.token.last(4) %>
+      <% end %>
+    </div>
+  <% end %>
 </div>

@@ -15,8 +15,6 @@ class ApiTokensController < ApplicationController
 
   # GET /api_tokens/1 or /api_tokens/1.json
   def show
-    return if @api_token.user.id != current_user.id
-
     # Mark the token shown so we only show it once
     return if @api_token.shown_once
 
@@ -43,6 +41,7 @@ class ApiTokensController < ApplicationController
   # POST /api_tokens or /api_tokens.json
   def create
     @api_token = ApiToken.new(api_token_params)
+    @api_token.user_id = current_user.id if @api_token.user_id.nil?
 
     respond_to do |format|
       if @api_token.save

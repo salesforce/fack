@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_01_011345) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_29_021336) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -57,11 +57,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_01_011345) do
     t.boolean "disabled"
     t.string "external_id"
     t.boolean "enabled", default: true
+    t.integer "questions_count", default: 0, null: false
     t.index ["created_at"], name: "index_documents_on_created_at"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["user_id"], name: "index_documents_on_user_id"
+  end
+
+  create_table "documents_questions", id: false, force: :cascade do |t|
+    t.bigint "document_id", null: false
+    t.bigint "question_id", null: false
   end
 
   create_table "libraries", force: :cascade do |t|

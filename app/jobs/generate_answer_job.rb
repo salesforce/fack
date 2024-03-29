@@ -79,6 +79,9 @@ class GenerateAnswerJob < ApplicationJob
       max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10000
       next unless (token_count + doc.token_count.to_i) < max_doc_tokens
 
+      # So we can count references to the document
+      question.documents << doc
+
       #prompt += "\n\nTITLE: #{doc.title}\n"
       prompt += "\n\nURL: " + ENV['ROOT_URL'] + document_path(doc) + "\n"
       prompt += doc.to_json(only: %i[id name document title created_at])

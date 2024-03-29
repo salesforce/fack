@@ -1,6 +1,9 @@
 class Question < ApplicationRecord
   has_neighbors :embedding
 
+  has_many :documents_questions
+  has_many :documents, through: :documents_questions
+
   # Tracking helpful answers
   acts_as_votable
 

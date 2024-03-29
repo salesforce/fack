@@ -1,6 +1,9 @@
 class Document < ApplicationRecord
   include PgSearch::Model
 
+  has_many :documents_questions
+  has_many :questions, through: :documents_questions
+
   pg_search_scope :search_by_title_and_document,
                   against: %i[title document],
                   using: {

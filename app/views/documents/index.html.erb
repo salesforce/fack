@@ -20,7 +20,7 @@
   </div>
   <div class="flex-grow flex items-center mt-3">
     <% if params[:sort].nil? %>
-      <%= link_to 'Sort by Questions', 
+      <%= link_to 'Sort by Popularity', 
             request.original_url.include?('?') ? 
                 "#{request.original_url}&sort=questions" : 
                 "#{request.original_url}?sort=questions", 
@@ -36,8 +36,20 @@
         <details class="text-base">
           <summary class="text-md cursor-pointer flex justify-between items-center <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
             <div>
-              <span><%= document.title %> (<%= document.questions_count %>)</span>
-              <div class="text-stone-400 text-xs"><%= time_ago_in_words(document.created_at) %> ago | <%= document.library.name %> </div>
+              <span><%= document.title %></span>
+              <div class="text-stone-400 text-xs mt-1"><%= time_ago_in_words(document.created_at) %> ago | 
+                <div class="inline-flex items-center"> <%= document.library.name %> 
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mx-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                  </svg>
+                  |
+                </div>
+                <div class=" inline-flex items-center">
+                  <%= document.questions_count %> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 ml-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                  </svg>
+                </div>
+              </div>
             </div>
             <a href="<%= url_for(document) %>" class="inline-flex items-center text-sky-500 hover:text-sky-600">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -45,7 +57,7 @@
               </svg>
             </a>
           </summary>
-          <div class="bg-white p-2 rounded-lg mt-2">
+          <div class="bg-white rounded-lg mt-4">
             <% cache document do %>
               <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
             <% end %>

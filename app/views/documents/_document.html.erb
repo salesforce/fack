@@ -1,5 +1,5 @@
 <div id="<%= dom_id document %>">
-  <div class="text-xs text-stone-500 border border-stone-100 rounded-t-lg">
+  <div class="text-xs text-stone-500 border border-stone-200 rounded-t-lg">
     <div class="flex justify-between p-3 bg-sky-800 rounded-t-lg">
       <h1 class="text-3xl font-light text-sky-200"><%= document.title %></h1>
       <%= button_to document_path(@document, toggle_disabled: true),
@@ -23,7 +23,7 @@
         <% end %>
       <% end %>
     </div>
-    <div class="flex justify-between items-center p-3 bg-stone-200">
+    <div class="flex justify-between items-center p-3 bg-stone-50">
       <div class="w-full">
         <% if document.url %>
           <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500",target:"_source" %></p>

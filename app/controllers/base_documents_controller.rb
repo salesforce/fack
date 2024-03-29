@@ -7,7 +7,14 @@ class BaseDocumentsController < ApplicationController
 
   # GET /documents or /documents.json
   def index
-    @documents = Document.all.order(created_at: :desc)
+    @documents = Document.all
+
+    if params[:sort] == "questions"
+      @documents = @documents.order(questions_count: :desc)
+    else 
+      @documents = @documents.order(created_at: :desc)
+    end
+    
     if params[:library_id].present?
       @library = Library.find(params[:library_id])
       @documents = @documents.where(library_id: params[:library_id])

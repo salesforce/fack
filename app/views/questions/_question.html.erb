@@ -1,7 +1,7 @@
 <div id="<%= dom_id question %>" >
   <div class="border rounded-lg">
     <h1 class="text-3xl font-light p-4 rounded-t bg-sky-800 text-sky-200"><%= question.question %></h1>
-    <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="">
+    <p class="text-xs text-stone-500 px-4 py-2 bg-stone-200">Asked <span class="">
         <%= time_ago_in_words(question.created_at) %> ago by <%= question.user.email %> </span>
       <div><%= link_to "Source: " + question.source_url, question.source_url , class: "text-xs text-sky-500 px-4" unless question.source_url.blank?%></div>
     </p>
@@ -13,7 +13,7 @@
         <% end %>
       </p>
     <% end %>
-    <div class="markdown-content font-light p-4 bg-stone-50 border-t border-stone-700">
+    <div class="markdown-content font-light p-4 bg-white border-t border-stone-700">
       <% if @question.pending? || @question.generating? %>
         <div class="animate-pulse flex space-x-4">
           <div class="flex-1 space-y-2">

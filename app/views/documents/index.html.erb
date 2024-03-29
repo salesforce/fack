@@ -45,7 +45,7 @@
               </svg>
             </a>
           </summary>
-          <div class="bg-stone-100 p-2 rounded-lg mt-2">
+          <div class="bg-white p-2 rounded-lg mt-2">
             <% cache document do %>
               <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
             <% end %>

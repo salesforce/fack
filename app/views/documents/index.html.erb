@@ -32,7 +32,7 @@
   <%= paginate @documents %>
   <ul class="space-y-4">
     <% @documents.each do |document| %>
-      <li class="bg-white p-4 rounded shadow group">
+      <li class="bg-white p-4 rounded border border-stone-400 hover:shadow group">
         <details class="text-base">
           <summary class="text-md cursor-pointer flex justify-between items-center <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
             <div>
@@ -58,7 +58,7 @@
               </svg>
             </a>
           </summary>
-          <div class="bg-white rounded-lg mt-4">
+          <div class="rounded-lg mt-4 bg-white">
             <% cache document do %>
               <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
             <% end %>

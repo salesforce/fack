@@ -9,20 +9,18 @@ class BaseDocumentsController < ApplicationController
   def index
     @documents = Document.all
 
-    if params[:sort] == "questions"
-      @documents = @documents.order(questions_count: :desc)
-    else 
-      @documents = @documents.order(created_at: :desc)
-    end
-    
+    @documents = if params[:sort] == 'questions'
+                   @documents.order(questions_count: :desc)
+                 else
+                   @documents.order(created_at: :desc)
+                 end
+
     if params[:library_id].present?
       @library = Library.find(params[:library_id])
       @documents = @documents.where(library_id: params[:library_id])
     end
 
-    if params[:contains].present?
-      @documents = @documents.search_by_title_and_document(params[:contains])
-    end
+    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
     @documents = @documents.page(params[:page])
   end
 
@@ -41,15 +39,22 @@ class BaseDocumentsController < ApplicationController
 
   # POST /documents or /documents.json
   def create
-    # check if external id present
-    external_id = document_params[:external_id]
+    begin
+      # This will attempt to extract the parameters and will raise an error if something goes wrong
+      params = document_params
+    rescue ActionController::ParameterMissing => e
+      return render json: { error: e.message }, status: :bad_request
+    end
+
+    # Proceed with the rest of your method using the safely extracted `params`
+    external_id = params[:external_id]
     @document = Document.find_by_external_id(external_id) if external_id.present?
 
     if @document.nil?
-      @document = Document.new(document_params)
+      @document = Document.new(params)
       @document.user_id = current_user.id
     else
-      @document.assign_attributes(document_params)
+      @document.assign_attributes(params)
     end
 
     respond_to do |format|

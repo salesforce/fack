@@ -582,10 +582,7 @@ ROOT_URL=<root url>  # "http://localhost:3000" if you are testing locally.
 ### 5. Install jq
 jq is a dependency.
 
-On mac:
-```
-brew install jq
-```
+See the [download page](https://jqlang.github.io/jq/download/) for instructions.
 
 ### 6. Run the import script
 ```

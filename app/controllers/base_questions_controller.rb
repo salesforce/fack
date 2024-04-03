@@ -9,7 +9,15 @@ class BaseQuestionsController < ApplicationController
 
   # POST /questions or /questions.json
   def create
-    @question = Question.new(question_params)
+    begin
+      # Attempt to securely get the parameters
+      params = question_params
+    rescue ActionController::ParameterMissing => e
+      # If there's a missing parameter, return a 400 Bad Request with the error message
+      return render json: { error: e.message }, status: :bad_request
+    end
+
+    @question = Question.new(params)
     @question.user_id = current_user.id
     @question.status = 'pending'
 
@@ -23,6 +31,10 @@ class BaseQuestionsController < ApplicationController
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @question.errors, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(@question, partial: 'questions/form',
+                                                               locals: { question: @question })
+        end
       end
     end
   end

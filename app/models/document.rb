@@ -15,6 +15,7 @@ class Document < ApplicationRecord
   belongs_to :user
 
   validates :library, presence: true
+  validates :title, presence: true
 
   # Prevent DDOS and generally excessively large docs
   validates :token_count, presence: true

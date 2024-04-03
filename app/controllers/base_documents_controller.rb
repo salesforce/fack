@@ -34,6 +34,7 @@ class BaseDocumentsController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to documents_path }
+      format.json { render :show, status: :ok, location: @document }
     end
   end
 

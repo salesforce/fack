@@ -6,7 +6,7 @@
   </div>
   <ul class="border mt-2 rounded-xl">
     <% @libraries.each do |library| %>
-      <li class="bg-gray-800 text-white last:rounded-b-xl first:rounded-t-xl hover:bg-gray-900 border-b border-stone-200 last:border-b-0">
+      <li class="bg-white text-gray-800 last:rounded-b-xl first:rounded-t-xl hover:bg-gray-800 hover:text-white border-b border-stone-200 last:border-b-0">
         <%= link_to library_path(library) do %>
           <div class="p-3 flex justify-between items-center space-x-4">
             <div class="flex-1">

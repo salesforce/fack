@@ -154,20 +154,20 @@ Coming soon
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | question  |  required | text                    | The question to ask of the documentation   |
-> | library_ids  |  optional | comma separated ids (reference to library)            | The libraries to limit the answers   |    
+> | library_ids_included  |  optional | comma separated ids (reference to library)            | The libraries to limit the answers   |    
 
 
 ##### Responses
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Question created successfully`                                     |
+> | `201`         | `text/plain;charset=UTF-8`        | JSON Object                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
-> curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" -d '{"question": { "question" : "how do i setup falcon?"}}' http://localhost:3000/api/v1/questions
+> curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" -d '{"question": { "question" : "how do i setup falcon?", library_ids_included: ["1"] }}' http://localhost:3000/api/v1/questions
 > ```
 
 > ```javascript
@@ -178,6 +178,7 @@ Coming soon
 >   "answer": "# ANSWER\nTo set up Falcon, you need to install the Falcon CLI. Here are the steps to install the Falcon CLI:\n\n1. For macOS users, install the Falcon CLI with brew:\n   ```\n   brew tap sfdc-falcon/cli git[@git.soma.salesforce.com:sfdc-falcon/>homebrew-cli.git](https://git.soma.salesforce.com/git.soma.salesforce.com:sfdc-falcon/homebrew-cli.git)\n   brew install falcon-cli\n   ```\n\n2.  For Linux users, install the Falcon CLI with `curl`:\n   ```\n   curl -sSL https://sfdc.co/get-falcon-cli | bash\n   ```\n\n3. Verify that you've successfully installed the CLI by logging in:\n   ```\n   falcon login\n   ```\n\nYou can find more information about setting up the Falcon CLI in the [Install the Falcon Command Line Interface (CLI)](https://git.soma.salesforce.com/tech-enablement/falcon-paved-path/blob/main/install-falcon-cli.md) document.\n\n# SOURCES\n- [Install the Falcon Command Line Interface (CLI)](https://git.soma.salesforce.com/tech-enablement/falcon-paved-path/blob/main/install-falcon-cli.md)",
 >   "created_at": "2023-11-03T17:28:43.625Z",
 >   "updated_at": "2023-11-03T17:28:43.625Z",
+>   "library_ids_included": ["1"],
 >   "url": "http://localhost:3000/questions/226.json"
 >}
 > ```

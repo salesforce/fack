@@ -110,3 +110,5 @@ gem 'acts_as_votable'
 
 gem 'pg_search'
 
+
+gem "pundit", "~> 2.3"

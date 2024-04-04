@@ -1,7 +1,6 @@
 class BaseDocumentsController < ApplicationController
   helper_method :can_manage_documents?
   before_action :set_document, only: %i[show edit update]
-  before_action :can_manage_documents?, only: %i[edit create update]
 
   include Hashable
 
@@ -25,16 +24,28 @@ class BaseDocumentsController < ApplicationController
   end
 
   def update
-    if params[:toggle_disabled]
-      @document.update(enabled: !@document.enabled)
-    else
-      @document.update(document_params)
+    begin
+      # This will attempt to extract the parameters and will raise an error if something goes wrong
+      params = document_params
+    rescue ActionController::ParameterMissing => e
+      respond_to do |format|
+        format.html { render inline: "<html><body><h1>Error:</h1><p><%= h error %></p></body></html>", status: :bad_request, locals: { error: e.message } }
+        format.json { render json: { error: e.message }, status: :bad_request }
+      end
     end
 
+    authorize @document
+
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to documents_path }
-      format.json { render :show, status: :ok, location: @document }
+      if @document.update(params)
+        EmbedDocumentJob.perform_later(@document.id) if @document.previous_changes.include?('check_hash')
+
+        format.html { redirect_to document_url(@document), notice: 'Document was successfully updated.' }
+        format.json { render :show, status: :ok, location: @document }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @document.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -57,6 +68,8 @@ class BaseDocumentsController < ApplicationController
     else
       @document.assign_attributes(params)
     end
+
+    authorize @document
 
     respond_to do |format|
       if @document.save
@@ -92,6 +105,6 @@ class BaseDocumentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def document_params
-    params.require(:document).permit(:document, :title, :external_id, :url, :library_id)
+    params.require(:document).permit(:document, :title, :enabled, :external_id, :url, :library_id)
   end
 end

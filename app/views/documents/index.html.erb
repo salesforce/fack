@@ -35,7 +35,7 @@
         <details class="text-base">
           <summary class="text-md cursor-pointer flex justify-between items-center <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
             <div>
-              <span><%= document.title %></span>
+              <span class="text-2xl"><%= document.title %></span>
               <div class="text-stone-400 text-xs mt-1">
                 <div class="inline-flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1 text-stone-900">
@@ -67,7 +67,7 @@
               </svg>
             </a>
           </summary>
-          <div class="rounded-lg mt-4 bg-white">
+          <div class="rounded-lg mt-4 bg-white font-light">
             <% cache document do %>
               <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
             <% end %>

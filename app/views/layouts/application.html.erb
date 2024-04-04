@@ -94,13 +94,13 @@
       </div>
     </div>
     <main class="p-4">
-      <!--<div id="flash_messages">
+      <div id="flash_messages">
         <% flash.each do |type, message| %>
-          <div class="flash <%= type %>">
+          <div class="<%= flash_class(type) %> mx-auto container p-4 mb-4 text-sm text-white font-semibold rounded-lg" role="alert">
             <%= message %>
           </div>
         <% end %>
-      </div>-->
+      </div>
       <div class="mx-auto container">
         <%= yield %>
       </div>

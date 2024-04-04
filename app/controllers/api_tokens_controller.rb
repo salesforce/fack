@@ -1,22 +1,16 @@
 class ApiTokensController < ApplicationController
   before_action :set_api_token, only: %i[show edit update destroy]
-  before_action :can_manage_tokens?
-
-  def can_manage_tokens?
-    return if current_user.admin?
-
-    handle_bad_authortization
-  end
 
   # GET /api_tokens or /api_tokens.json
   def index
-    @api_tokens = ApiToken.all.order(last_used: :desc)
+    @api_tokens = policy_scope(ApiToken).order(last_used: :desc)
+    authorize ApiToken
   end
 
   # GET /api_tokens/1 or /api_tokens/1.json
   def show
-    # Mark the token shown so we only show it once
-    return if @api_token.shown_once
+    authorize @api_token
+    # Your existing show logic here
 
     # Get the current date and time
     current_time = DateTime.now
@@ -33,15 +27,19 @@ class ApiTokensController < ApplicationController
   # GET /api_tokens/new
   def new
     @api_token = ApiToken.new
+    authorize @api_token
   end
 
   # GET /api_tokens/1/edit
-  def edit; end
+  def edit
+    authorize @api_token
+  end
 
   # POST /api_tokens or /api_tokens.json
   def create
     @api_token = ApiToken.new(api_token_params)
     @api_token.user_id = current_user.id if @api_token.user_id.nil?
+    authorize @api_token
 
     respond_to do |format|
       if @api_token.save
@@ -54,6 +52,7 @@ class ApiTokensController < ApplicationController
 
   # PATCH/PUT /api_tokens/1 or /api_tokens/1.json
   def update
+    authorize @api_token
     respond_to do |format|
       if @api_token.update(api_token_params)
         format.html { redirect_to api_tokens_url, notice: 'Api token was successfully updated.' }
@@ -65,6 +64,8 @@ class ApiTokensController < ApplicationController
 
   # DELETE /api_tokens/1 or /api_tokens/1.json
   def destroy
+    authorize @api_token
+
     @api_token.destroy
 
     respond_to do |format|

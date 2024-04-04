@@ -23,10 +23,10 @@ RSpec.describe ApiTokensController, type: :controller do
         allow(controller).to receive(:current_user).and_return(regular_user)
       end
 
-      it 'does not allow access' do
+      it 'does allow access' do
         get :index
         # Replace this with the expected behavior for non-admin users
-        expect(response).to redirect_to(root_path)
+        expect(response).to be_successful
         # Or, if you return a 403 Forbidden status:
         # expect(response).to have_http_status(:forbidden)
       end

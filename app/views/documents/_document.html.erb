@@ -1,5 +1,5 @@
 <div id="<%= dom_id document %>">
-  <div class="text-xs text-stone-500 border border-stone-200 rounded-t-lg">
+  <div class="text-xs text-stone-500">
     <div class="flex justify-between p-3 bg-sky-800 rounded-t-lg">
       <h1 class="text-3xl font-light text-sky-200"><%= document.title %></h1>
       <%= button_to document_path(@document, toggle_disabled: true),
@@ -23,13 +23,13 @@
         <% end %>
       <% end %>
     </div>
-    <div class="flex justify-between items-center p-3 bg-stone-50">
+    <div class="flex justify-between items-center p-3 bg-stone-300">
       <div class="w-full">
         <% if document.url %>
           <p class="text-xs">Source <%= link_to document.url, document.url, class:"text-sky-500",target:"_source" %></p>
         <% end %>
-        <p class="text-xs "><%= link_to document.library.name, document.library, class:"text-sky-500" if document.library_id %> library</p>
-        <p class=" text-xs text-stone-400">Created <%= time_ago_in_words(document.created_at) %> ago | Updated <%= time_ago_in_words(document.updated_at) %> ago</p>
+        <p class="text-xs">Library <%= link_to document.library.name, document.library, class:"text-sky-500" if document.library_id %></p>
+        <p class="text-xs text-stone-800 mt-1">Created <%= time_ago_in_words(document.created_at) %> ago | Updated <%= time_ago_in_words(document.updated_at) %> ago</p>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
       <%= render partial: 'shared/markdown', locals: {text: document.document } %>
     <% end %>
   </div>
-  <div class="text-xs p-3 text-stone-500 border border-stone-100 bg-stone-800 rounded-b-lg">
+  <div class="text-xs p-3 text-stone-500  bg-stone-800 rounded-b-lg">
     <p class="text-stone-400">Info for nerds:</p>
     <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%>  | External id <%= document.external_id.present? ? document.external_id : " not provided"%></p>
     <p class=""></p>
@@ -47,7 +47,7 @@
 <% if session[:debug] == "true" then %>
   <h1 class="text-3xl font-light py-4 text-stone-500">Embedding</h1>
   <div class="markdown-content leading-5">
-    <div class="whitespace-pre-wrap break-words font-mono p-5 border border-sky-600 rounded-lg bg-stone-200">
+    <div class="break-words font-mono p-5 border border-sky-600 rounded-b-lg bg-stone-200">
       <%= document.embedding unless document.embedding.nil? %>
     </div>
   </div>

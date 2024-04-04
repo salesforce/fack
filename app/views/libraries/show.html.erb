@@ -1,8 +1,6 @@
 <% content_for :title, @library.name %>
 <div class="mx-auto">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
+
   <div class="flex justify-between items-center">
     <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name%></h1>
     <%= link_to 'Edit', edit_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>

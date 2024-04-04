@@ -1,8 +1,5 @@
 <% content_for :title, @question.question %>
 
-<div>
-  <p style="color: green"><%= notice %></p>
-</div>
 <turbo-frame id="question_show">
   <%= render @question %>
   <script>

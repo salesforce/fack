@@ -1,11 +1,11 @@
-<ul class="space-y-4">
+<ul class="space-y-2">
   <% questions.each do |question| %>
-    <li class="bg-stone-50 p-4 rounded shadow hover:bg-white ">
+    <li class="bg-white p-4 rounded hover:shadow border border-stone-300 ">
       <details class="text-base">
         <summary class="relative font-light text-md cursor-pointer flex items-center justify-between">
           <div class="flex items-center">
             <%= render partial: 'question_status_icon', locals: {question: question} %>
-            <%= question.question.truncate(100) %>
+            <span class="text-2xl"><%= question.question.truncate(100) %></span>
             <span class="text-stone-400 text-xs ml-2"><%= time_ago_in_words(question.created_at) %> ago</span>
           </div>
           <div class="text-sky-600 text-sm">

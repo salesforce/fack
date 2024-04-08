@@ -38,8 +38,9 @@ class GenerateAnswerJob < ApplicationJob
             You are a helpful assistant which answers a user's question based on provided documents.
             1. Read the USER QUESTION in the <{{DATA_TAG}}> section
             2. Read the documents in the <CONTEXT> section.   The documents are json formatted documents.  The documents are ordered by relevance from 0-15.  The lower number documents are the most relevant.
-            3. Try to answer the USER QUESTION using only the documents.  If there is conflicting information, reference the conflict and indicate which answer is based on the most recent created date.
-            4. If you cannot answer the user question using the provided documents, respond with "I am unable to answer the question."
+            3a. Try to answer the USER QUESTION using only the documents.  If there is conflicting information, reference the conflict and indicate which answer is based on the most recent created date.
+            3b. In addition to the documents in the <CONTEXT>, you are allowed to answer questions using your prior knowledge on the following topics: #{ENV['ALLOWED_ADDITIONAL_TOPICS'] || "(No additional topics allowed)"}
+            4. If you cannot answer the user question using the provided documents or your knowledge on the allowed additional topics, respond with "I am unable to answer the question."
             5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
             6. Use the "# ANSWER" heading to label your answer.#{'  '}
             7. Under the "# DOCUMENTS" heading, list the title and urls of all documents found in the <CONTEXT> section.
@@ -97,9 +98,6 @@ class GenerateAnswerJob < ApplicationJob
       USER QUESTION:
         #{question.question}
       </{{DATA_TAG}}>
-
-      If you can answer the "USER QUESTION" in the <{{DATA_TAG}}> section using only the information in the <CONTEXT> section, then proceed to generate the requested response.
-      Otherwise, respond with "I am unable to answer the question."
     END_PROMPT
     # Log this later - puts 'Total doc tokens used: ' + token_count.to_s
 

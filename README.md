@@ -336,6 +336,21 @@ Each object in the `questions` array includes:
 
 ##### Responses
 
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| document |      | object     | A document objects |
+
+The `document` object includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the document                              |
+| document   |      | text       | The content of the document                         |
+| title        |      | text       | The title of the document                         |
+| url        |      | text       | URL to access the document                          |
+| created_at |      | datetime   | The creation date and time of the document          |
+| updated_at |      | datetime   | The last update date and time of the document       |
+
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
 > | `200`         | `text/plain;charset=UTF-8`        |                                     |
@@ -351,6 +366,7 @@ Each object in the `questions` array includes:
 > {
 >  "id": 1,
 >  "document": "# QUESTION\nHow do I use gen ai?\n\n# ANSWER\n...",
+>  "title": "How do I use GenAI?",
 >  "url": "http://localhost:3000/documents/1",
 >  "length": 97,
 >  "created_at": "2023-11-14T01:55:11.731Z",
@@ -380,6 +396,7 @@ Each object in the `documents` array includes:
 |------------|------|------------|-----------------------------------------------------|
 | id         |      | integer    | The ID of the document                              |
 | document   |      | text       | The content of the document                         |
+| title        |      | text       | The title of the document                         |
 | url        |      | text       | URL to access the document                          |
 | created_at |      | datetime   | The creation date and time of the document          |
 | updated_at |      | datetime   | The last update date and time of the document       |

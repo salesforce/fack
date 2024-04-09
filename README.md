@@ -304,7 +304,8 @@ Each object in the `questions` array includes:
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | document  |  required | text                    | The content of the document   |
+> | document  |  required | text                    | The content of the document.  10,000 token limit.  |
+> | title  |  required | text                    | The title of the document   |
 > | library_id  |  required | text | The ID of the library to which this document will be added            |  
 > | external_id  |  optional | text          | A unique ID provided by the client. If a POST request includes the same external_id as an existing record, the record will be updated instead of created. |    
 

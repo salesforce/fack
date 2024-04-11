@@ -7,7 +7,9 @@
   </div>
   <div class="py-2 text-stone-500 text-xs ">
     Owner <span class="text-stone-500 font-bold "><%= (@library.user.email) %> </span> |
-    Created <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.created_at) %> ago</span>
+    Created <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.created_at) %> ago</span> |
+    Updated <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.updated_at) %> ago</span>
+
     <% if @library.source_url.present? %>
       <div class="text-xs mt-2">
         Source: <%= link_to @library.source_url, @library.source_url, class: "text-sky-500" %>

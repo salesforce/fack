@@ -16,22 +16,22 @@
       </div>
     <% end %>
   </div>
-  <ul class="flex bg-sky-800 my-3 rounded-lg border">
+  <ul class="flex bg-sky-50 my-3 rounded-lg border text-sky-700 ">
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-light text-stone-200 text-xs">Documents</label>
-      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
+      <label class="font-light text-xs text-stone-500">Documents</label>
+      <p class="text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-light text-stone-200 text-xs">Average Token Count</label>
-      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
+      <label class="font-light text-xs text-stone-500">Average Token Count</label>
+      <p class="text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.average(:token_count).round %> </p>
     </li>
     <li class="w-1/4 p-3 m-2 border-r-2 border-stone-300 text-center">
-      <label class="font-light text-stone-200 text-xs">Disabled Docs</label>
-      <p class="text-stone-200 text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
+      <label class="font-light text-xs text-stone-500">Disabled Docs</label>
+      <p class="text-2xl"><%= @library.documents.empty? ? "None" : @library.documents.where.not(enabled: true).count %> </p>
     </li>
     <li class="w-1/4 p-3 m-2  border-stone-300 text-center">
-      <label class="font-light text-stone-200 text-xs">Docs without Embedding</label>
-      <p class="text-stone-200 text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
+      <label class="font-light  text-xs text-stone-500">Docs without Embedding</label>
+      <p class="text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
     </li>
   </ul>
   <h2 class="text-xl text-stone-600 pt-4">Documents</h2>

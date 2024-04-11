@@ -1,9 +1,9 @@
 <ul class="space-y-4 text-sm">
   <% docs.each_with_index do |document, index| %>
-    <li class="bg-white p-2 rounded shadow leading-8  hover:bg-stone-50">
+    <li class="bg-stone-50 p-2 rounded shadow leading-8  hover:bg-white">
       <div class="block">
-        <span class="text-stone-500 border border-sky-800 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
-        <%= link_to document.title, document, class:"text-sky-400 hover:underline"%>
+        <span class="text-stone-500 border border-sky-900 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
+        <%= link_to document.title, document, class:"text-sky-900 hover:underline"%>
         <div class="text-xs text-stone-400">Created <%= time_ago_in_words(document.created_at) %> ago</div>
       </div>
     </li>

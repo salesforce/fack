@@ -3,7 +3,7 @@
     <li class="bg-stone-50 p-2 rounded shadow leading-8  hover:bg-white">
       <div class="block">
         <span class="text-stone-500 border border-sky-900 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
-        <%= link_to document.title, document, class:"text-sky-900 hover:underline"%>
+        <%= link_to document.title, document, class:"text-stone-900 hover:underline"%>
         <div class="text-xs text-stone-400">Created <%= time_ago_in_words(document.created_at) %> ago</div>
       </div>
     </li>

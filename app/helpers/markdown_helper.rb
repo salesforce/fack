@@ -15,7 +15,7 @@ class CustomRender < Redcarpet::Render::HTML
   
 
   def paragraph(quote)
-    %(<p class="text-stone-600 mb-3 leading-6	">#{quote.gsub("\n", '<br>')}</p>)
+    %(<p class="text-stone-600 mb-3 leading-7	">#{quote.gsub("\n", '<br>')}</p>)
   end
 
   def link(link, _title, content)
@@ -23,13 +23,13 @@ class CustomRender < Redcarpet::Render::HTML
   end
 
   def codespan(quote)
-    %(<code class="block bg-stone-800 rounded text-stone-100 border-stone-500 border m-4 p-2">#{escape_html(quote.gsub("\n",
+    %(<code class="bg-stone-800 rounded text-amber-200 border-stone-500 border m-2">#{escape_html(quote.gsub("\n",
                                                                                                            ''))}</code>)
   end
 
   def block_code(code, _language)
     puts code
-    %(<code class="bg-stone-800 text-white font-light p-5 block">#{escape_html(code)}</code>)
+    %(<code class="block bg-stone-800 text-white font-light p-5">#{escape_html(code)}</code>)
   end
 
   def header(title, level)

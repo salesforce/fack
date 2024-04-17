@@ -1,11 +1,48 @@
-<ul class="space-y-4 text-sm">
-  <% docs.each_with_index do |document, index| %>
-    <li class="bg-stone-50 p-2 rounded shadow leading-8  hover:bg-white">
-      <div class="block">
-        <span class="text-stone-500 border border-sky-900 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
-        <%= link_to document.title, document, class:"text-stone-900 hover:underline"%>
-        <div class="text-xs text-stone-400">Created <%= time_ago_in_words(document.created_at) %> ago</div>
-      </div>
-    </li>
-  <% end %>
-</ul>
+
+  <ul class="space-y-4">
+    <% docs.each do |document| %>
+      <li class="bg-white p-4 rounded border border-stone-400 hover:shadow group">
+        <details class="text-base">
+          <summary class="text-md cursor-pointer flex justify-between items-center <%= 'text-red-500' if document.embedding.nil? || document.token_count.nil? %>">
+            <div>
+              <span class="text-2xl"><%= document.title %></span>
+              <div class="text-stone-400 text-xs mt-1">
+                <div class="inline-flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1 text-stone-900">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                  <%= time_ago_in_words(document.created_at) %>
+                </div>
+                <div class="inline-flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mx-1 text-stone-900">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                  </svg>                <%= document.token_count %> tokens 
+                </div>
+                <div class="inline-flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mx-1 text-stone-900">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+                  </svg> <%= document.library.name %>
+                </div>
+                <div class=" inline-flex items-center <%= "text-orange-500" if document.questions_count > 0 %> ">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3 mx-1 text-stone-900">
+                    <path fill-rule="evenodd" d="M8.914 6.025a.75.75 0 0 1 1.06 0 3.5 3.5 0 0 1 0 4.95l-2 2a3.5 3.5 0 0 1-5.396-4.402.75.75 0 0 1 1.251.827 2 2 0 0 0 3.085 2.514l2-2a2 2 0 0 0 0-2.828.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    <path fill-rule="evenodd" d="M7.086 9.975a.75.75 0 0 1-1.06 0 3.5 3.5 0 0 1 0-4.95l2-2a3.5 3.5 0 0 1 5.396 4.402.75.75 0 0 1-1.251-.827 2 2 0 0 0-3.085-2.514l-2 2a2 2 0 0 0 0 2.828.75.75 0 0 1 0 1.06Z" clip-rule="evenodd" />
+                  </svg>    <%= document.questions_count %> references
+                </div>
+              </div>
+            </div>
+            <a href="<%= url_for(document) %>" class="inline-flex items-center text-sky-800 hover:text-sky-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </summary>
+          <div class="rounded-lg mt-4 bg-white font-light">
+            <% cache document do %>
+              <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+            <% end %>
+          </div>
+        </details>
+      </li>
+    <% end %>
+  </ul>

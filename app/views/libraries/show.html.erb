@@ -1,15 +1,18 @@
 <% content_for :title, @library.name %>
 <div class="mx-auto">
-
   <div class="flex justify-between items-center">
-    <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name%></h1>
-    <%= link_to 'Edit', edit_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name %></h1>
+    <div class="flex space-x-2">
+      <% if policy(@library).edit? %>
+        <%= link_to 'New Document', new_document_path(library_id: @library.id), class: "rounded-lg p-2 bg-sky-600 text-white" %>
+        <%= link_to 'Edit', edit_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white" %>
+      <% end %>
+    </div>
   </div>
   <div class="py-2 text-stone-500 text-xs ">
     Owner <span class="text-stone-500 font-bold "><%= (@library.user.email) %> </span> |
     Created <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.created_at) %> ago</span> |
     Updated <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.updated_at) %> ago</span>
-
     <% if @library.source_url.present? %>
       <div class="text-xs mt-2">
         Source: <%= link_to @library.source_url, @library.source_url, class: "text-sky-500" %>
@@ -34,7 +37,7 @@
       <p class="text-2xl"> <%= @library.documents.empty? ? "None" : @library.documents.where(embedding: nil).count %> </p>
     </li>
   </ul>
-  <h2 class="text-xl text-stone-600 pt-4">Documents</h2>
+  <h2 class="text-xl text-stone-600 py-4">Recent Documents</h2>
   <%= render 'shared/doc_list', docs: @library.documents.order(created_at: :desc).first(5) %>
   <div class="my-2">
     <%= link_to "View all " + @library.documents.count.to_s + " documents", library_documents_path(@library.id), class:"text-sky-500 hover:underline" %>

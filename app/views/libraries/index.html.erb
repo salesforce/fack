@@ -2,7 +2,9 @@
 <div class="">
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-3xl text-sky-800">Libraries</h1>
-    <%= link_to 'New', new_library_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <% if policy(Library.new).create? %>
+      <%= link_to 'New', new_library_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <% end %>
   </div>
   <ul class="border mt-2 rounded-xl">
     <% @libraries.each do |library| %>

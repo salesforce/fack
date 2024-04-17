@@ -10,6 +10,8 @@ class BaseDocumentsController < ApplicationController
 
     @documents = if params[:sort] == 'questions'
                    @documents.order(questions_count: :desc)
+                 elsif params[:sort] == 'tokens'
+                   @documents.order(token_count: :desc)
                  else
                    @documents.order(created_at: :desc)
                  end
@@ -29,7 +31,10 @@ class BaseDocumentsController < ApplicationController
       params = document_params
     rescue ActionController::ParameterMissing => e
       respond_to do |format|
-        format.html { render inline: "<html><body><h1>Error:</h1><p><%= h error %></p></body></html>", status: :bad_request, locals: { error: e.message } }
+        format.html do
+          render inline: '<html><body><h1>Error:</h1><p><%= h error %></p></body></html>', status: :bad_request,
+                 locals: { error: e.message }
+        end
         format.json { render json: { error: e.message }, status: :bad_request }
       end
     end

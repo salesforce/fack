@@ -59,9 +59,11 @@ class Document < ApplicationRecord
     tokens.length
   end
 
+  # The AI embedding models are currently limited to ~8,000 tokens.
+  # https://community.openai.com/t/new-embedding-model-input-size/602476
   def token_count_must_be_less_than
-    if token_count.present? && token_count >= 10_000
-      errors.add(:token_count, "is #{token_count} and must be less than 10,000")
+    if token_count.present? && token_count >= 8_000
+      errors.add(:token_count, "is #{token_count} and must be less than 8,000")
     end
   end
 end

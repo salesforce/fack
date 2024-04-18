@@ -9,7 +9,7 @@ class BaseLibrariesController < ApplicationController
   # POST /libraries or /libraries.json
   def create
     @library = Library.new(library_params)
-    @library.user_id = current_user.id
+    @library.user_id ||= current_user.id
 
     authorize @library
 

@@ -43,7 +43,9 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.update(params)
-        EmbedDocumentJob.set(priority: 5).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
+        if @document.previous_changes.include?('check_hash')
+          EmbedDocumentJob.set(priority: 5).perform_later(@document.id)
+        end
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully updated.' }
         format.json { render :show, status: :ok, location: @document }
@@ -78,8 +80,14 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        # TODO: Check if document is changing before reembedding to save cost
-        EmbedDocumentJob.set(priority: 5).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
+        # This will space out embeddings by 10 seconds when jobs start to back up, especially during an import
+        # TODO: make this more configurable
+        total_jobs = Delayed::Job.count
+        delay_seconds = total_jobs * 10 # 10 second delay per job in the queue
+
+        if @document.previous_changes.include?('check_hash')
+          EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id)
+        end
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
         format.json { render :show, status: :created, location: @document }

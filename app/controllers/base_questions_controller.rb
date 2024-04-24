@@ -23,7 +23,7 @@ class BaseQuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
-        GenerateAnswerJob.perform_later(@question.id)
+        GenerateAnswerJob.set(priority: 1).perform_later(@question.id)
 
         format.html { redirect_to question_url(@question), notice: 'Question was successfully created.' }
         format.json { render :show, status: :created, location: @question }

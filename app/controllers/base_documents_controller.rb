@@ -43,7 +43,7 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.update(params)
-        EmbedDocumentJob.perform_later(@document.id) if @document.previous_changes.include?('check_hash')
+        EmbedDocumentJob.set(priority: 5).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully updated.' }
         format.json { render :show, status: :ok, location: @document }
@@ -79,7 +79,7 @@ class BaseDocumentsController < ApplicationController
     respond_to do |format|
       if @document.save
         # TODO: Check if document is changing before reembedding to save cost
-        EmbedDocumentJob.perform_later(@document.id) if @document.previous_changes.include?('check_hash')
+        EmbedDocumentJob.set(priority: 5).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
 
         format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
         format.json { render :show, status: :created, location: @document }

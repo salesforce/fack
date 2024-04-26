@@ -18,8 +18,12 @@ class GenerateAnswerJob < ApplicationJob
       related_docs = related_docs.where(library_id: question.library_ids_included)
     end
     
-    max_docs = (ENV['MAX_DOCS'] || 7).to_i
-    related_docs = related_docs.first(max_docs)
+    # We really only need 20-30 docs.
+    # However, if we put limit(20), postgres sometimes messes up the plan and returns 0 or too few results
+    # This often happens if we do a query on a specific library which has 2000+ documents
+    # For now, we will limit to 1000 so we don't query the whole db.
+    # Will need to find a better solution later
+    related_docs = related_docs.limit(1000)
 
     token_count = 0
 
@@ -74,11 +78,14 @@ class GenerateAnswerJob < ApplicationJob
       </{{PROGRAM_TAG}}>
     PROMPT
 
+    max_docs = (ENV['MAX_DOCS'] || 7).to_i
+
     prompt += '<CONTEXT>'
     if related_docs.each_with_index do |doc, _index|
       # Make sure we don't exceed the max document tokens limit
       max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10000
       next unless (token_count + doc.token_count.to_i) < max_doc_tokens
+      next unless _index < max_docs
 
       # So we can count references to the document
       question.documents << doc

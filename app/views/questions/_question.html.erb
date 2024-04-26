@@ -1,20 +1,22 @@
 <div id="<%= dom_id question %>" >
-  <div class="border rounded-lg">
+  <div class="border rounded-lg bg-white">
     <h1 class="text-3xl font-light p-4 rounded-t bg-sky-800 text-sky-100"><%= question.question %></h1>
-    <% if @libraries.present? %>
-      <p class="text-xs text-stone-500 px-4 py-2 ">Libraries Included:
-        <% @libraries.each do |library| %>
-          <span class=""><%= link_to library.name, library , class: "text-xs text-sky-500 bg-stone-100 mx-1 p-1 border border-stone-400 rounded text-center hover:bg-stone-200", target: "_new" %>
-          </span>
-        <% end %>
+    <div class="bg-stone-100">
+      <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="font-bold">
+          <%= time_ago_in_words(question.created_at) %></span> ago by <span class="font-bold"><%= question.user.email %> </span>
+        <div>
+          <%= link_to "Source: " + question.source_url, question.source_url , class: "text-xs text-sky-500 px-4" unless question.source_url.blank?%>
+        </div>
       </p>
-    <% end %>
-    <p class="text-xs text-stone-500 px-4 py-2">Asked <span class="font-bold">
-        <%= time_ago_in_words(question.created_at) %></span> ago by <span class="font-bold"><%= question.user.email %> </span>
-      <div>
-        <%= link_to "Source: " + question.source_url, question.source_url , class: "text-xs text-sky-500 px-4" unless question.source_url.blank?%>
-      </div>
-    </p>
+      <% if @libraries.present? %>
+        <p class="text-xs text-stone-500 px-4 py-2 ">Libraries Included:
+          <% @libraries.each do |library| %>
+            <span class=""><%= link_to library.name, library , class: "text-xs text-sky-500 bg-white mx-1 p-1 border border-stone-400 rounded text-center hover:bg-stone-200", target: "_new" %>
+            </span>
+          <% end %>
+        </p>
+      <% end %>
+    </div>
     <div class="markdown-content font-light p-4 bg-white border-t border-stone-700">
       <% if @question.pending? || @question.generating? %>
         <div class="animate-pulse flex space-x-4">

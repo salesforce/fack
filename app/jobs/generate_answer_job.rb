@@ -18,12 +18,12 @@ class GenerateAnswerJob < ApplicationJob
       related_docs = related_docs.where(library_id: question.library_ids_included)
     end
     
-    # We really only need 20-30 docs.
     # However, if we put limit(20), postgres sometimes messes up the plan and returns 0 or too few results
     # This often happens if we do a query on a specific library which has 2000+ documents
-    # For now, we will limit to 1000 so we don't query the whole db.
+    # Ordering by created_at seems to make the optimizer use a different index and consistently
+    # return the right results
     # Will need to find a better solution later
-    related_docs = related_docs.limit(1000)
+    related_docs = related_docs.order(created_at: :desc).limit(100)
 
     token_count = 0
 

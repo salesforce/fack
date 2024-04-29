@@ -80,10 +80,10 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        # This will space out embeddings by 10 seconds when jobs start to back up, especially during an import
+        # This will space out embeddings when jobs start to back up, especially during an import
         # TODO: make this more configurable
         total_jobs = Delayed::Job.count
-        delay_seconds = total_jobs * 10 # 10 second delay per job in the queue
+        delay_seconds = total_jobs * 3 # 3 second delay per job in the queue
 
         if @document.previous_changes.include?('check_hash')
           EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id)

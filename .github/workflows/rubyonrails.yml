@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:15-alpine
+        image: postgres:16-alpine
         ports:
           - "5432:5432"
         env:
@@ -37,7 +37,7 @@ jobs:
       - name: Install PostgreSQL Extension
         run: |
           sudo apt-get update
-          sudo apt install postgresql-15-pgvector
+          sudo apt install postgresql-16-pgvector
           psql -c 'CREATE EXTENSION vector;' -U rails -d rails_test
       - name: Set up database schema
         run: bin/rails db:schema:load

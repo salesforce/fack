@@ -1,0 +1,36 @@
+<h1 class="text-2xl font-bold my-4">Delayed Jobs</h1>
+
+<div class="flex flex-wrap -m-2">
+  <% @jobs.each do |job| %>
+    <div class="p-2 w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+      <div class="h-full flex flex-col bg-white rounded-lg border border-gray-200 shadow-md p-4">
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-sm font-semibold text-gray-900">ID: <%= job.id %></span>
+          <span class="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-full">Priority: <%= job.priority %></span>
+        </div>
+        <div class="mb-2">
+          <strong>Attempts:</strong> <%= job.attempts %>
+        </div>
+        <div class="mb-2">
+          <strong>Handler:</strong>
+          <div class="text-xs text-gray-600 overflow-ellipsis overflow-hidden">
+            <%= job.handler %>
+          </div>
+        </div>
+        <div class="mb-2">
+          <strong>Last Error:</strong>
+          <div class="text-xs text-red-600 overflow-ellipsis overflow-hidden">
+            <%= job.last_error %>
+          </div>
+        </div>
+        <div class="mb-2">
+          <strong>Run At:</strong> <%= time_ago_in_words(job.run_at) %> ago
+        </div>
+        <div class="mb-2">
+          <strong>Created At:</strong> <%= time_ago_in_words(job.created_at) %> ago
+        </div>
+        <%= button_to 'Delete', delayed_job_path(job), method: :delete, data: { confirm: 'Are you sure?' }, class: "mt-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>
+      </div>
+    </div>
+  <% end %>
+</div>

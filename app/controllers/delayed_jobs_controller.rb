@@ -1,10 +1,9 @@
 class DelayedJobsController < ApplicationController
   before_action :set_job, only: [:destroy]
-  
+
   def index
     @jobs = Delayed::Job.all
   end
-
 
   def destroy
     if @job.destroy

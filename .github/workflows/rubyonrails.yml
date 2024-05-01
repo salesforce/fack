@@ -34,11 +34,26 @@ jobs:
         with:
           bundler-cache: true
       # Add or replace database setup steps here
-      - name: Install PostgreSQL Extension
+
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt install postgresql-16-pgvector
-          psql -c 'CREATE EXTENSION vector;' -U rails -d rails_test
+          sudo apt-get install -y postgresql-server-dev-all git make gcc
+
+      - name: Clone pgvector
+        run: git clone https://github.com/pgvector/pgvector.git
+
+      - name: Build and install pgvector
+        run: |
+          cd pgvector
+          make
+          sudo make install
+
+      - name: Configure PostgreSQL and Create pgvector Extension
+        run: |
+          sudo service postgresql start
+          sudo -u postgres psql -c "CREATE EXTENSION vector;"
+
       - name: Set up database schema
         run: bin/rails db:schema:load
       - name: Run tests

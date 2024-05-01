@@ -36,6 +36,8 @@ jobs:
 
       - name: Set up database schema
         run: bin/rails db:schema:load
+      - name: Setup Tailwind
+        run: bundle exec rake assets:precompile
       - name: Run tests
         run: bundle exec rspec
 

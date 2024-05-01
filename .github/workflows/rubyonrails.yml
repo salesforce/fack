@@ -33,7 +33,11 @@ jobs:
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
-
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql
+  
       - name: Configure PostgreSQL and Create pgvector Extension
         run: |
           sudo service postgresql start

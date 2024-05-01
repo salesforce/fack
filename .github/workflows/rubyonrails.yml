@@ -33,21 +33,6 @@ jobs:
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
-      # Add or replace database setup steps here
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-server-dev-16 git make gcc
-
-      - name: Clone pgvector
-        run: git clone https://github.com/pgvector/pgvector.git
-
-      - name: Build and install pgvector
-        run: |
-          cd pgvector
-          make
-          sudo make install
 
       - name: Configure PostgreSQL and Create pgvector Extension
         run: |

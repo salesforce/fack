@@ -6,6 +6,8 @@ class DelayedJobsController < ApplicationController
   end
 
   def destroy
+    authorize @job
+
     if @job.destroy
       flash[:notice] = "Job was successfully deleted."
     else

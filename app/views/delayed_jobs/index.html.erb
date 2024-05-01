@@ -29,7 +29,7 @@
         <div class="mb-2">
           <strong>Created At:</strong> <%= time_ago_in_words(job.created_at) %> ago
         </div>
-        <!--<%= button_to 'Delete', delayed_job_path(job), method: :delete, data: { confirm: 'Are you sure?' }, class: "mt-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>-->
+        <%= button_to 'Delete', delayed_job_path(job), method: :delete, data: { confirm: 'Are you sure?' }, class: "mt-auto bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>
       </div>
     </div>
   <% end %>

@@ -74,7 +74,14 @@ GEM
     bindex (0.8.1)
     bootsnap (1.17.1)
       msgpack (~> 1.2)
+    brakeman (6.1.2)
+      racc
     builder (3.2.4)
+    bundle-audit (0.1.0)
+      bundler-audit
+    bundler-audit (0.9.1)
+      bundler (>= 1.2.0, < 3)
+      thor (~> 1.0)
     capybara (3.39.2)
       addressable
       matrix
@@ -332,6 +339,8 @@ DEPENDENCIES
   acts_as_votable
   bcrypt (~> 3.1.7)
   bootsnap
+  brakeman
+  bundle-audit
   capybara
   daemons
   debug

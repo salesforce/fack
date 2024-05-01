@@ -112,3 +112,7 @@ gem 'pg_search'
 
 
 gem "pundit", "~> 2.3"
+
+gem "bundle-audit"
+
+gem "brakeman"

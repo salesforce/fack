@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     resources :documents
   end
 
+  resources :delayed_jobs, only: [:index, :destroy]
+
   # API Routes - Setting default format to JSON
   namespace :api, defaults: { format: :json } do
     namespace :v1 do

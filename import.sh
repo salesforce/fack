@@ -49,7 +49,6 @@ done
 if [ -z "$LIBRARY_ID" ] || [ -z "$DIRECTORY_PATH" ]; then
   usage
 fi
-
 # Function to process files in directory
 process_directory() {
   local directory_path="$1"
@@ -58,14 +57,15 @@ process_directory() {
   local auth_token="$4"
 
   for file_path in "$directory_path"/*; do
+    relative_path=${file_path#$directory_path/}  # Remove directory path from file path
     if [ -d "$file_path" ]; then
       # Recursively process subdirectories
       process_directory "$file_path" "$library_id" "$api_url" "$auth_token"
-    elif [[ $file_path == *.md || $file_path == *.mdx ]]; then
-      echo -e "\n# Processing: $file_path"
+    elif [[ $relative_path == *.md || $relative_path == *.txt ]]; then
+      echo -e "# Processing: $relative_path"
       local file_content=$(<"$file_path")
-      local external_id=$(md5 -q "$file_path")
-      local title=$(basename "$file_path")
+      local external_id=$relative_path
+      local title=$(basename "$relative_path")
       local data_json=$(jq -n \
         --arg doc "$file_content" \
         --arg title "$title" \
@@ -81,9 +81,9 @@ process_directory() {
 
       # Check the response status code
       if [ "$response" -eq 201 ]; then
-        echo "Document '$file_path' uploaded successfully."
+        echo "Document '$relative_path' uploaded successfully."
       else
-        echo "Failed to create document '$file_path'. Response status code: $response"
+        echo "Failed to create document '$relative_path'. Response status code: $response"
       fi
     fi
   done

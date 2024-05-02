@@ -1,5 +1,5 @@
 class EmbedDocumentJob < ApplicationJob
-  include SalesforceGptConcern  # Include the concern here
+  include SalesforceGptConcern # Include the concern here
 
   queue_as :default
 

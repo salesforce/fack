@@ -15,14 +15,15 @@ class Question < ApplicationRecord
   before_save :check_unable_to_answer
 
   def slack_markdown_answer
-    return if self.answer.nil?
+    return if answer.nil?
+
     # Regular expression to match Markdown links
     # \[([^]]+)\] - Matches the link text inside square brackets
     # \(http[^)]+\) - Matches the URL inside parentheses
     markdown_regex = /\[([^\]]+)\]\((http[^)]+)\)/
-    
+
     # Replace each Markdown link with Slack's format
-    self.answer.truncate(3000).gsub(markdown_regex) do |_match|
+    answer.truncate(3000).gsub(markdown_regex) do |_match|
       link_text = ::Regexp.last_match(1)
       url = ::Regexp.last_match(2)
       "<#{url}|#{link_text}>"
@@ -36,6 +37,4 @@ class Question < ApplicationRecord
 
     self.able_to_answer = false
   end
-
-
 end

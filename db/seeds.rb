@@ -10,7 +10,7 @@
 unless User.find_by(email: 'admin@fack.com')
   User.create!(
     email: 'admin@fack.com',
-    password: ENV['TEST_PASSWORD'],
+    password: ENV.fetch('TEST_PASSWORD', nil),
     admin: true,
     created_at: Time.now,
     updated_at: Time.now
@@ -20,7 +20,7 @@ end
 unless User.find_by(email: 'normal@fack.com')
   User.create!(
     email: 'normal@fack.com',
-    password: ENV['TEST_PASSWORD'],
+    password: ENV.fetch('TEST_PASSWORD', nil),
     admin: false,
     created_at: Time.now,
     updated_at: Time.now

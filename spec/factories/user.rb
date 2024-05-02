@@ -3,7 +3,7 @@ FactoryBot.define do
     # Define attributes for user
     email { 'vijay@gmail.com' }
     password { 'Lettestthis1!' }
-    
+
     factory :admin_user do
       # Define attributes for user
       email { 'vijayadmin@gmail.com' }

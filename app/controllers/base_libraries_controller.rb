@@ -15,7 +15,9 @@ class BaseLibrariesController < ApplicationController
 
     respond_to do |format|
       if @library.save
-        format.html { redirect_to library_url(@library), notice: 'Library was successfully created.' }
+        format.html do
+          redirect_to library_url(@library), notice: 'Library was successfully created.'
+        end
         format.json { render :show, status: :created, location: @library }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -30,7 +32,9 @@ class BaseLibrariesController < ApplicationController
 
     respond_to do |format|
       if @library.update(library_params)
-        format.html { redirect_to library_url(@library), notice: 'Library was successfully updated.' }
+        format.html do
+          redirect_to library_url(@library), notice: 'Library was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @library }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -40,6 +44,7 @@ class BaseLibrariesController < ApplicationController
   end
 
   private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_library
     @library = Library.find(params[:id])

@@ -1,12 +1,11 @@
 class ApiToken < ApplicationRecord
-
   validates :token, presence: true, uniqueness: true
   validates :name, presence: true
 
   before_validation :generate_token, on: :create
 
   belongs_to :user
-  #encrypts :token, deterministic: true
+  # encrypts :token, deterministic: true
 
   private
 

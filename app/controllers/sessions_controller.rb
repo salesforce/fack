@@ -9,13 +9,13 @@ class SessionsController < ApplicationController
       login_user(user)
       redirect_to root_path
     else
-      redirect_to new_session_url, notice: "Error logging in."
+      redirect_to new_session_url, notice: 'Error logging in.'
     end
   end
 
   def set_debug
     session[:debug] = params[:debug]
-    redirect_to root_url, notice: "Debug set: " + session[:debug]
+    redirect_to root_url, notice: 'Debug set: ' + session[:debug]
   end
 
   def logout

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root 'questions#new' # Setting the questions new page as the root page
 
   # Auth routes
-  resources :sessions, only: [:new, :create, :destroy]
+  resources :sessions, only: %i[new create destroy]
   get '/sessions/logout', to: 'sessions#logout'
   get '/sessions/set_debug', to: 'sessions#set_debug'
   # SAML Authentication
@@ -15,13 +15,13 @@ Rails.application.routes.draw do
   resources :questions
   resources :documents
   resources :api_tokens
-  
+
   # Nested Resources
   resources :libraries do
     resources :documents
   end
 
-  resources :delayed_jobs, only: [:index, :destroy]
+  resources :delayed_jobs, only: %i[index destroy]
 
   # API Routes - Setting default format to JSON
   namespace :api, defaults: { format: :json } do

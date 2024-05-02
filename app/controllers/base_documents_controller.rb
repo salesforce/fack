@@ -21,7 +21,9 @@ class BaseDocumentsController < ApplicationController
       @documents = @documents.where(library_id: params[:library_id])
     end
 
-    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
+    if params[:contains].present?
+      @documents = @documents.search_by_title_and_document(params[:contains])
+    end
     @documents = @documents.page(params[:page])
   end
 
@@ -47,7 +49,9 @@ class BaseDocumentsController < ApplicationController
           EmbedDocumentJob.set(priority: 5).perform_later(@document.id)
         end
 
-        format.html { redirect_to document_url(@document), notice: 'Document was successfully updated.' }
+        format.html do
+          redirect_to document_url(@document), notice: 'Document was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @document }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -89,7 +93,9 @@ class BaseDocumentsController < ApplicationController
           EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id)
         end
 
-        format.html { redirect_to document_url(@document), notice: 'Document was successfully created.' }
+        format.html do
+          redirect_to document_url(@document), notice: 'Document was successfully created.'
+        end
         format.json { render :show, status: :created, location: @document }
       else
         format.html { render :new, status: :unprocessable_entity }

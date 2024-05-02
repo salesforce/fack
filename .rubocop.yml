@@ -1,0 +1,28 @@
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2
+  Exclude:
+    - 'db/schema.rb'
+    - 'bin/*'
+    - 'node_modules/**/*'
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 50 # sets maximum block length to 25 lines
+  AllowedMethods: ['describe', 'context']
+  Exclude:
+    - 'spec/**/*.rb' # Excludes all spec files from this cop
+
+Metrics/MethodLength:
+  Max: 50
+
+Metrics/AbcSize:
+  Max: 30  
+
+Layout/LineLength:
+  Max: 200

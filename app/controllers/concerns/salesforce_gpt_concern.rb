@@ -96,8 +96,8 @@ module SalesforceGptConcern
   def get_salesforce_connect_oauth_token
     encoded_client_id = URI.encode_www_form_component(ENV['SALESFORCE_CONNECT_CLIENT_ID'] || '')
     encoded_client_secret = URI.encode_www_form_component(ENV['SALESFORCE_CONNECT_CLIENT_SECRET'] || '')
-    encoded_username = ENV['SALESFORCE_CONNECT_USERNAME']
-    encoded_password = ENV['SALESFORCE_CONNECT_PASSWORD']
+    encoded_username = ENV.fetch('SALESFORCE_CONNECT_USERNAME', nil)
+    encoded_password = ENV.fetch('SALESFORCE_CONNECT_PASSWORD', nil)
 
     token_request_data = {
       grant_type: 'password',
@@ -108,7 +108,7 @@ module SalesforceGptConcern
     }
 
     token_request_body = URI.encode_www_form(token_request_data)
-    oauth_url = ENV['SALESFORCE_CONNECT_ORG_URL'] + '/services/oauth2/token'
+    oauth_url = ENV.fetch('SALESFORCE_CONNECT_ORG_URL', nil) + '/services/oauth2/token'
 
     begin
       uri = URI.parse(oauth_url)

@@ -12,7 +12,6 @@ class CustomRender < Redcarpet::Render::HTML
   def escape_html(text)
     text.gsub(/[&<>"']/) { |match| ESCAPE_TABLE[match] }
   end
-  
 
   def paragraph(quote)
     %(<p class="text-stone-600 mb-3 leading-7">#{quote.gsub("\n", '<br>')}</p>)
@@ -24,7 +23,7 @@ class CustomRender < Redcarpet::Render::HTML
 
   def codespan(quote)
     %(<code class="text-sm bg-stone-800 rounded text-amber-200 border-stone-500 border m-1 p-1">#{escape_html(quote.gsub("\n",
-                                                                                                           ''))}</code>)
+                                                                                                                         ''))}</code>)
   end
 
   def block_code(code, _language)

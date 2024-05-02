@@ -9,9 +9,9 @@ class DelayedJobsController < ApplicationController
     authorize @job
 
     if @job.destroy
-      flash[:notice] = "Job was successfully deleted."
+      flash[:notice] = 'Job was successfully deleted.'
     else
-      flash[:alert] = "Job could not be deleted."
+      flash[:alert] = 'Job could not be deleted.'
     end
     redirect_to delayed_jobs_path
   end

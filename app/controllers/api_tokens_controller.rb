@@ -43,7 +43,9 @@ class ApiTokensController < ApplicationController
 
     respond_to do |format|
       if @api_token.save
-        format.html { redirect_to api_token_url(@api_token), notice: 'Api token was successfully updated.' }
+        format.html do
+          redirect_to api_token_url(@api_token), notice: 'Api token was successfully updated.'
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
       end

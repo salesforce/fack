@@ -11,7 +11,10 @@ class User < ApplicationRecord
 
     # Check for minimum length
     min_length = 8
-    errors.add(:password, "must be at least #{min_length} characters long") if password.length < min_length
+    if password.length < min_length
+      errors.add(:password,
+                 "must be at least #{min_length} characters long")
+    end
 
     # Check for at least one uppercase letter
     errors.add(:password, 'must contain at least one uppercase letter') unless password =~ /[A-Z]/

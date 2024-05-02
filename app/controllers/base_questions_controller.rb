@@ -25,7 +25,9 @@ class BaseQuestionsController < ApplicationController
       if @question.save
         GenerateAnswerJob.set(priority: 1).perform_later(@question.id)
 
-        format.html { redirect_to question_url(@question), notice: 'Question was successfully created.' }
+        format.html do
+          redirect_to question_url(@question), notice: 'Question was successfully created.'
+        end
         format.json { render :show, status: :created, location: @question }
         format.turbo_stream
       else
@@ -51,6 +53,7 @@ class BaseQuestionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def question_params
-    params.require(:question).permit(:question, :answer, :library_id, :source_url, library_ids_included: [])
+    params.require(:question).permit(:question, :answer, :library_id, :source_url,
+                                     library_ids_included: [])
   end
 end

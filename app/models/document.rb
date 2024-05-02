@@ -21,6 +21,8 @@ class Document < ApplicationRecord
   validates :token_count, presence: true
   validate :token_count_must_be_less_than
 
+  validates :external_id, uniqueness: true, if: -> { external_id.present? }
+
   validates :length, presence: true
 
   validates :document, presence: true,

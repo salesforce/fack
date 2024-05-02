@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BaseLibrariesController < ApplicationController
   before_action :set_library, only: %i[show edit update destroy]
 

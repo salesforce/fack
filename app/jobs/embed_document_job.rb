@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmbedDocumentJob < ApplicationJob
   include SalesforceGptConcern # Include the concern here
 
@@ -7,7 +9,7 @@ class EmbedDocumentJob < ApplicationJob
     document = Document.find(document_id)
     begin
       document.update(embedding: get_embedding(document.document))
-    rescue StandardError => e
+    rescue StandardError
       Rails.logger.error('Error calling Salesforce Connect GPT.')
     end
   end

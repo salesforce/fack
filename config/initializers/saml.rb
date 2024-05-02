@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.config.saml_settings = {
   assertion_consumer_service_url: 'http://localhost:3000/auth/saml/callback',
   issuer: 'fack',

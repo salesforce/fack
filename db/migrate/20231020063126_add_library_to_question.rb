@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddLibraryToQuestion < ActiveRecord::Migration[7.0]
   def change
     add_reference :questions, :library, null: true, foreign_key: true

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe DocumentsController, type: :controller do
@@ -15,7 +17,7 @@ RSpec.describe DocumentsController, type: :controller do
   describe 'POST #create' do
     context 'with an existing external ID' do
       it 'does not create a new Document if the external ID exists' do
-        existing_document = Document.create!(valid_attributes.merge(external_id: 'existing_id'))
+        Document.create!(valid_attributes.merge(external_id: 'existing_id'))
         expect do
           post :create, params: { document: valid_attributes.merge(external_id: 'existing_id') }
         end.to change(Document, :count).by(0)

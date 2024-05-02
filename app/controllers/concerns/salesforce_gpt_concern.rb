@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'httparty'
 
@@ -107,8 +109,8 @@ module SalesforceGptConcern
       password: encoded_password
     }
 
-    token_request_body = URI.encode_www_form(token_request_data)
-    oauth_url = ENV.fetch('SALESFORCE_CONNECT_ORG_URL', nil) + '/services/oauth2/token'
+    URI.encode_www_form(token_request_data)
+    oauth_url = "#{ENV.fetch('SALESFORCE_CONNECT_ORG_URL', nil)}/services/oauth2/token"
 
     begin
       uri = URI.parse(oauth_url)

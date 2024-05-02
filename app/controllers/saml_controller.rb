@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SamlController < ApplicationController
   skip_before_action :verify_authenticity_token
   def init
@@ -11,12 +13,12 @@ class SamlController < ApplicationController
 
     if user.nil?
       # Create a user
-      user = User.new(email: email)
+      user = User.new(email:)
     end
 
     return nil unless user.save
 
-    puts 'Created user: ' + user.email
+    puts "Created user: #{user.email}"
 
     # Failed to create user
 
@@ -41,7 +43,7 @@ class SamlController < ApplicationController
         notice = 'Login failed.  Please contact an admin for help.'
       end
 
-      redirect_to root_path, notice: notice
+      redirect_to root_path, notice:
     else
       redirect_to(request.create(saml_settings))
     end

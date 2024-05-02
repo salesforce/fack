@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DelayedJobsController < ApplicationController
   before_action :set_job, only: [:destroy]
 

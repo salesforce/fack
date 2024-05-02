@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BaseDocumentsController < ApplicationController
   helper_method :can_manage_documents?
   before_action :set_document, only: %i[show edit update]
@@ -21,9 +23,7 @@ class BaseDocumentsController < ApplicationController
       @documents = @documents.where(library_id: params[:library_id])
     end
 
-    if params[:contains].present?
-      @documents = @documents.search_by_title_and_document(params[:contains])
-    end
+    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
     @documents = @documents.page(params[:page])
   end
 
@@ -45,9 +45,7 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.update(params)
-        if @document.previous_changes.include?('check_hash')
-          EmbedDocumentJob.set(priority: 5).perform_later(@document.id)
-        end
+        EmbedDocumentJob.set(priority: 5).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
 
         format.html do
           redirect_to document_url(@document), notice: 'Document was successfully updated.'
@@ -89,9 +87,7 @@ class BaseDocumentsController < ApplicationController
         total_jobs = Delayed::Job.count
         delay_seconds = total_jobs * 3 # 3 second delay per job in the queue
 
-        if @document.previous_changes.include?('check_hash')
-          EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id)
-        end
+        EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
 
         format.html do
           redirect_to document_url(@document), notice: 'Document was successfully created.'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   # Root route
   root 'questions#new' # Setting the questions new page as the root page

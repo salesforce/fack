@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
   skip_before_action :require_login
 
@@ -15,7 +17,7 @@ class SessionsController < ApplicationController
 
   def set_debug
     session[:debug] = params[:debug]
-    redirect_to root_url, notice: 'Debug set: ' + session[:debug]
+    redirect_to root_url, notice: "Debug set: #{session[:debug]}"
   end
 
   def logout

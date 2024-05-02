@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BaseQuestionsController < ApplicationController
   before_action :set_question, only: %i[show edit update destroy]
   include NeighborConcern

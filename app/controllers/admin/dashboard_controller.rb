@@ -1,7 +1,11 @@
-class Admin::DashboardController < ApplicationController
-  before_action :current_user_is_admin?
+# frozen_string_literal: true
 
-  def index
-    # admin dashboard view
+module Admin
+  class DashboardController < ApplicationController
+    before_action :current_user_is_admin?
+
+    def index
+      # admin dashboard view
+    end
   end
 end

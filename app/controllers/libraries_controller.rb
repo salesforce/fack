@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LibrariesController < BaseLibrariesController
   # GET /libraries/new
   def new

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddQuestionsCountToDocuments < ActiveRecord::Migration[6.0]
   def change
     add_column :documents, :questions_count, :integer, default: 0, null: false

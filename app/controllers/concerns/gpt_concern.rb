@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'httparty'
 require 'uri'
@@ -29,7 +31,7 @@ module GptConcern
   end
 
   def call_openai_embedding(input)
-    access_token = ENV['OPENAI_API_KEY']
+    access_token = ENV.fetch('OPENAI_API_KEY', nil)
     endpoint_url = 'https://api.openai.com/v1/embeddings'
     headers = {
       'Authorization' => "Bearer #{access_token}",
@@ -54,7 +56,7 @@ module GptConcern
   end
 
   def call_openai_generation(prompt)
-    access_token = ENV['OPENAI_API_KEY']
+    access_token = ENV.fetch('OPENAI_API_KEY', nil)
     endpoint_url = 'https://api.openai.com/v1/chat/completions'
     headers = {
       'Authorization' => "Bearer #{access_token}",
@@ -64,18 +66,16 @@ module GptConcern
       messages: [
         { role: 'user', content: prompt }
       ],
-      model: ENV['EGPT_GEN_MODEL'] || 'gpt-3.5-turbo-16k',
+      model: ENV['EGPT_GEN_MODEL'] || 'gpt-3.5-turbo-16k'
       # Add additional parameters as required by OpenAI
     }
 
     response = HTTParty.post(endpoint_url, body: body.to_json, headers:)
-    if response.code == 200
-      return JSON.parse(response.body)['choices'].first['message']['content']
-    else
-      # Handle error
-      puts "Error calling OpenAI API for generation: #{response.code} - #{response.message}"
-      ''
-    end
+    return JSON.parse(response.body)['choices'].first['message']['content'] if response.code == 200
+
+    # Handle error
+    puts "Error calling OpenAI API for generation: #{response.code} - #{response.message}"
+    ''
   end
 
   def call_salesforce_connect_gpt_embedding(input)
@@ -155,8 +155,8 @@ module GptConcern
   def get_salesforce_connect_oauth_token
     encoded_client_id = URI.encode_www_form_component(ENV['SALESFORCE_CONNECT_CLIENT_ID'] || '')
     encoded_client_secret = URI.encode_www_form_component(ENV['SALESFORCE_CONNECT_CLIENT_SECRET'] || '')
-    encoded_username = ENV['SALESFORCE_CONNECT_USERNAME']
-    encoded_password = ENV['SALESFORCE_CONNECT_PASSWORD']
+    encoded_username = ENV.fetch('SALESFORCE_CONNECT_USERNAME', nil)
+    encoded_password = ENV.fetch('SALESFORCE_CONNECT_PASSWORD', nil)
 
     token_request_data = {
       grant_type: 'password',
@@ -166,8 +166,8 @@ module GptConcern
       password: encoded_password
     }
 
-    token_request_body = URI.encode_www_form(token_request_data)
-    oauth_url = ENV['SALESFORCE_CONNECT_ORG_URL'] + '/services/oauth2/token'
+    URI.encode_www_form(token_request_data)
+    oauth_url = "#{ENV.fetch('SALESFORCE_CONNECT_ORG_URL', nil)}/services/oauth2/token"
 
     begin
       uri = URI.parse(oauth_url)

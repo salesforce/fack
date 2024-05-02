@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Library, type: :model do
@@ -6,12 +8,12 @@ RSpec.describe Library, type: :model do
 
   describe 'validations' do
     it 'is valid with valid attributes' do
-      library = build(:library, user: user)
+      library = build(:library, user:)
       expect(library).to be_valid
     end
 
     it 'is not valid without a name' do
-      library = build(:library, name: nil, user: user)
+      library = build(:library, name: nil, user:)
       expect(library).not_to be_valid
     end
   end

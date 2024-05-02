@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redcarpet'
 # Create a custom renderer that sets a custom class for block-quotes.
 class CustomRender < Redcarpet::Render::HTML
@@ -7,7 +9,7 @@ class CustomRender < Redcarpet::Render::HTML
     '>' => '&gt;',
     '"' => '&quot;',
     "'" => '&#39;'
-  }
+  }.freeze
 
   def escape_html(text)
     text.gsub(/[&<>"']/) { |match| ESCAPE_TABLE[match] }
@@ -60,7 +62,7 @@ module MarkdownHelper
     renderer = CustomRender.new(escape_html: true)
     # renderer = Redcarpet::Render::HTML.new(hard_wrap: true)
 
-    markdown = Redcarpet::Markdown.new(renderer, extensions = {})
+    markdown = Redcarpet::Markdown.new(renderer, {})
     markdown.render(text).html_safe
   end
 end

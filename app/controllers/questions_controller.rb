@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < BaseQuestionsController
   # GET /questions/1 or /questions/1.json
   def show

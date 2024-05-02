@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LibraryPolicy < ApplicationPolicy
   attr_reader :user, :library
 

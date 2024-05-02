@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApiTokenPolicy < ApplicationPolicy
   attr_reader :user, :api_token
 

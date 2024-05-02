@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec/support/auth_helpers.rb
 module AuthHelpers
   def sign_in(user = nil)

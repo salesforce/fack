@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmbedDocumentJob < ApplicationJob
-  include SalesforceGptConcern # Include the concern here
+  include GptConcern # Include the concern here
 
   queue_as :default
 

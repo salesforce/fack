@@ -37,6 +37,14 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
+    context 'when the question saves successfully' do
+      it 'enqueues an GenerateAnswerJob' do
+        expect {
+          post :create, params: { question: valid_attributes }
+        }.to have_enqueued_job(GenerateAnswerJob).on_queue('default')
+      end
+    end
+
     context 'with invalid params' do
       it 'fails to create' do
         post :create, params: { question: invalid_attributes }

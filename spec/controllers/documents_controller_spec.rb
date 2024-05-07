@@ -33,6 +33,14 @@ RSpec.describe DocumentsController, type: :controller do
       end
     end
 
+    context 'when the document saves successfully' do
+      it 'enqueues an EmbedDocumentJob' do
+        expect {
+          post :create, params: { document: valid_attributes }
+        }.to have_enqueued_job(EmbedDocumentJob).on_queue('default')
+      end
+    end
+
     context 'with a new external ID' do
       it 'creates a new Document with the given external ID' do
         expect do

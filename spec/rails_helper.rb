@@ -37,6 +37,10 @@ end
 RSpec.configure do |config|
   config.include AuthHelpers, type: :controller
 
+  config.before(:each) do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
   # Include FactoryBot syntax to simplify calls to factories
   config.include FactoryBot::Syntax::Methods
 

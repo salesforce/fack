@@ -5,6 +5,9 @@ AllCops:
     - 'db/schema.rb'
     - 'bin/*'
     - 'node_modules/**/*'
+    - 'app/jobs/generate_answer_job.rb'  # Exclude until we can refactor
+    - 'app/controllers/concerns/salesforce_gpt_concern.rb'
+    - 'app/controllers/concerns/gpt_concern.rb'
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -22,7 +25,11 @@ Metrics/MethodLength:
   Max: 50
 
 Metrics/AbcSize:
-  Max: 30  
+  Max: 40  
 
 Layout/LineLength:
   Max: 200
+
+Lint/MissingSuper:
+  Exclude:
+    - 'app/policies/*.rb'

@@ -6,6 +6,9 @@ class User < ApplicationRecord
   has_secure_password validations: false
   validate :password_strength
 
+  has_many :library_users
+  has_many :libraries, through: :library_users
+
   private
 
   def password_strength

@@ -5,7 +5,8 @@
     <div class="flex space-x-2">
       <% if policy(@library).edit? %>
         <%= link_to 'New Document', new_document_path(library_id: @library.id), class: "rounded-lg p-2 bg-sky-600 text-white" %>
-        <%= link_to 'Edit', edit_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white" %>
+        <%= link_to 'Edit', edit_library_path(@library), title: "Edit Library", class: "rounded-lg p-2 bg-sky-600 text-white" %>
+        <%= link_to 'Users', users_library_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white" %>
       <% end %>
     </div>
   </div>

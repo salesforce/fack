@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_29_182707) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_14_224325) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "vector"
 
@@ -81,6 +82,17 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_29_182707) do
     t.index ["user_id"], name: "index_libraries_on_user_id"
   end
 
+  create_table "library_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "library_id", null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["library_id"], name: "index_library_users_on_library_id"
+    t.index ["user_id", "library_id"], name: "index_library_users_on_user_id_and_library_id", unique: true
+    t.index ["user_id"], name: "index_library_users_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "question"
     t.text "answer"
@@ -130,6 +142,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_29_182707) do
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
   add_foreign_key "libraries", "users"
+  add_foreign_key "library_users", "libraries"
+  add_foreign_key "library_users", "users"
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
 end

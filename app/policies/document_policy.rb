@@ -9,10 +9,17 @@ class DocumentPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin? || document.library.user_id == user.id
+    user.admin? || document.library.user_id == user.id || user_is_editor?
   end
 
   def update?
-    user.admin? || document.library.user_id == user.id
+    user.admin? || document.library.user_id == user.id || user_is_editor?
+  end
+
+  private
+
+  def user_is_editor?
+    library_user = LibraryUser.find_by(user: user, library: document.library)
+    library_user&.editor?
   end
 end

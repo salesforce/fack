@@ -122,7 +122,7 @@ class GenerateAnswerJob < ApplicationJob
 
       generation_time = end_time - start_time
 
-      question.update(answer:, generation_time:)
+      question.update(answer:, generation_time:, generated_at: end_time)
       question.generated!
     rescue StandardError => e
       # TODO: add more error messaging

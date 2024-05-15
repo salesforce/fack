@@ -1,0 +1,17 @@
+<!-- app/views/libraries/users.html.erb -->
+
+<h1 class="text-3xl font-semibold text-stone-900 mb-6"><span class="text-sky-500"><%= link_to @library.name, library_path(@library) %> </span> > Users </h1>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="grid grid-cols-3 gap-4 p-4 bg-gray-200 font-semibold">
+    <div>Email</div>
+    <div>Role</div>
+  </div>
+
+  <% @users.each do |user| %>
+    <div class="grid grid-cols-3 gap-4 p-4 border-b border-gray-200">
+      <div><%= user.email %></div>
+      <div><%= user.library_users.find_by(library: @library).role.capitalize %></div>
+    </div>
+  <% end %>
+</div>

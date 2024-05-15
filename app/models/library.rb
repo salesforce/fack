@@ -4,4 +4,7 @@ class Library < ApplicationRecord
   has_many :documents
   validates :name, presence: true
   belongs_to :user
+
+  has_many :library_users
+  has_many :users, through: :library_users
 end

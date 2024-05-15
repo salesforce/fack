@@ -13,6 +13,13 @@ class LibraryPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || library.user_id == user.id
+    user.admin? || user_is_editor? || library.user_id == user.id
+  end
+
+  private
+
+  def user_is_editor?
+    library_user = LibraryUser.find_by(user: user, library: library)
+    library_user&.editor?
   end
 end

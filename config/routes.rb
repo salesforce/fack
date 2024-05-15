@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   # Nested Resources
   resources :libraries do
     resources :documents
+    member do
+      get 'users'
+    end
   end
 
   resources :delayed_jobs, only: %i[index destroy]

@@ -62,7 +62,8 @@
     </div>
     <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">
       <% if question.generation_time %>
-        Generation time <%= question.generation_time.truncate(3) || "..." %> seconds
+        Generation time <%= question.generation_time.truncate(3) || "..." %> seconds |
+        Total time <%= (question.generated_at - question.created_at).truncate(3) || "..." %> seconds
       <% end %>
     </p>
   </div>

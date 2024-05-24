@@ -47,7 +47,8 @@ class GenerateAnswerJob < ApplicationJob
             3a. Try to answer the USER QUESTION using only the documents.  If there is conflicting information, reference the conflict and indicate which answer is based on the most recent created date.
             3b. In addition to the documents in the <CONTEXT>, you are allowed to answer questions using your prior knowledge on the following topics: #{ENV['ALLOWED_ADDITIONAL_TOPICS'] || '(No additional topics allowed)'}
             4. If you cannot answer the user question using the provided documents or your knowledge on the allowed additional topics, respond with "I am unable to answer the question."
-            5. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
+            5a. Format your response with markdown.  There are 2 sections: ANSWER, DOCUMENTS
+            5b. If the documents include helpful links to other URLs, make sure to include those links in your answer.
             6. Use the "# ANSWER" heading to label your answer.#{'  '}
             7. Under the "# DOCUMENTS" heading, list the title and urls of all documents found in the <CONTEXT> section.
       #{'  '}

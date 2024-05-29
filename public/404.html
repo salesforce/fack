@@ -1,67 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>The page you were looking for doesn't exist (404)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  .rails-default-error-page {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
-
-  .rails-default-error-page div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
-
-  .rails-default-error-page div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-
-  .rails-default-error-page h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
-
-  .rails-default-error-page div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
+  <title>Page Not Found (404)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="rails-default-error-page">
-  <!-- This file lives in public/404.html -->
-  <div class="dialog">
-    <div>
-      <h1>The page you were looking for doesn't exist.</h1>
-      <p>You may have mistyped the address or the page may have moved.</p>
+<body class="bg-gray-100 text-center py-20">
+  <div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden md:max-w-2xl">
+    <div class="md:flex">
+      <div class="w-full p-8">
+        <div class="text-6xl mb-4">
+          <span class="text-gray-300">F</span><span class="font-bold text-sky-500">ack!</span>
+        </div>
+        <div class="tracking-wide text-sm text-amber-500 font-semibold">404 Error</div>
+        <p class="mt-4 text-stone-100 border bg-stone-700 p-6 rounded font-mono"><span id="requested-url"
+            class="break-words"></span> not found.</p>
+        <h1 class="block mt-1 text-lg leading-tight font-medium text-black">The page you were looking for doesn't exist.
+        </h1>
+        <p class="mt-2 text-gray-500">You may have mistyped the address or the page may have moved.  Occasionally, links to external sites are broken within documents.  Please contact an administrator if you believe there is a problem with a document.</p>
+        <a href="/" class="mt-6 inline-block bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded">Go to
+          Homepage</a>
+      </div>
     </div>
-    <p>If you are the application owner check the logs for more information.</p>
   </div>
+
+  <script>
+    // Get the requested URL and display it
+    document.getElementById('requested-url').textContent = window.location.href;
+  </script>
 </body>
+
 </html>

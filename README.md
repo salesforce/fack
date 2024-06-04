@@ -320,9 +320,19 @@ Each object in the `questions` array includes:
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}' http://localhost:3000/api/v1/documents
+>  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document": {"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}}' http://localhost:3000/api/v1/documents
 > ```
 
+Example POST data.  Make sure you have the top level "document" attribute.
+> ```javascript
+{
+>   "document": {
+>     "document": "Restart your computer to fix it.",
+>     "title": "How to fix a computer",
+>     "library_id": 23,
+>    },
+> }
+> ```
 </details>
     
     

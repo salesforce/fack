@@ -309,6 +309,15 @@ Each object in the `questions` array includes:
 > | library_id  |  required | text | The ID of the library to which this document will be added            |  
 > | external_id  |  optional | text          | A unique ID provided by the client. If a POST request includes the same external_id as an existing record, the record will be updated instead of created. |    
 
+##### Example POST Data
+Make sure you have the top level "document" attribute.
+> ```javascript
+>   "document": {
+>     "document": "Restart your computer to fix it.",
+>     "title": "How to fix a computer",
+>     "library_id": 23,
+>    }
+> ```
 
 ##### Responses
 
@@ -320,9 +329,8 @@ Each object in the `questions` array includes:
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}' http://localhost:3000/api/v1/documents
+>  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document": {"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}}' http://localhost:3000/api/v1/documents
 > ```
-
 </details>
     
     

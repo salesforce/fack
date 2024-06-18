@@ -20,6 +20,6 @@ class LibraryPolicy < ApplicationPolicy
 
   def user_is_editor?
     library_user = LibraryUser.find_by(user: user, library: library)
-    library_user&.editor?
+    library_user&.editor? || library_user&.admin?
   end
 end

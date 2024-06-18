@@ -5,6 +5,6 @@ class Library < ApplicationRecord
   validates :name, presence: true
   belongs_to :user
 
-  has_many :library_users
+  has_many :library_users, dependent: :destroy
   has_many :users, through: :library_users
 end

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   # Nested Resources
   resources :libraries do
+    resources :library_users
     resources :documents
     member do
       get 'users'

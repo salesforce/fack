@@ -1,0 +1,21 @@
+  <div><%= link_to @library.name, library_path(@library) %></div>
+
+<div class="flex justify-between items-center py-2">
+  <h1 class="font-bold text-3xl text-sky-800">Users</h1>
+  <% if policy(Library.new).create? %>
+    <%= link_to 'New', new_library_library_user_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+  <% end %>
+</div>
+
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="grid grid-cols-3 gap-4 p-4 bg-gray-200 font-semibold">
+    <div>Email</div>
+    <div>Role</div>
+  </div>
+  <% @users.each do |user| %>
+    <div class="grid grid-cols-3 gap-4 p-4 border-b border-gray-200">
+      <div><%= user.email %></div>
+      <div><%= user.library_users.find_by(library: @library).role.capitalize %></div>
+    </div>
+  <% end %>
+</div>

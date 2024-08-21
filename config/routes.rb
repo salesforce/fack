@@ -2,7 +2,9 @@
 
 Rails.application.routes.draw do
   resources :messages
-  resources :chats
+  resources :chats do
+    resources :messages, only: %i[create destroy]
+  end
   resources :assistants
   # Root route
   root 'questions#new' # Setting the questions new page as the root page

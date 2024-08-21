@@ -66,6 +66,6 @@ class AssistantsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assistant_params
-    params.require(:assistant).permit(:user_prompt, :llm_prompt, :libraries)
+    params.require(:assistant).permit(:user_prompt, :llm_prompt, :libraries, :name)
   end
 end

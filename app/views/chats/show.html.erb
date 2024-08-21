@@ -15,11 +15,9 @@
 
 <div class="mx-auto  w-full flex mt-10">
   <div class="">
-    <h3 class="text-xl mb-4">Add a new message:</h3>
     <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
-      <%= f.label :content, 'Message content:' %>
-      <%= f.text_field :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
-      <%= f.submit 'Add Message', class: 'rounded-lg py-3 px-5 bg-blue-500 text-white font-medium' %>
+      <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
+      <%= f.submit 'Send to Assistant', class: 'rounded-lg py-3 px-5 bg-blue-500 text-white font-medium' %>
     <% end %>
   </div>
 </div>

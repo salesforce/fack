@@ -12,9 +12,9 @@
 
   <div id="assistants" class="min-w-full">
     <% @assistants.each do |assistant| %>
-      <%= render assistant %>
+
       <p>
-        <%= link_to "Show this assistant", assistant, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+        <%= link_to assistant.name, assistant, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
       </p>
     <% end %>
   </div>

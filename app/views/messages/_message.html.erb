@@ -1,11 +1,9 @@
 <div id="<%= dom_id message %>">
   <div class="p-3 my-5 ounded bg-stone-200">
     <p class="">
-      <%= message.content %>
+      <%= render_markdown(message.content) %>
     </p>
-    <p class="my-5">
-      <strong class="block font-medium mb-1">From:</strong>
-      <%= message.from %>
+    <p class="">
     </p>
   </div>
 </div>

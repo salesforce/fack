@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_21_201527) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_21_201713) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -108,6 +108,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_201527) do
     t.index ["user_id"], name: "index_library_users_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.text "content"
+    t.integer "from"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "question"
     t.text "answer"
@@ -161,6 +170,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_201527) do
   add_foreign_key "libraries", "users"
   add_foreign_key "library_users", "libraries"
   add_foreign_key "library_users", "users"
+  add_foreign_key "messages", "chats"
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
 end

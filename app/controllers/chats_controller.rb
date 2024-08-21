@@ -1,5 +1,5 @@
 class ChatsController < ApplicationController
-  before_action :set_chat, only: %i[ show edit update destroy ]
+  before_action :set_chat, only: %i[show edit update destroy]
 
   # GET /chats or /chats.json
   def index
@@ -7,8 +7,7 @@ class ChatsController < ApplicationController
   end
 
   # GET /chats/1 or /chats/1.json
-  def show
-  end
+  def show; end
 
   # GET /chats/new
   def new
@@ -16,16 +15,16 @@ class ChatsController < ApplicationController
   end
 
   # GET /chats/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /chats or /chats.json
   def create
     @chat = Chat.new(chat_params)
+    @chat.user_id = @current_user.id
 
     respond_to do |format|
       if @chat.save
-        format.html { redirect_to chat_url(@chat), notice: "Chat was successfully created." }
+        format.html { redirect_to chat_url(@chat), notice: 'Chat was successfully created.' }
         format.json { render :show, status: :created, location: @chat }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +37,7 @@ class ChatsController < ApplicationController
   def update
     respond_to do |format|
       if @chat.update(chat_params)
-        format.html { redirect_to chat_url(@chat), notice: "Chat was successfully updated." }
+        format.html { redirect_to chat_url(@chat), notice: 'Chat was successfully updated.' }
         format.json { render :show, status: :ok, location: @chat }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,19 +51,20 @@ class ChatsController < ApplicationController
     @chat.destroy!
 
     respond_to do |format|
-      format.html { redirect_to chats_url, notice: "Chat was successfully destroyed." }
+      format.html { redirect_to chats_url, notice: 'Chat was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_chat
-      @chat = Chat.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def chat_params
-      params.require(:chat).permit(:assistant_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_chat
+    @chat = Chat.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def chat_params
+    params.require(:chat).permit(:assistant_id)
+  end
 end

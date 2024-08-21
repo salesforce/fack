@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
       if @message.save
         GenerateMessageResponseJob.set(priority: 1).perform_later(@message.id)
 
-        format.html { redirect_to @chat, notice: 'Message was successfully created.' }
+        format.html { redirect_to @chat}
         format.json { render :show, status: :created, location: @message }
       else
         format.html { render :new, status: :unprocessable_entity }

@@ -140,6 +140,31 @@ The tests are located under the `spec` directory.
 # UI
 Coming soon
 
+# Assistants
+1. Definition
+   1. Assistant format.  
+      1. User Input Prompt
+      2. LLM prompt. up to 50k tokens.
+   2. Libraries allowed
+2. Objects
+   1. Assistant
+   2. Session
+   3. Message (content, from: <user, llm>)
+3. Operation in UI
+   1. Click assistant of choice
+   2. User is prompted for input from definition.  Click start.
+   3. Taken to Session page /assistant/1/session/3 with message shown.
+   4. Fack sends user answer
+      1. Adds relevant docs from libraries to the prompt
+      2. Adds the custom prompts
+   5. LLM can respond with the answer or a request user for more information
+   6. User can continue to respond
+      1. Fack sends user answer and updated docs from libraries to the AI
+      2. Fack sends the prior user responses and ai questions
+      3. Continues until user is satisfied.
+      4. If the answer is good, the user can give that feedback to benefit future users.
+
+
 # API
 
 ------------------------------------------------------------------------------------------

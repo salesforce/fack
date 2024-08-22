@@ -29,7 +29,7 @@ class CustomRender < Redcarpet::Render::HTML
   end
 
   def block_code(code, _language)
-    %(<code class="block bg-stone-800 text-white font-light p-5">#{escape_html(code)}</code>)
+    %(<code class="block bg-stone-800 text-white font-light p-5 rounded whitespace-pre-line mb-3">#{escape_html(code)}</code>)
   end
 
   def header(title, level)
@@ -47,6 +47,23 @@ class CustomRender < Redcarpet::Render::HTML
     %(<li class="py-2 ">#{content}</li>)
   end
 
+  def table(header, body)
+    content = <<-HTML
+      <thead class="p-2 text-xl">
+        #{header}
+      </thead>
+      <tbody class="p-2">
+        #{body}
+      </tbody>
+    HTML
+
+    %(<table class="text-stone-700 text-left border-separate ml-3">#{content}</table>)
+  end
+
+  def table_row(content)
+    %(<tr class="text-stone-700 text-left p-2">#{content}</tr>)
+  end
+
   def list(content, list_type)
     case list_type
     when :ordered
@@ -62,7 +79,7 @@ module MarkdownHelper
     renderer = CustomRender.new(escape_html: true)
     # renderer = Redcarpet::Render::HTML.new(hard_wrap: true)
 
-    markdown = Redcarpet::Markdown.new(renderer, {})
+    markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, tables: true)
     markdown.render(text).html_safe
   end
 end

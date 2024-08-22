@@ -1,18 +1,13 @@
 <div class="mx-auto  w-full flex">
   <div class="">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
+    <%= link_to "Chats", chats_path, class: "bg-gray-100 inline-block font-medium" %>
     <%= render @chat %>
-    <%= link_to "Edit this chat", edit_chat_path(@chat), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to chats", chats_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <div class="inline-block ml-2">
       <%= button_to "Destroy this chat", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
     </div>
   </div>
 </div>
 <%= render partial: 'messages/message', collection: @chat.messages %>
-
 <div class="mx-auto  w-full flex mt-10">
   <div class="">
     <%= form_with(model: [@chat, Message.new], local: true) do |f| %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_15_220929) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_23_175752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -26,6 +26,30 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_220929) do
     t.boolean "shown_once"
     t.datetime "last_used"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
+  end
+
+  create_table "assistants", force: :cascade do |t|
+    t.text "user_prompt"
+    t.text "llm_prompt"
+    t.text "libraries"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.text "input"
+    t.text "output"
+    t.text "instructions"
+    t.text "context"
+    t.text "description"
+  end
+
+  create_table "chats", force: :cascade do |t|
+    t.bigint "assistant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.text "first_message"
+    t.index ["assistant_id"], name: "index_chats_on_assistant_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -93,6 +117,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_220929) do
     t.index ["user_id"], name: "index_library_users_on_user_id"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.text "content"
+    t.integer "from"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.text "prompt"
+    t.integer "status", default: 0
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.text "question"
     t.text "answer"
@@ -140,11 +177,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_220929) do
   end
 
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "chats", "assistants"
+  add_foreign_key "chats", "users"
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
   add_foreign_key "libraries", "users"
   add_foreign_key "library_users", "libraries"
   add_foreign_key "library_users", "users"
+  add_foreign_key "messages", "chats"
+  add_foreign_key "messages", "users"
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
 end

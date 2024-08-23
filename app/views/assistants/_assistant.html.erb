@@ -1,0 +1,35 @@
+<div id="<%= dom_id assistant %>" class="p-5 w-full">
+  <!-- Assistant Name Heading -->
+  <h2 class="text-2xl font-bold mb-4">
+    <%= assistant.name %>
+  </h2>
+  <!-- User Prompt -->
+  <div class="my-5">
+    <strong class="block font-medium mb-1">User prompt:</strong>
+    <p class="text-gray-700"><%= assistant.user_prompt %></p>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Description:</strong>
+    <textarea class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700" rows="10" disabled><%= assistant.description %></textarea>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Libraries:</strong>
+    <p class="text-gray-700"><%= assistant.libraries %></p>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Input:</strong>
+    <textarea class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700" rows="10" disabled><%= assistant.input %></textarea>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Output:</strong>
+    <textarea class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700" rows="10" disabled><%= assistant.output %></textarea>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Instructions:</strong>
+    <textarea class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700" rows="10" disabled><%= assistant.instructions %></textarea>
+  </div>
+  <div class="my-5">
+    <strong class="block font-medium mb-1">Context:</strong>
+    <textarea class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700" rows="10" disabled><%= assistant.context %></textarea>
+  </div>
+</div>

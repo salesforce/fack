@@ -17,7 +17,12 @@ class SessionsController < ApplicationController
 
   def set_debug
     session[:debug] = params[:debug]
-    redirect_to root_url, notice: "Debug set: #{session[:debug]}"
+    redirect_to root_url, notice: "Debug mode: #{session[:debug]}"
+  end
+
+  def set_beta
+    session[:beta] = params[:beta]
+    redirect_to root_url, notice: "Beta mode: #{session[:debug]}"
   end
 
   def logout

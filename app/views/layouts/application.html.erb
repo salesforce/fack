@@ -39,6 +39,13 @@
                   <a href="/sessions/set_debug?debug=true" class="block px-4 py-2 text-black hover:bg-gray-100">Enable Debug Mode
                   </a>
                 <% end %>
+                <% if session[:beta] == "true" then %>
+                  <a href="/sessions/set_beta?beta=false" class="block px-4 py-2 text-black hover:bg-gray-100">Disable Beta Mode
+                  </a>
+                <% else %>
+                  <a href="/sessions/set_beta?beta=true" class="block px-4 py-2 text-black hover:bg-gray-100">Enable Beta Mode
+                  </a>
+                <% end %>
                 <a href="/delayed_jobs" class="block px-4 py-2 text-black hover:bg-gray-100">Job Queue</a>
                 <% if current_user_is_admin? %>
                   <a href="/assistants" class="block px-4 py-2 text-black hover:bg-gray-100">Assistants</a>

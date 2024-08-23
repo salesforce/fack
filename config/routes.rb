@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   resources :sessions, only: %i[new create destroy]
   get '/sessions/logout', to: 'sessions#logout'
   get '/sessions/set_debug', to: 'sessions#set_debug'
+  get '/sessions/set_beta', to: 'sessions#set_beta'
+
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
   post 'auth/saml/consume', to: 'saml#consume'

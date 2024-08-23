@@ -12,6 +12,7 @@ class ChatsController < ApplicationController
   # GET /chats/new
   def new
     @chat = Chat.new
+    @chat.assistant = Assistant.find(params[:assistant_id])
   end
 
   # GET /chats/1/edit
@@ -19,11 +20,13 @@ class ChatsController < ApplicationController
 
   # POST /chats or /chats.json
   def create
-    @chat = Chat.new(chat_params)
+    @assistant = Assistant.find(params[:assistant_id])
+    @chat = @assistant.chats.new(chat_params) # Assuming `chats` is the relationship between Assistant and Chat
     @chat.user_id = @current_user.id
 
     respond_to do |format|
       if @chat.save
+        @chat.messages.create(content: @chat.first_message, user_id: @current_user.id)
         format.html { redirect_to chat_url(@chat) }
         format.json { render :show, status: :created, location: @chat }
       else
@@ -52,6 +55,6 @@ class ChatsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def chat_params
-    params.require(:chat).permit(:assistant_id)
+    params.require(:chat).permit(:assistant_id, :first_message)
   end
 end

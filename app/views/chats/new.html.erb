@@ -1,7 +1,7 @@
 <div class="">
-  <h1 class="font-bold text-4xl">New chat</h1>
+  <h1 class="font-bold text-4xl"> I am the <%= @chat.assistant.name %> assistant. </h1>
 
-  <%= render "form", chat: @chat %>
+  <%= render "form", chat: @chat, assistant: @chat.assistant %>
 
-  <%= link_to "Back to chats", chats_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+  <%= link_to "Back to chats", chats_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-300 inline-block font-medium" %>
 </div>

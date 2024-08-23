@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_21_220600) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_22_234524) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -42,6 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_220600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.text "first_message"
     t.index ["assistant_id"], name: "index_chats_on_assistant_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end

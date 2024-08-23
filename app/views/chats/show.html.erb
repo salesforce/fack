@@ -1,13 +1,11 @@
 <div class="mx-auto  w-full flex">
   <div class="">
-    <%= link_to "Chats", chats_path, class: "bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Chats", chats_path, class: "text-sky-500 hover:text-sky-800 inline-block font-medium" %>
     <%= render @chat %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this chat", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-    </div>
+    <%= button_to "Delete", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-300 font-medium" %>
   </div>
 </div>
-<%= render partial: 'messages/message', collection: @chat.messages %>
+<%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>
 <div class="w-full mt-10">
   <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
     <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>

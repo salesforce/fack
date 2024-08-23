@@ -1,8 +1,10 @@
-<div id="<%= dom_id message %>">
-  <div class="p-3 my-5 ounded bg-stone-200">
-    Status: <%= message.status %>
-    <p class="">
+<div id="<%= dom_id(message) %>" class="my-5 flex <%= message.user? ? 'justify-start' : 'justify-end' %>">
+  <div class="w-3/4 p-4 rounded-lg <%= message.user? ? 'bg-stone-300 text-gray-900' : 'bg-blue-100 text-gray-800' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
+    <p class="mb-3">
       <%= render_markdown(message.content) if message.content.present? %>
     </p>
+    <div class="text-right text-xs text-gray-600 mt-3">
+      Status: <%= message.status %> | From: <%= message.from %>
+    </div>
   </div>
 </div>

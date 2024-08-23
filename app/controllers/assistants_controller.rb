@@ -11,6 +11,8 @@ class AssistantsController < ApplicationController
 
   # GET /assistants/new
   def new
+    authorize @assistant
+
     @assistant = Assistant.new
   end
 
@@ -19,6 +21,8 @@ class AssistantsController < ApplicationController
 
   # POST /assistants or /assistants.json
   def create
+    authorize @assistant
+
     @assistant = Assistant.new(assistant_params)
     libraries_array = @assistant.libraries.split(',') # Convert the string to an array
     @assistant.libraries = libraries_array
@@ -36,6 +40,8 @@ class AssistantsController < ApplicationController
 
   # PATCH/PUT /assistants/1 or /assistants/1.json
   def update
+    authorize @assistant
+
     respond_to do |format|
       if @assistant.update(assistant_params)
         format.html { redirect_to assistant_url(@assistant), notice: 'Assistant was successfully updated.' }

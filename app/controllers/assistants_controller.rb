@@ -11,8 +11,6 @@ class AssistantsController < ApplicationController
 
   # GET /assistants/new
   def new
-    authorize @assistant
-
     @assistant = Assistant.new
   end
 

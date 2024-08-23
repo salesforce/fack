@@ -15,7 +15,6 @@
   <div class="w-full flex">
     <div class="">
       <%= render @chat %>
-      <%= button_to "Delete", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-300 font-medium" %>
     </div>
   </div>
   <%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>

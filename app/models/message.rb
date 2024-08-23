@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
   belongs_to :chat
+  belongs_to :user
   after_create :enqueue_generate_message_response_job
 
   enum from: { user: 0, assistant: 1 }

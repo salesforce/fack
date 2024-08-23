@@ -1,10 +1,21 @@
 <div id="<%= dom_id(message) %>" class="my-5 flex <%= message.user? ? 'justify-start' : 'justify-end' %>">
-  <div class="w-3/4 p-4 rounded-lg <%= message.user? ? 'bg-stone-300 text-gray-900' : 'bg-blue-100 text-gray-800' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
-    <p class="mb-3">
-      <%= render_markdown(message.content) if message.content.present? %>
+  <div class="w-3/4">
+    <p class="text-xs text-gray-500 mb-1">
+      <% if message.from == 'user' %>
+        <%= message.user.email %>
+      <% elsif message.from == 'assistant' %>
+        <%= message.chat.assistant.name %>
+      <% else %>
+        <%= message.from %>
+      <% end %>
     </p>
-    <div class="text-right text-xs text-gray-600 mt-3">
-      Status: <%= message.status %> | From: <%= message.from %>
+    <div class="p-4 rounded-br-2xl rounded-tr-2xl rounded-bl-2xl <%= message.user? ? 'bg-white text-gray-900' : 'bg-sky-800 text-gray-100' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
+      <p class="mb-3">
+        <%= render_markdown(message.content) if message.content.present? %>
+      </p>
+      <div class="text-right text-xs text-gray-600 mt-3">
+        <%= message.status %>
+      </div>
     </div>
   </div>
 </div>

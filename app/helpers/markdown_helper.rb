@@ -16,7 +16,7 @@ class CustomRender < Redcarpet::Render::HTML
   end
 
   def paragraph(quote)
-    %(<p class="text-stone-600 mb-3 leading-7">#{quote.gsub("\n", '<br>')}</p>)
+    %(<p class="mb-3 leading-7">#{quote.gsub("\n", '<br>')}</p>)
   end
 
   def link(link, _title, content)

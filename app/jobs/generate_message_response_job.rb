@@ -46,10 +46,14 @@ class GenerateMessageResponseJob < ApplicationJob
 
       <{{PROGRAM_TAG}}>
             You are a helpful assistant which answers a user's question based on provided documents and messages.
-            Try to fullfill the user request in the <{{DATA_TAG}}>.
+            1. Try to fullfill the user request in the <{{DATA_TAG}}>.
 
-            DETAILED INSTRUCTIONS:
-            #{message.chat.assistant.llm_prompt}
+            2. Follow these rules when answering the question:
+            #{message.chat.assistant.instructions}
+
+            3. Your output should follow these requirements:
+            #{message.chat.assistant.output}
+
       </{{PROGRAM_TAG}}>
 
     PROMPT
@@ -57,16 +61,16 @@ class GenerateMessageResponseJob < ApplicationJob
     max_docs = (ENV['MAX_DOCS'] || 7).to_i
 
     prompt += '<CONTEXT>'
+    prompt += 'SPECIAL INFORMATION'
+    prompt += message.chat.assistant.context
+    
+    prompt += 'DOCUMENTS'
     if related_docs.each_with_index do |doc, index|
       # Make sure we don't exceed the max document tokens limit
       max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10_000
       next unless (token_count + doc.token_count.to_i) < max_doc_tokens
       next unless index < max_docs
 
-      # So we can count references to the document
-      # question.documents << doc
-
-      # prompt += "\n\nTITLE: #{doc.title}\n"
       prompt += "\n\nURL: #{ENV.fetch('ROOT_URL', nil)}#{document_path(doc)}\n"
       prompt += doc.to_json(only: %i[id name document title created_at])
       token_count += doc.token_count.to_i
@@ -85,9 +89,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
     prompt += <<~END_PROMPT
       <{{DATA_TAG}}>
-        <USER_QUESTION>
-          #{message.content}
-        </USER_QUESTION>
+        #{message.content}
       </{{DATA_TAG}}>
     END_PROMPT
     # Log this later - puts 'Total doc tokens used: ' + token_count.to_s

@@ -1,14 +1,28 @@
-<div class="mx-auto  w-full flex">
-  <div class="">
-    <%= link_to "Chats", chats_path, class: "text-sky-500 hover:text-sky-800 inline-block font-medium" %>
-    <%= render @chat %>
-    <%= button_to "Delete", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-300 font-medium" %>
+<div class="mx-auto w-full flex flex-col">
+  <!-- Breadcrumbs -->
+  <nav class="mb-4">
+    <ul class="flex space-x-2 text-gray-600">
+      <li>
+        <%= link_to "Assistants", assistants_path, class: "text-sky-500 hover:text-sky-800" %>
+      </li>
+      <li>/</li>
+      <li>
+        <%= link_to @chat.assistant.name, assistant_path(@chat.assistant), class: "text-sky-500 hover:text-sky-800" %>
+      </li>
+    </ul>
+  </nav>
+  <!-- Main Content -->
+  <div class="w-full flex">
+    <div class="">
+      <%= render @chat %>
+      <%= button_to "Delete", @chat, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-300 font-medium" %>
+    </div>
   </div>
-</div>
-<%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>
-<div class="w-full mt-10">
-  <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
-    <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
-    <%= f.submit 'Send', class: 'rounded-lg py-3 px-5 bg-sky-600 text-white font-medium' %>
-  <% end %>
+  <%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>
+  <div class="w-full mt-10">
+    <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
+      <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
+      <%= f.submit 'Send', class: 'rounded-lg py-3 px-5 bg-sky-600 text-white font-medium' %>
+    <% end %>
+  </div>
 </div>

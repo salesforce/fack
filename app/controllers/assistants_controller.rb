@@ -19,11 +19,11 @@ class AssistantsController < ApplicationController
 
   # POST /assistants or /assistants.json
   def create
-    authorize @assistant
-
     @assistant = Assistant.new(assistant_params)
     libraries_array = @assistant.libraries.split(',') # Convert the string to an array
     @assistant.libraries = libraries_array
+
+    authorize @assistant
 
     respond_to do |format|
       if @assistant.save

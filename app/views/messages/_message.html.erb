@@ -1,9 +1,8 @@
 <div id="<%= dom_id message %>">
   <div class="p-3 my-5 ounded bg-stone-200">
+    Status: <%= message.status %>
     <p class="">
       <%= render_markdown(message.content) if message.content.present? %>
-    </p>
-    <p class="">
     </p>
   </div>
 </div>

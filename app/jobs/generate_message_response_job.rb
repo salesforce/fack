@@ -98,19 +98,17 @@ class GenerateMessageResponseJob < ApplicationJob
     llm_message.chat_id = message.chat_id
     llm_message.user_id = message.user_id
     llm_message.from = :assistant
-    llm_message.save
 
     begin
       start_time = Time.now
-      # question.generating!
-      puts llm_message.inspect
+      llm_message.generating!
       llm_message.content = get_generation(llm_message.prompt)
       end_time = Time.now
 
-      puts       llm_message.content
       generation_time = end_time - start_time
 
       llm_message.save
+      llm_message.ready!
       # question.generated!
     rescue StandardError => e
       # TODO: add more error messaging

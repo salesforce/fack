@@ -3,6 +3,7 @@ class Message < ApplicationRecord
   after_create :enqueue_generate_message_response_job
 
   enum from: { user: 0, assistant: 1 }
+  enum status: { ready: 0, generating: 1 }
 
   private
 

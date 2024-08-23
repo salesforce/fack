@@ -2,20 +2,24 @@
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
-
   <% content_for :title, "Assistants" %>
-
   <div class="flex justify-between items-center">
     <h1 class="font-bold text-4xl">Assistants</h1>
-    <%= link_to "New assistant", new_assistant_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+    <%= link_to "New assistant", new_assistant_path, class: "rounded-lg py-3 px-5 bg-sky-600 text-white block font-medium" %>
   </div>
-
-  <div id="assistants" class="min-w-full">
+  <div id="assistants" class="mt-5 space-y-4">
     <% @assistants.each do |assistant| %>
-
-      <p>
-        <%= link_to assistant.name, assistant, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      </p>
+      <div class="flex justify-between items-center bg-white rounded-lg shadow-lg p-4">
+        <div>
+          <h2 class="font-bold text-xl mb-2">
+            <%= link_to assistant.name, assistant, class: "text-blue-600 hover:underline" %>
+          </h2>
+          <p class="text-gray-700"><%= assistant.user_prompt %></p>
+        </div>
+        <div>
+          <%= link_to "Start Chat", new_chat_path(assistant_id: assistant.id), class: "rounded-lg py-2 px-4 bg-blue-500 text-white font-medium" %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>

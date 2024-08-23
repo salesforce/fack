@@ -95,7 +95,7 @@
                   Documents
                 </a>
               </li>
-              <% if current_user_is_admin? %>
+              <% if session[:beta] == "true" then %>
                 <li>
                   <a href="/chats" class="<%= controller_name == 'chats' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">

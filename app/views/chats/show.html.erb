@@ -8,11 +8,9 @@
   </div>
 </div>
 <%= render partial: 'messages/message', collection: @chat.messages %>
-<div class="mx-auto  w-full flex mt-10">
-  <div class="">
-    <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
-      <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
-      <%= f.submit 'Send to Assistant', class: 'rounded-lg py-3 px-5 bg-blue-500 text-white font-medium' %>
-    <% end %>
-  </div>
+<div class="w-full mt-10">
+  <%= form_with(model: [@chat, Message.new], local: true) do |f| %>
+    <%= f.text_area :content, class: 'w-full p-2 border border-gray-300 rounded-lg mb-4' %>
+    <%= f.submit 'Send', class: 'rounded-lg py-3 px-5 bg-sky-600 text-white font-medium' %>
+  <% end %>
 </div>

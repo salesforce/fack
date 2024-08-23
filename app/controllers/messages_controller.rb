@@ -23,12 +23,11 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     @message.chat_id = @chat.id
     @message.user_id = @current_user.id
+    @message.from = :user
 
     respond_to do |format|
       if @message.save
-        GenerateMessageResponseJob.set(priority: 1).perform_later(@message.id)
-
-        format.html { redirect_to @chat}
+        format.html { redirect_to @chat }
         format.json { render :show, status: :created, location: @message }
       else
         format.html { render :new, status: :unprocessable_entity }

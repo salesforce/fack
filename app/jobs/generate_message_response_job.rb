@@ -97,7 +97,7 @@ class GenerateMessageResponseJob < ApplicationJob
     llm_message.prompt = prompt
     llm_message.chat_id = message.chat_id
     llm_message.user_id = message.user_id
-
+    llm_message.from = :assistant
     llm_message.save
 
     begin

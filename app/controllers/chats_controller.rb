@@ -26,7 +26,7 @@ class ChatsController < ApplicationController
 
     respond_to do |format|
       if @chat.save
-        @chat.messages.create(content: @chat.first_message, user_id: @current_user.id)
+        @chat.messages.create(content: @chat.first_message, user_id: @current_user.id, from: :user)
         format.html { redirect_to chat_url(@chat) }
         format.json { render :show, status: :created, location: @chat }
       else

@@ -98,6 +98,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
     prompt = replace_tag_with_random(prompt, '{{PROGRAM_TAG}}')
     prompt = replace_tag_with_random(prompt, '{{DATA_TAG}}')
+
     llm_message.prompt = prompt
     llm_message.chat_id = message.chat_id
     llm_message.user_id = message.user_id
@@ -113,11 +114,9 @@ class GenerateMessageResponseJob < ApplicationJob
 
       llm_message.save
       llm_message.ready!
-      # question.generated!
     rescue StandardError => e
       # TODO: add more error messaging
-      Rails.logger.error("Error calling Salesforce Connect GPT to generate answer.#{e.inspect}")
-      # question.failed!
+      Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
     end
   end
 end

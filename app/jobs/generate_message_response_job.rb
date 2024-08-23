@@ -13,9 +13,11 @@ class GenerateMessageResponseJob < ApplicationJob
     llm_message = Message.new
 
     # Get embedding from GPT
+    # TODO - get the previous user messages in embedding
     embedding = get_embedding(message.content)
 
-    related_docs = related_documents_from_embedding(embedding).where(enabled: true)
+    library_ids = message.chat.assistant.libraries.split(',')
+    related_docs = related_documents_from_embedding(embedding).where(enabled: true, library_id: library_ids)
 
     # question.library_ids_included.push(question.library_id) if question.library_id
     # if question.library_ids_included.present? && question.library_ids_included.none?(&:nil?) && question.library_ids_included.length.positive?
@@ -63,7 +65,7 @@ class GenerateMessageResponseJob < ApplicationJob
     prompt += '<CONTEXT>'
     prompt += 'SPECIAL INFORMATION'
     prompt += message.chat.assistant.context
-    
+
     prompt += 'DOCUMENTS'
     if related_docs.each_with_index do |doc, index|
       # Make sure we don't exceed the max document tokens limit

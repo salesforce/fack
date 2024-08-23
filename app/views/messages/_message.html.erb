@@ -16,21 +16,11 @@
         </svg>
       </div>
     <% else %>
-      <div class="p-4 rounded-bl-2xl rounded-br-2xl <%= message.user? ? 'rounded-tr-2xl' : 'rounded-tl-2xl' %> <%= message.user? ? 'bg-white text-gray-900' : 'bg-sky-800 text-gray-100' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
+      <div class="p-4 rounded-bl-2xl rounded-br-2xl <%= message.user? ? 'rounded-tr-2xl' : 'rounded-tl-2xl' %> <%= message.user? ? 'bg-white text-gray-900' : 'bg-sky-200 text-sky-700' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
         <p class="mb-3">
           <%= render_markdown(message.content) if message.content.present? %>
         </p>
-        <div class="text-right text-xs text-gray-600 mt-3">
-          <% if message.status == 'ready' %>
-            <div class="text-green-200">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-            </div>
-          <% else %>
-            <%= message.status %>
-          <% end %>
-        </div>
+        
       </div>
     <% end %>
   </div>

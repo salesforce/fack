@@ -29,7 +29,7 @@
   </div>
 
   <!-- Messages -->
-  <div class="flex-grow overflow-auto" id="messages-container">
+  <div class="flex-grow overflow-auto" id="messages-container-<%=@chat.id%>">
     <%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>
   </div>
 
@@ -46,7 +46,7 @@
     <% end %>
   </div>
 
-  <!-- JavaScript to start the whole page scrolled to the bottom -->
+  <!-- JavaScript to start the whole page scrolled to the bottom and refresh messages -->
   <script>
     function scrollToBottom() {
       window.scrollTo(0, document.body.scrollHeight);
@@ -57,7 +57,23 @@
 
     // Optional: Scroll to the most recent message after submitting a new message
     document.querySelector('form').addEventListener('submit', function() {
-      setTimeout(scrollToBottom, 100); // slight delay to ensure the new message is rendered
+      setTimeout(scrollToBottom, 3000); // slight delay to ensure the new message is rendered
     });
+
+    // Function to fetch and update messages every 3 seconds
+    function refreshMessages() {
+      fetch("<%= chat_path(@chat) %>", { 
+        headers: { 'X-Requested-With': 'XMLHttpRequest' } 
+      })
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newMessages = doc.querySelector('#messages-container-<%=@chat.id%>').innerHTML;
+        document.querySelector('#messages-container-<%=@chat.id%>').innerHTML = newMessages;
+      });
+    }
+
+    setInterval(refreshMessages, 4000);
   </script>
 </div>

@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resources :messages
   resources :chats do
-    resources :messages, only: %i[create destroy]
+    resources :messages, only: %i[create destroy index]
   end
   resources :assistants do
     resources :chats, only: %i[create new]

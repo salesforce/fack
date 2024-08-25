@@ -30,138 +30,134 @@
             <div class="hidden origin-top-right absolute right-0 mt-0 w-64 rounded-md shadow-lg bg-white border-2 border-sky-200" >
               <div class="block px-4 py-2 text-black text-sm text-stone-500"> <%= current_user.email %><%= " (Admin)" if current_user_is_admin?%></div>
               <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
-                <a href="/sessions/logout" class="block px-4 py-2 text-black hover:bg-gray-100">Logout
-                </a>
-                <% if session[:debug] == "true" then %>
-                  <a href="/sessions/set_debug?debug=false" class="block px-4 py-2 text-black hover:bg-gray-100">Disable Debug Mode
-                  </a>
-                <% else %>
-                  <a href="/sessions/set_debug?debug=true" class="block px-4 py-2 text-black hover:bg-gray-100">Enable Debug Mode
-                  </a>
-                <% end %>
-                <% if session[:beta] == "true" then %>
-                  <a href="/sessions/set_beta?beta=false" class="block px-4 py-2 text-black hover:bg-gray-100">Disable Beta Mode
-                  </a>
-                <% else %>
-                  <a href="/sessions/set_beta?beta=true" class="block px-4 py-2 text-black hover:bg-gray-100">Enable Beta Mode
-                  </a>
-                <% end %>
-                <a href="/delayed_jobs" class="block px-4 py-2 text-black hover:bg-gray-100">Job Queue</a>
-                <% if current_user_is_admin? %>
-                  <a href="/assistants" class="block px-4 py-2 text-black hover:bg-gray-100">Assistants</a>
-                  <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens</a>
-                  <a href="/admin/dashboard" class="block px-4 py-2 text-black hover:bg-gray-100">Admin</a>
-                <% end %>
-              </div>
+              </a>
+              <% if session[:debug] == "true" %>
+                <%= link_to "Disable Debug Mode", sessions_set_debug_path(debug: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+              <% else %>
+                <%= link_to "Enable Debug Mode", sessions_set_debug_path(debug: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+              <% end %>
+              <% if session[:beta] == "true" %>
+                <%= link_to "Disable Beta Mode", sessions_set_beta_path(beta: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+              <% else %>
+                <%= link_to "Enable Beta Mode", sessions_set_beta_path(beta: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+              <% end %>
+              <a href="/delayed_jobs" class="block px-4 py-2 text-black hover:bg-gray-100">Job Queue</a>
+              <% if current_user_is_admin? %>
+                <a href="/assistants" class="block px-4 py-2 text-black hover:bg-gray-100">Assistants</a>
+                <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens</a>
+                <a href="/admin/dashboard" class="block px-4 py-2 text-black hover:bg-gray-100">Admin</a>
+              <% end %>
+              <a href="/sessions/logout" class="block px-4 py-2 text-black hover:bg-gray-100">Logout</a>
             </div>
           </div>
-          <script>
-            document.getElementById('menu-button').addEventListener('click', function() {
-            const menu = this.nextElementSibling;
-            menu.classList.toggle('hidden');
-            });
-          </script>
-        <% else %>
-        <% end %>
-      </div>
-    </header>
-    <div class="px-4 bg-sky-900 ">
-      <div class="text-sky-300 flex mx-auto container justify-between items-center">
-        <% if current_user %>
-          <nav>
-            <ul class="flex font-light">
-              <li>
-                <a href="/questions" class="<%= controller_name == 'questions' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-300 hover:text-sky-100 flex items-center mr-2 p-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-                  </svg>
-                  Questions
-                </a>
-              </li>
-              <li>
-                <a href="/libraries" class="<%= controller_name == 'libraries' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-300 hover:text-sky-100 flex items-center mr-2 p-2">
-                  <!-- Add your chosen SVG icon for 'Libraries' here -->
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                  </svg>
-                  Libraries
-                </a>
-              </li>
-              <li>
-                <a href="/documents" class="<%= controller_name == 'documents' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                  Documents
-                </a>
-              </li>
-              <% if session[:beta] == "true" then %>
-                <li>
-                  <a href="/chats" class="<%= controller_name == 'chats' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                    </svg>
-                    Chats
-                  </a>
-                </li>
-                <li>
-                  <a href="/assistants" class="<%= controller_name == 'assistants' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                    </svg>
-                    Assistants
-                  </a>
-                </li>
-              <% end %>
-            </ul>
-          </nav>
-        <% else %>
-        <% end %>
-      </div>
-    </div>
-    <main class="p-4">
-      <div id="flash_messages">
-        <% flash.each do |type, message| %>
-          <div class="<%= flash_class(type) %> mx-auto container p-4 mb-4 text-sm text-white font-semibold rounded-lg" role="alert">
-            <%= message %>
-          </div>
-        <% end %>
-      </div>
-      <div class="mx-auto container">
-        <%= yield %>
-      </div>
-    </main>
-    <% if show_footer? %>
-      <footer class="bg-gray-800 text-white p-4">
-        <div class="container mx-auto text-center flex justify-between items-center">
-          <a href="https://github.com/salesforce/fack" target="github" class="hover:text-gray-300">
-            <svg class="inline-block h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.207 11.385 0.6 0.113 0.793-0.258 0.793-0.577 0-0.285-0.01-1.04-0.015-2.04-3.338 0.724-4.042-1.605-4.042-1.605-0.546-1.387-1.334-1.756-1.334-1.756-1.091-0.747 0.084-0.732 0.084-0.732 1.205 0.085 1.841 1.234 1.841 1.234 1.07 1.835 2.807 1.305 3.492 0.998 0.108-0.775 0.418-1.305 0.762-1.605-2.665-0.304-5.466-1.332-5.466-5.93 0-1.31 0.469-2.382 1.236-3.222-0.124-0.303-0.536-1.524 0.117-3.176 0 0 1.008-0.322 3.3 1.23 0.957-0.266 1.983-0.399 3.004-0.404 1.02 0.005 2.047 0.138 3.004 0.404 2.29-1.552 3.297-1.23 3.297-1.23 0.653 1.652 0.242 2.873 0.118 3.176 0.768 0.84 1.235 1.912 1.235 3.222 0 4.61-2.804 5.625-5.476 5.922 0.43 0.371 0.824 1.102 0.824 2.222 0 1.606-0.015 2.897-0.015 3.293 0 0.321 0.192 0.694 0.801 0.576C20.565 22.092 24 17.596 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
-            GitHub
-          </a>
-          <div class="text-sm text-stone-400 bg-gray-900 p-2 border border-gray-700 rounded-lg">
-            AI Generated Answers From <b>Your</b> Documentation
-          </div>
-          <div class="text-left">
-            <% cache "footer", expires_in: 60.seconds do %>
-              <span class="text-xs text-stone-300">LAST 7 DAYS</span>
-              <div class="text-sky-300 text-sm ">
-                <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
-              </div>
-              <div class="text-sky-300 text-sm ">
-                <%= Question.all.where("created_at >= ?", 7.days.ago).map(&:get_upvotes).sum(&:size) %> <span class="font-light text-stone-400"> helpful answers</span>
-              </div>
-              <div class="text-sky-300 text-sm ">
-                <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
-              </div>
-              <div class="text-sky-300 text-sm ">
-                <%= User.all.where("last_login >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> visitors</span>
-              </div>
-            <% end %>
-          </div>
         </div>
-      </footer>
-    <% end %>
-    <div class="bg-stone-200 p-8">
+        <script>
+          document.getElementById('menu-button').addEventListener('click', function() {
+          const menu = this.nextElementSibling;
+          menu.classList.toggle('hidden');
+          });
+        </script>
+      <% else %>
+      <% end %>
     </div>
-  </body>
+  </header>
+  <div class="px-4 bg-sky-900 ">
+    <div class="text-sky-300 flex mx-auto container justify-between items-center">
+      <% if current_user %>
+        <nav>
+          <ul class="flex font-light">
+            <li>
+              <a href="/questions" class="<%= controller_name == 'questions' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-300 hover:text-sky-100 flex items-center mr-2 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                </svg>
+                Questions
+              </a>
+            </li>
+            <li>
+              <a href="/libraries" class="<%= controller_name == 'libraries' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-300 hover:text-sky-100 flex items-center mr-2 p-2">
+                <!-- Add your chosen SVG icon for 'Libraries' here -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                </svg>
+                Libraries
+              </a>
+            </li>
+            <li>
+              <a href="/documents" class="<%= controller_name == 'documents' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+                Documents
+              </a>
+            </li>
+            <% if session[:beta] == "true" then %>
+              <li>
+                <a href="/chats" class="<%= controller_name == 'chats' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                  </svg>
+                  Chats
+                </a>
+              </li>
+              <li>
+                <a href="/assistants" class="<%= controller_name == 'assistants' ? 'text-sky-100 border-sky-300 bg-sky-600' : '' %> hover:border-sky-400 hover:text-sky-100 flex items-center mr-2 p-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                  </svg>
+                  Assistants
+                </a>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      <% else %>
+      <% end %>
+    </div>
+  </div>
+  <main class="p-4">
+    <div id="flash_messages">
+      <% flash.each do |type, message| %>
+        <div class="<%= flash_class(type) %> mx-auto container p-4 mb-4 text-sm text-white font-semibold rounded-lg" role="alert">
+          <%= message %>
+        </div>
+      <% end %>
+    </div>
+    <div class="mx-auto container">
+      <%= yield %>
+    </div>
+  </main>
+  <% if show_footer? %>
+    <footer class="bg-gray-800 text-white p-4">
+      <div class="container mx-auto text-center flex justify-between items-center">
+        <a href="https://github.com/salesforce/fack" target="github" class="hover:text-gray-300">
+          <svg class="inline-block h-6 w-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.207 11.385 0.6 0.113 0.793-0.258 0.793-0.577 0-0.285-0.01-1.04-0.015-2.04-3.338 0.724-4.042-1.605-4.042-1.605-0.546-1.387-1.334-1.756-1.334-1.756-1.091-0.747 0.084-0.732 0.084-0.732 1.205 0.085 1.841 1.234 1.841 1.234 1.07 1.835 2.807 1.305 3.492 0.998 0.108-0.775 0.418-1.305 0.762-1.605-2.665-0.304-5.466-1.332-5.466-5.93 0-1.31 0.469-2.382 1.236-3.222-0.124-0.303-0.536-1.524 0.117-3.176 0 0 1.008-0.322 3.3 1.23 0.957-0.266 1.983-0.399 3.004-0.404 1.02 0.005 2.047 0.138 3.004 0.404 2.29-1.552 3.297-1.23 3.297-1.23 0.653 1.652 0.242 2.873 0.118 3.176 0.768 0.84 1.235 1.912 1.235 3.222 0 4.61-2.804 5.625-5.476 5.922 0.43 0.371 0.824 1.102 0.824 2.222 0 1.606-0.015 2.897-0.015 3.293 0 0.321 0.192 0.694 0.801 0.576C20.565 22.092 24 17.596 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+          GitHub
+        </a>
+        <div class="text-sm text-stone-400 bg-gray-900 p-2 border border-gray-700 rounded-lg">
+          AI Generated Answers From <b>Your</b> Documentation
+        </div>
+        <div class="text-left">
+          <% cache "footer", expires_in: 60.seconds do %>
+            <span class="text-xs text-stone-300">LAST 7 DAYS</span>
+            <div class="text-sky-300 text-sm ">
+              <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= Question.all.where("created_at >= ?", 7.days.ago).map(&:get_upvotes).sum(&:size) %> <span class="font-light text-stone-400"> helpful answers</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>
+            </div>
+            <div class="text-sky-300 text-sm ">
+              <%= User.all.where("last_login >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> visitors</span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </footer>
+  <% end %>
+  <div class="bg-stone-200 p-8">
+  </div>
+</body>
 </html>

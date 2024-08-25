@@ -9,14 +9,11 @@ Rails.application.routes.draw do
     resources :chats, only: %i[create new]
   end
 
-  # Root route
-  root 'questions#new' # Setting the questions new page as the root page
-
   # Auth routes
-  resources :sessions, only: %i[new create destroy]
-  get '/sessions/logout', to: 'sessions#logout'
+  resources :sessions, only: %i[new create]
   get '/sessions/set_debug', to: 'sessions#set_debug'
   get '/sessions/set_beta', to: 'sessions#set_beta'
+  get '/sessions/logout', to: 'sessions#logout', as: :logout
 
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
@@ -52,4 +49,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
   end
+
+  root 'questions#new' # Setting the questions new page as the root page
 end

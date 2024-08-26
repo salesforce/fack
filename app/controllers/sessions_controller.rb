@@ -22,10 +22,13 @@ class SessionsController < ApplicationController
 
   def set_beta
     session[:beta] = params[:beta]
-    redirect_to root_url, notice: "Beta mode: #{session[:debug]}"
+    redirect_to root_url, notice: "Beta mode: #{session[:beta]}"
   end
 
   def logout
+    Rails.logger.debug "Session before Logout: #{session.to_hash}"
+    Rails.logger.info "Logout called: #{request.referrer}, #{request.user_agent}, #{request.remote_ip}, #{session.to_hash}"
+
     session[:user_id] = nil
     redirect_to root_url
   end

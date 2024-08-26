@@ -22,4 +22,8 @@ module ApplicationHelper
       'bg-gray-500'
     end
   end
+
+  def show_footer?
+    @show_footer != false
+  end
 end

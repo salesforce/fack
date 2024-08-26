@@ -7,7 +7,9 @@ class ChatsController < ApplicationController
   end
 
   # GET /chats/1 or /chats/1.json
-  def show; end
+  def show
+    @show_footer = false
+  end
 
   # GET /chats/new
   def new

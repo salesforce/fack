@@ -20,7 +20,9 @@
         <p class="mb-3">
           <%= render_markdown(message.content) if message.content.present? %>
         </p>
-        
+        <% if session[:debug] == "true" && message.prompt.present? %>
+          <textarea class="w-full rounded border bg-stone-100" rows=5><%= message.prompt %></textarea>
+        <% end %>
       </div>
     <% end %>
   </div>

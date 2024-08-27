@@ -1,4 +1,4 @@
-<div class="mx-auto w-full flex flex-col min-h-screen">
+<div class="mx-auto w-full flex flex-col min-h-screen" id="chat-container">
   <!-- Breadcrumbs -->
   <nav class="mb-4">
     <ul class="flex space-x-2 text-gray-600">
@@ -27,9 +27,7 @@
     </div>
   </div>
   <!-- Messages -->
-  <div class="flex-grow overflow-auto" id="messages-container-<%=@chat.id%>">
-    <%= render partial: 'messages/message', collection: @chat.messages.order(created_at: :asc) %>
-  </div>
+  <turbo-frame id="messages-<%=@chat.id%>" src="<%= chat_messages_path(@chat) %>"></turbo-frame>
   <!-- Input Form Fixed at Bottom -->
   <div class="w-full fixed bottom-0 left-0 bg-white p-4 border-t border-gray-300">
     <%= form_with(model: [@chat, Message.new], local: true, class: 'flex space-x-2') do |f| %>
@@ -45,38 +43,21 @@
   <!-- JavaScript to start the whole page scrolled to the bottom and refresh messages -->
   <script>
     function scrollToBottom() {
-      const chatContainer = document.querySelector('#messages-container-<%=@chat.id%>');
-      if (chatContainer) {
-        window.scrollTo(0, document.body.scrollHeight);
+      const turboFrame = document.getElementById('messages-list');
+      if (turboFrame) {
+        console.log(turboFrame.scrollHeight);
+        window.scrollTo(0, turboFrame.scrollHeight);
       }
     }
 
-
-    document.addEventListener("turbo:load", scrollToBottom); // Trigger on Turbo page load
     document.addEventListener("DOMContentLoaded", scrollToBottom); // Trigger on full page load
+    document.addEventListener("turbo:frame-load", scrollToBottom); // Trigger on Turbo page load
 
-    // Optional: Scroll to the most recent message after submitting a new message
-    document.querySelector('form').addEventListener('submit', function() {
-      setTimeout(scrollToBottom, 3000); // slight delay to ensure the new message is rendered
-    });
-
-    // Function to fetch and update messages every 3 seconds
-    function refreshMessages() {
-      const chatContainer = document.querySelector('#messages-container-<%=@chat.id%>');
-      if (chatContainer) {
-        fetch("<%= chat_path(@chat) %>", {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          const newMessages = doc.querySelector('#messages-container-<%=@chat.id%>').innerHTML;
-          document.querySelector('#messages-container-<%=@chat.id%>').innerHTML = newMessages;
-        });
-      }
-    }
-
-    setInterval(refreshMessages, 4000);
+    // Refresh the Turbo Frame every 5 seconds (5000 milliseconds)
+    setInterval(function() {
+      const turboFrame = document.getElementById('messages-<%=@chat.id%>');
+      turboFrame.src = `<%= chat_messages_path(@chat) %>`;
+      //turboFrame.addEventListener("turbo:frame-load", scrollToBottom); // Scroll after the frame is loaded
+    }, 5000);
   </script>
 </div>

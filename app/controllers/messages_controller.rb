@@ -4,7 +4,13 @@ class MessagesController < ApplicationController
 
   # GET /messages or /messages.json
   def index
-    @messages = Message.all
+    @messages = if @chat
+                  @chat.messages.order(created_at: :asc)
+                else
+                  Message.all.order(created_at: :asc)
+                end
+
+    @messages
   end
 
   # GET /messages/1 or /messages/1.json

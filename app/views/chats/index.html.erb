@@ -1,11 +1,7 @@
 <div class="w-full">
   <% content_for :title, "Chats" %>
   <div class="flex justify-between items-center">
-    <div>
-      <h1 class="font-bold text-4xl">Chats</h1>
-      <p class="text-gray-600 mt-2 text-sm">These are previous chats you can review or continue.</p>
-      <!-- Tagline description -->
-    </div>
+    <%= render 'shared/page_header', title: 'Chats', subtitle: 'Discussion with assistants' %>
     <%= link_to "New +", assistants_path, class: "rounded-lg py-3 px-5 bg-sky-900 text-white block font-medium" %>
   </div>
   <%= paginate @chats %>

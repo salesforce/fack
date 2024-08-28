@@ -9,11 +9,11 @@ class AssistantPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin?
+    user.admin? || user.editor?
   end
 
   def update?
-    user.admin?
+    user.admin? || user.editor?
   end
 
   def destroy?

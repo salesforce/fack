@@ -30,7 +30,7 @@
   <turbo-frame id="messages-<%=@chat.id%>" src="<%= chat_messages_path(@chat) %>"></turbo-frame>
   <!-- Input Form Fixed at Bottom -->
   <div class="w-full fixed bottom-0 left-0 bg-white p-4 border-t border-gray-300">
-    <%= form_with(model: [@chat, Message.new], local: true, class: 'flex space-x-2') do |f| %>
+    <%= form_with(model: [@chat, Message.new], remote: true, class: 'flex space-x-2') do |f| %>
       <%= f.text_field :content, class: 'flex-grow p-2 border border-gray-300 rounded-lg' %>
       <button type="submit" class="flex items-center justify-center space-x-2 rounded-lg py-2 px-4 bg-sky-600 text-white font-medium">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -45,19 +45,27 @@
     function scrollToBottom() {
       const turboFrame = document.getElementById('messages-list');
       if (turboFrame) {
-        console.log(turboFrame.scrollHeight);
         window.scrollTo(0, turboFrame.scrollHeight);
       }
     }
 
-    document.addEventListener("DOMContentLoaded", scrollToBottom); // Trigger on full page load
     document.addEventListener("turbo:frame-load", scrollToBottom); // Trigger on Turbo page load
 
-    // Refresh the Turbo Frame every 5 seconds (5000 milliseconds)
-    setInterval(function() {
-      const turboFrame = document.getElementById('messages-<%=@chat.id%>');
-      turboFrame.src = `<%= chat_messages_path(@chat) %>`;
-      //turboFrame.addEventListener("turbo:frame-load", scrollToBottom); // Scroll after the frame is loaded
-    }, 5000);
+    document.addEventListener("turbo:frame-load", function(event) {
+      if (event.target.id === "messages-<%= @chat.id %>") {
+        console.log("Turbo Frame loaded, reattaching event listeners");
+
+        // Reattach the submit event listener
+        document.querySelector('form.flex').addEventListener('submit', function(event) {
+          setTimeout(function() {
+            const turboFrame = document.getElementById('messages-<%= @chat.id %>');
+            turboFrame.src = null;  // Clear the src attribute
+            turboFrame.src = `<%= chat_messages_path(@chat) %>`;  // Set the new src to reload the frame
+            console.log(turboFrame.src);
+          }, 6000);  // Delay of 6000 milliseconds (6 seconds)
+        });
+      }
+    });
+
   </script>
 </div>

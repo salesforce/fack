@@ -3,7 +3,7 @@ class ChatsController < ApplicationController
 
   # GET /chats or /chats.json
   def index
-    @chats = Chat.all
+    @chats = Chat.all.page(params[:page])
   end
 
   # GET /chats/1 or /chats/1.json

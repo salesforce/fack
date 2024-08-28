@@ -1,5 +1,4 @@
 <div class="w-full">
-
   <% content_for :title, "Chats" %>
   <div class="flex justify-between items-center">
     <div>
@@ -9,6 +8,7 @@
     </div>
     <%= link_to "New +", assistants_path, class: "rounded-lg py-3 px-5 bg-sky-900 text-white block font-medium" %>
   </div>
+  <%= paginate @chats %>
   <div id="chats" class="min-w-full mt-5 space-y-4">
     <% @chats.order(created_at: :desc).each do |chat| %>
       <%= link_to chat_path(chat), class: "block bg-white rounded-lg shadow-lg p-4 hover:bg-gray-100" do %>

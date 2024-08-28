@@ -1,8 +1,17 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing assistant</h1>
-
+<div class="w-full">
+  <nav class="mb-4">
+    <ul class="flex space-x-2 text-gray-600">
+      <li>
+        <%= link_to "Assistants", assistants_path, class: "text-sky-500 hover:text-sky-800" %>
+      </li>
+      <li>/</li>
+      <li>
+        <%= link_to @assistant.name, assistant_path(@assistant), class: "text-sky-500 hover:text-sky-800" %>
+      </li>
+    </ul>
+  </nav>
+  <h1 class="font-bold text-4xl">Editing Assistant</h1>
   <%= render "form", assistant: @assistant %>
-
   <%= link_to "Show this assistant", @assistant, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   <%= link_to "Back to assistants", assistants_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
 </div>

@@ -4,5 +4,24 @@
     <% @messages.each do |message| %>
       <%= render partial: 'messages/message', locals: { message: message } %>
     <% end %>
+    <% if @messages.last.from == 'user' %>
+      <script>
+        reloadTurboFrameWithDelay(3000);
+      </script>
+    <% end %>
   </div>
+
+
+  <script>
+    //If the last message is from a user, we refresh the list until the last message is not from a user
+    function reloadTurboFrameWithDelay(delay) {
+      setTimeout(function() {
+        const turboFrame = document.getElementById("messages-<%=@chat.id%>");
+        if (turboFrame) {
+          turboFrame.src = turboFrame.src;  // Set the new src to reload the frame
+          console.log("Reloading Turbo Frame:", turboFrame.src);
+        }
+      }, delay);
+    }
+  </script>
 </turbo-frame>

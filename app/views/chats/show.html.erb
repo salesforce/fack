@@ -40,6 +40,10 @@
       </button>
     <% end %>
   </div>
+
+
+
+
   <!-- JavaScript to start the whole page scrolled to the bottom and refresh messages -->
   <script>
     function scrollToBottom() {
@@ -50,22 +54,6 @@
     }
 
     document.addEventListener("turbo:frame-load", scrollToBottom); // Trigger on Turbo page load
-
-    document.addEventListener("turbo:frame-load", function(event) {
-      if (event.target.id === "messages-<%= @chat.id %>") {
-        console.log("Turbo Frame loaded, reattaching event listeners");
-
-        // Reattach the submit event listener
-        document.querySelector('form.flex').addEventListener('submit', function(event) {
-          setTimeout(function() {
-            const turboFrame = document.getElementById('messages-<%= @chat.id %>');
-            turboFrame.src = null;  // Clear the src attribute
-            turboFrame.src = `<%= chat_messages_path(@chat) %>`;  // Set the new src to reload the frame
-            console.log(turboFrame.src);
-          }, 6000);  // Delay of 6000 milliseconds (6 seconds)
-        });
-      }
-    });
-
+    
   </script>
 </div>

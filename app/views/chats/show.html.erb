@@ -1,4 +1,5 @@
 <div class="mx-auto w-full flex flex-col min-h-screen" id="chat-container">
+    <% content_for :title, @chat.first_message.truncate(20) %>
   <!-- Breadcrumbs -->
   <nav class="mb-4">
     <ul class="flex space-x-2 text-gray-600">

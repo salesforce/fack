@@ -32,9 +32,9 @@
           <p class="mb-3">
             <% cache message do %>
               <%= message.content.present? && !message.user? ? render_markdown(message.content) : message.content %>
-              <% if session[:debug] == "true" && message.prompt.present? %>
-                <textarea class="w-full rounded border bg-stone-100" rows=5><%= message.prompt %></textarea>
-              <% end %>
+            <% end %>
+            <% if session[:debug] == "true" && message.prompt.present? %>
+              <textarea class="w-full rounded border bg-stone-100" rows=5><%= message.prompt %></textarea>
             <% end %>
           </p>
         </div>

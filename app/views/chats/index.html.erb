@@ -10,7 +10,7 @@
     <% if params[:all].present? %>
       <%= link_to "Show My Chats", chats_path, class: "rounded-lg py-2 px-4 bg-white text-sky-500 block font-medium ml-4 hover:bg-gray-100 border border-stone-200" %>
     <% else %>
-      <%= link_to "Show All Chats", chats_path(all: 1), class: "rounded-lg py-2 px-4 bg-white text-sky-500 block font-medium ml-4 hover:bg-gray-100 border border-stone-200" %>
+      <%= link_to "Show All Chats", chats_path(all: 1), class: "rounded-lg py-2 px-4 bg-white text-sky-500 block font-medium hover:bg-gray-100 border border-stone-200" %>
     <% end %>
   </div>
 

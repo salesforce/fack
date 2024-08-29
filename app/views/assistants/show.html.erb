@@ -12,8 +12,9 @@
       </li>
     </ul>
   </nav>
-  <h2 class="text-3xl font-bold mb-4">
+  <h2 class="text-3xl font-bold mb-4 flex items-center">
     <%= @assistant.name %>
+    <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
   </h2>
   <div class="">
     <%= link_to "New chat", new_assistant_chat_path(@assistant), class: "mt-2 rounded-lg py-3 px-5 bg-sky-500 inline-block font-medium text-white" %>

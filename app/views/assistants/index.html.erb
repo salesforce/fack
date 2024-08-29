@@ -10,8 +10,9 @@
     <% @assistants.each do |assistant| %>
       <div class="flex justify-between items-center bg-white rounded-lg shadow-lg p-4">
         <div class="w-5/6">
-          <h2 class="font-bold text-xl mb-2">
-            <%= link_to assistant.name, assistant, class: "text-sky-500 hover:underline" %>
+          <h2 class="font-bold text-xl mb-2 flex items-center ">
+            <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
+            <%= link_to assistant.name, assistant, class: "text-sky-500 hover:underline ml-1" %>
           </h2>
           <p class="text-gray-500 text-sm"><%= assistant.description %></p>
         </div>

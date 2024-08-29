@@ -35,11 +35,11 @@ class CustomRender < Redcarpet::Render::HTML
   def header(title, level)
     case level
     when 1
-      %(<h1 class="text-3xl">#{title}</h1>)
+      %(<h1 class="text-4xl mt-2">#{title}</h1>)
     when 2
-      %(<h2 class="text-2xl">#{title}</h2>)
+      %(<h2 class="text-3xl mt-2">#{title}</h2>)
     when 3
-      %(<h2 class="text-xl">#{title}</h2>)
+      %(<h3 class="text-2xl mt-2">#{title}</h3>)
     end
   end
 

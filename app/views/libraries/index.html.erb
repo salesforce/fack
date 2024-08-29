@@ -1,11 +1,12 @@
 <% content_for :title, "Libraries" %>
 <div class="">
   <div class="flex justify-between items-center">
-    <h1 class="font-bold text-3xl text-sky-800">Libraries</h1>
+    <%= render 'shared/page_header', title: 'Libraries', subtitle: 'Collections of similar documents.' %>
     <% if policy(Library.new).create? %>
       <%= link_to 'New', new_library_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
     <% end %>
   </div>
+  <%= paginate @libraries %>
   <ul class="border mt-2 rounded-xl">
     <% @libraries.each do |library| %>
       <li class="bg-white text-gray-800 last:rounded-b-xl first:rounded-t-xl hover:bg-sky-800 hover:text-white border-b border-stone-200 last:border-b-0">

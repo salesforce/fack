@@ -125,7 +125,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_28_193047) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.text "prompt"
-    t.integer "status"
+    t.integer "status", default: 0
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end

@@ -3,7 +3,11 @@ class ChatsController < ApplicationController
 
   # GET /chats or /chats.json
   def index
-    @chats = Chat.all.page(params[:page])
+    @chats = if params[:all].present?
+               Chat.all.page(params[:page])
+             else
+               Chat.where(user_id: current_user.id).page(params[:page])
+             end
   end
 
   # GET /chats/1 or /chats/1.json

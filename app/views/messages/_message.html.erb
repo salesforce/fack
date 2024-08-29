@@ -28,7 +28,7 @@
           </script>
         <% end %>
       <% else %>
-        <div class="p-4 rounded-bl-2xl rounded-br-2xl <%= message.user? ? 'rounded-tr-2xl' : 'rounded-tl-2xl' %> <%= message.user? ? 'bg-white text-gray-900' : 'bg-sky-200 text-sky-700' %> border <%= message.user? ? 'border-stone-200' : 'border-blue-300' %> shadow-sm">
+        <div class="p-4 rounded-bl-2xl rounded-br-2xl <%= message.user? ? 'rounded-tr-2xl' : 'rounded-tl-2xl' %> <%= message.user? ? 'bg-white text-stone-600' : 'bg-sky-100 text-sky-800' %> border <%= message.user? ? 'border-stone-200' : 'border-sky-300' %> shadow-sm">
           <p class="mb-3">
             <% cache message do %>
               <%= message.content.present? && !message.user? ? render_markdown(message.content) : message.content %>

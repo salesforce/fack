@@ -10,33 +10,47 @@
     </div>
   <% end %>
   <div class="my-5">
+    <%= form.label :status %>
+    <%= form.select :status, Assistant.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
+  
+  <div class="my-5">
     <%= form.label :name %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :description %>
     <%= form.text_area :description, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :libraries %>
-    <%= form.text_field :libraries, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.text_field :libraries, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :input %>
     <%= form.text_area :input, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :instructions %>
     <%= form.text_area :instructions, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :output %>
     <%= form.text_area :output, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
   <div class="my-5">
     <%= form.label :context %>
     <%= form.text_area :context, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+
+
+
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
   </div>

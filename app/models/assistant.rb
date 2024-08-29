@@ -1,6 +1,8 @@
 class Assistant < ApplicationRecord
   has_many :chats
 
+  enum status: { development: 0, ready: 1 }
+
   # Add this line to make the libraries field required
   validates :libraries, presence: true
 

@@ -27,7 +27,7 @@ module Confluence
     private
 
     def base_url
-      'https://confluence.internal.salesforce.com/rest/api/search?cql='
+      ENV.fetch('CONFLUENCE_URL', nil)
     end
 
     def build_cql(spaces, query)

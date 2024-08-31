@@ -10,6 +10,8 @@ class GenerateMessageResponseJob < ApplicationJob
   def perform(_message_id)
     message = Message.find(_message_id)
 
+    assistant = message.chat.assistant
+
     llm_message = Message.new
 
     # Get embedding from GPT
@@ -65,6 +67,22 @@ class GenerateMessageResponseJob < ApplicationJob
     prompt += '<CONTEXT>'
     prompt += 'SPECIAL INFORMATION\n\n'
     prompt += message.chat.assistant.context
+
+    # QUIP Doc
+    quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
+
+    uri = URI.parse(assistant.quip_url)
+    path = uri.path.sub(%r{^/}, '') # Removes the leading /
+    quip_thread = quip_client.get_thread(path)
+
+    prompt += 'QUIP DOCUMENT\n\n'
+    prompt += quip_thread.to_json
+    # query = Confluence::Query.new
+    # spaces = params[:spaces]
+    # query_string = params[:query]
+
+    # @results = query.query_confluence(spaces, query_string)
+    # puts @results.to_json
 
     prompt += '\n\nDOCUMENTS'
     if related_docs.each_with_index do |doc, index|

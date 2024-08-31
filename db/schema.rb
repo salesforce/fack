@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_29_172958) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_31_003744) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_29_172958) do
     t.text "context"
     t.text "description"
     t.integer "status", default: 0
+    t.string "quip_url"
   end
 
   create_table "chats", force: :cascade do |t|

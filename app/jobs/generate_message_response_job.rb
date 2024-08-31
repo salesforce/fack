@@ -105,7 +105,6 @@ class GenerateMessageResponseJob < ApplicationJob
       prompt += "No documents available\n"
     end
 
-    # Insert quip doc
     prompt += "</CONTEXT>\n\n"
 
     prompt += '<PREVIOUS_MESSAGES>'

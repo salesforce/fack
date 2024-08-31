@@ -87,7 +87,6 @@ class GenerateMessageResponseJob < ApplicationJob
       confluence_query_string = message.content
 
       confluence_results = confluence_query.query_confluence(spaces, confluence_query_string)
-      puts confluence_results
       prompt += confluence_results.to_json.truncate(70_000)
     end
 
@@ -120,7 +119,6 @@ class GenerateMessageResponseJob < ApplicationJob
         #{message.content}
       </{{DATA_TAG}}>
     END_PROMPT
-    # Log this later - puts 'Total doc tokens used: ' + token_count.to_s
 
     prompt = replace_tag_with_random(prompt, '{{PROGRAM_TAG}}')
     prompt = replace_tag_with_random(prompt, '{{DATA_TAG}}')

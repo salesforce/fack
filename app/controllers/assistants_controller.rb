@@ -68,6 +68,6 @@ class AssistantsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assistant_params
-    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url)
+    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces)
   end
 end

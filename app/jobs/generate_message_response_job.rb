@@ -69,20 +69,27 @@ class GenerateMessageResponseJob < ApplicationJob
     prompt += message.chat.assistant.context
 
     # QUIP Doc
-    quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
+    if assistant.quip_url.present?
+      quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
 
-    uri = URI.parse(assistant.quip_url)
-    path = uri.path.sub(%r{^/}, '') # Removes the leading /
-    quip_thread = quip_client.get_thread(path)
+      uri = URI.parse(assistant.quip_url)
+      path = uri.path.sub(%r{^/}, '') # Removes the leading /
+      quip_thread = quip_client.get_thread(path)
 
-    prompt += 'QUIP DOCUMENT\n\n'
-    prompt += quip_thread.to_json
-    # query = Confluence::Query.new
-    # spaces = params[:spaces]
-    # query_string = params[:query]
+      prompt += 'QUIP DOCUMENT\n\n'
+      prompt += quip_thread.to_json
+    end
 
-    # @results = query.query_confluence(spaces, query_string)
-    # puts @results.to_json
+    if assistant.confluence_spaces.present?
+      prompt += 'CONFLUENCE DOCUMENTS\n\n'
+      confluence_query = Confluence::Query.new
+      spaces = assistant.confluence_spaces
+      confluence_query_string = message.content
+
+      confluence_results = confluence_query.query_confluence(spaces, confluence_query_string)
+      puts confluence_results
+      prompt += confluence_results.to_json.truncate(70_000)
+    end
 
     prompt += '\n\nDOCUMENTS'
     if related_docs.each_with_index do |doc, index|

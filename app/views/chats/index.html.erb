@@ -25,7 +25,7 @@
               </svg>
               <h2 class="font-bold text-xl "><%= chat.assistant.name %></h2>
             </div>
-            <p class="text-gray-700 font-mono"><%= truncate(chat.messages.first.content, length: 100) %></p>
+            <p class="text-gray-700 font-mono"><%= truncate(chat.messages.first.content, length: 100) if chat.messages.first %></p>
           </div>
           <div class="text-gray-500 text-sm">
             <%= time_ago_in_words(chat.created_at) %> ago

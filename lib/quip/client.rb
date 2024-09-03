@@ -73,7 +73,7 @@ module Quip
 
     # Fetches a single thread by its ID
     def get_thread(id)
-      get_request("threads/#{id}")
+      get_request("threads/#{id}/html")
     end
 
     # Fetches multiple threads by their IDs
@@ -96,7 +96,7 @@ module Quip
     private
 
     def get_request(path, params = {})
-      uri = URI.join(@base_url, "/1/#{path}")
+      uri = URI.join(@base_url, "/2/#{path}")
       uri.query = URI.encode_www_form(clean_params(params))
       request = Net::HTTP::Get.new(uri)
       request['Authorization'] = "Bearer #{@access_token}" if @access_token
@@ -104,7 +104,7 @@ module Quip
     end
 
     def post_request(path, post_data = {})
-      uri = URI.join(@base_url, "/1/#{path}")
+      uri = URI.join(@base_url, "/2/#{path}")
       request = Net::HTTP::Post.new(uri)
       request['Authorization'] = "Bearer #{@access_token}" if @access_token
       request.set_form_data(clean_params(post_data))

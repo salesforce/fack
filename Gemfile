@@ -117,3 +117,5 @@ gem 'pundit', '~> 2.3'
 gem 'bundle-audit'
 
 gem 'brakeman'
+
+gem 'reverse_markdown'

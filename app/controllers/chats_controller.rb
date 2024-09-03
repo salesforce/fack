@@ -26,13 +26,16 @@ class ChatsController < ApplicationController
 
   # POST /chats or /chats.json
   def create
-    @assistant = Assistant.find(params[:assistant_id])
-    @chat = @assistant.chats.new(chat_params) # Assuming `chats` is the relationship between Assistant and Chat
-    @chat.user_id = @current_user.id
+    @chat = Chat.new(chat_params)
+    @chat.user_id = current_user.id
+
+    if assistant = Assistant.find_by(id: params[:assistant_id])
+      @chat.assistant = assistant
+    end
 
     respond_to do |format|
       if @chat.save
-        @chat.messages.create(content: @chat.first_message, user_id: @current_user.id, from: :user)
+        @chat.messages.create(content: @chat.first_message, user_id: @chat.user_id, from: :user)
         format.html { redirect_to chat_url(@chat) }
         format.json { render :show, status: :created, location: @chat }
       else

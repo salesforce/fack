@@ -3,7 +3,7 @@ class AssistantsController < ApplicationController
 
   # GET /assistants or /assistants.json
   def index
-    @assistants = Assistant.all
+    @assistants = Assistant.all.order(status: :desc)
   end
 
   # GET /assistants/1 or /assistants/1.json

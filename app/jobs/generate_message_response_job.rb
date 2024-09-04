@@ -77,7 +77,10 @@ class GenerateMessageResponseJob < ApplicationJob
       quip_thread = quip_client.get_thread(path)
 
       prompt += 'QUIP DOCUMENT\n\n'
-      prompt += quip_thread.to_json
+      # The quip api only returns html which has too much extra junk.
+      # Convert to md for smaller size
+      markdown_quip = ReverseMarkdown.convert quip_thread['html']
+      prompt += markdown_quip
     end
 
     if assistant.confluence_spaces.present?

@@ -265,6 +265,8 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.8)
       io-console (~> 0.5)
+    reverse_markdown (2.1.1)
+      nokogiri
     rexml (3.3.6)
       strscan
     rspec-core (3.13.0)
@@ -388,6 +390,7 @@ DEPENDENCIES
   rails-controller-testing
   redcarpet
   redis (~> 4.0)
+  reverse_markdown
   rspec-rails (~> 6.1)
   rubocop
   ruby-saml

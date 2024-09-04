@@ -14,7 +14,7 @@ RSpec.describe Message, type: :model do
            libraries: '1,2,3') # Assuming libraries expects a CSV of numbers
   end
 
-  let(:chat) { create(:chat, user:, assistant:) }
+  let(:chat) { create(:chat, first_message: 'My message', user:, assistant:) }
 
   it 'is valid with valid attributes' do
     message = Message.new(content: 'Hello, how are you?', chat:, user:, from: :user)

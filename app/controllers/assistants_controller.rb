@@ -19,7 +19,8 @@ class AssistantsController < ApplicationController
 
   # POST /assistants or /assistants.json
   def create
-    @assistant = Assistant.new(assistant_params)
+    json = JSON.parse(params[:json])
+    @assistant = Assistant.new(json || assistant_params)
 
     authorize @assistant
 

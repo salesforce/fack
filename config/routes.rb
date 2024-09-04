@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 Rails.application.routes.draw do
   resources :messages
   resources :chats do
@@ -7,6 +5,12 @@ Rails.application.routes.draw do
   end
   resources :assistants do
     resources :chats, only: %i[create new]
+
+    # Adding the import route for all assistants
+    collection do
+      post 'import'
+      get 'import'
+    end
   end
 
   # Auth routes

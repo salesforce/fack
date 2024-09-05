@@ -12,6 +12,7 @@ class AssistantsController < ApplicationController
   # GET /assistants/new
   def new
     @assistant = Assistant.new
+    @assistant.user_id = current_user.id
   end
 
   # GET /assistants/1/edit
@@ -20,7 +21,6 @@ class AssistantsController < ApplicationController
   # POST /assistants or /assistants.json
   def create
     @assistant = Assistant.new(assistant_params)
-    @assistant.user_id = current_user.id
 
     authorize @assistant
 

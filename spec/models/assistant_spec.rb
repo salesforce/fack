@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Assistant, type: :model do
+  let(:user) { create(:user) }
+
   describe 'validations' do
     it { should validate_presence_of(:libraries) }
     it { should validate_presence_of(:input) }
@@ -9,7 +11,7 @@ RSpec.describe Assistant, type: :model do
 
     context 'libraries CSV validation' do
       it 'is valid with a valid CSV string of numbers' do
-        assistant = Assistant.new(libraries: '1,2,3.5,4', input: 'input', instructions: 'instructions', output: 'output')
+        assistant = Assistant.new(libraries: '1,2,3.5,4', input: 'input', user:, instructions: 'instructions', output: 'output')
         expect(assistant).to be_valid
       end
 

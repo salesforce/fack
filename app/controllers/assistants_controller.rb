@@ -12,6 +12,7 @@ class AssistantsController < ApplicationController
   # GET /assistants/new
   def new
     @assistant = Assistant.new
+    @assistant.user_id = current_user.id
   end
 
   # GET /assistants/1/edit
@@ -68,6 +69,6 @@ class AssistantsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assistant_params
-    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces)
+    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces, :user_id)
   end
 end

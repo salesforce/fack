@@ -14,6 +14,10 @@
     <%= form.select :status, Assistant.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
+    <%= form.label :user_id, 'Owner' %>
+    <%= form.collection_select :user_id, User.all.order(email: :asc), :id, :email, {include_blank: 'Select a User'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
+  </div>
+  <div class="my-5">
     <%= form.label :name %>
     <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>

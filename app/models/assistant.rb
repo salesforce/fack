@@ -1,5 +1,6 @@
 class Assistant < ApplicationRecord
   has_many :chats
+  belongs_to :user
 
   enum status: { development: 0, ready: 1 }
 

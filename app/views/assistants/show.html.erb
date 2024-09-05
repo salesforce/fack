@@ -13,10 +13,14 @@
     </ul>
   </nav>
   <div class="flex justify-between items-center">
-    <h2 class="text-3xl font-bold mb-4 flex items-center">
-      <%= @assistant.name %>
-      <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
-    </h2>
+    <div>
+      <h2 class="text-3xl font-bold flex items-center">
+        <%= @assistant.name %>
+        <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
+      </h2>
+      <%= render partial: 'shared/meta_info', locals: { email: @assistant.user ? @assistant.user.email : "admin", created_at: @assistant.created_at, updated_at: @assistant.updated_at } %>
+
+    </div>
     <div>
       <%= link_to new_assistant_chat_path(@assistant), class: "rounded-lg py-3 px-5 bg-sky-800 inline-flex items-center font-medium text-white" do %>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">

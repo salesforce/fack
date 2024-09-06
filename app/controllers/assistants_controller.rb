@@ -7,6 +7,7 @@ class AssistantsController < BaseAssistantsController
   # GET /assistants/new
   def new
     @assistant = Assistant.new
+    @assistant.user_id = current_user.id
   end
 
   # GET /assistants/1/edit

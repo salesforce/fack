@@ -24,8 +24,9 @@ class CustomRender < Redcarpet::Render::HTML
   end
 
   def codespan(quote)
-    %(<code class="text-sm bg-stone-800 rounded text-amber-200 border-stone-500 border m-1 p-1">#{escape_html(quote.gsub("\n",
-                                                                                                                         ''))}</code>)
+    return '' if quote.nil? # Return an empty string if quote is nil
+
+    %(<code class="text-sm bg-stone-800 rounded text-amber-200 border-stone-500 border m-1 p-1">#{escape_html(quote.gsub("\n", ''))}</code>)
   end
 
   def block_code(code, _language)

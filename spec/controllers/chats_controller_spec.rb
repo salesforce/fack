@@ -7,7 +7,7 @@ RSpec.describe ChatsController, type: :controller do
 
   # Assuming the Assistant model requires these fields
   let(:library) { Library.create!(name: 'Test Library', user:) }
-  let(:assistant) { Assistant.create!(name: 'Test Assistant', libraries: '1,2', input: 'Sample input', instructions: 'Sample instructions', output: 'Sample output') }
+  let(:assistant) { Assistant.create!(name: 'Test Assistant', user:, libraries: '1,2', input: 'Sample input', instructions: 'Sample instructions', output: 'Sample output') }
 
   let(:valid_attributes) { { first_message: 'Hello', assistant_id: assistant.id } }
   let(:invalid_attributes) { { first_message: '', assistant_id: nil } }

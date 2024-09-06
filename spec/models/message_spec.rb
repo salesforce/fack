@@ -11,6 +11,7 @@ RSpec.describe Message, type: :model do
            input: 'Sample input',
            instructions: 'Sample instructions',
            output: 'Sample output',
+           user:,
            libraries: '1,2,3') # Assuming libraries expects a CSV of numbers
   end
 

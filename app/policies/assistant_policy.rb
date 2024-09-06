@@ -13,7 +13,7 @@ class AssistantPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || user.editor?
+    user.admin? || user.editor? || assistant.user_id == user.id
   end
 
   def destroy?

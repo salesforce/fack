@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-json.array! @documents, partial: 'api/v1/documents/document', as: :document
+json.array! @assistants, partial: 'api/v1/assistants/assistant', as: :assistant

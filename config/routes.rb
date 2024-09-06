@@ -42,6 +42,8 @@ Rails.application.routes.draw do
       resources :documents
       resources :libraries
       resources :questions
+      resources :chats
+      resources :assistants
     end
   end
 

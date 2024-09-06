@@ -13,6 +13,11 @@ class Assistant < ApplicationRecord
 
   validate :libraries_must_be_csv_with_numbers
 
+  # Override as_json to exclude specific fields
+  def as_json(options = {})
+    super(options.merge({ except: %i[created_at updated_at id user_prompt llm_prompt] }))
+  end
+
   private
 
   def libraries_must_be_csv_with_numbers

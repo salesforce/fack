@@ -4,6 +4,7 @@
     <%= render 'shared/page_header', title: 'Assistants', subtitle: 'Assistants have special instructions and context to answer specific problems better than general Q/A.  Click "Chat" to begin!' %>
     <% if policy(Assistant.new).edit? %>
       <%= link_to "New +", new_assistant_path, class: "rounded-lg py-3 px-5 bg-sky-900 text-white block font-medium" %>
+      <%= link_to "Import", import_assistants_path, class: "rounded-lg py-3 px-5 bg-sky-900 text-white block font-medium" %>
     <% end %>
   </div>
   <div id="assistants" class="mt-5 space-y-4">

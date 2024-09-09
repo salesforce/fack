@@ -25,7 +25,7 @@ class MessagesController < ApplicationController
   def create
     @message = Message.new(message_params)
     @message.chat_id = @chat.id
-    @message.user_id = @current_user.id
+    @message.user_id = current_user.id
     @message.from = :user
 
     respond_to do |format|

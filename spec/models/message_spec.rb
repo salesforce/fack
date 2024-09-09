@@ -24,7 +24,7 @@ RSpec.describe Message, type: :model do
 
   it 'is not valid without content' do
     message = Message.new(content: nil, chat:, user:, from: :user)
-    expect(message).to be_valid
+    expect(message).not_to be_valid
   end
 
   it 'is not valid without a chat' do

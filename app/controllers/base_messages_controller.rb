@@ -1,4 +1,4 @@
-class MessagesController < ApplicationController
+class BaseMessagesController < ApplicationController
   before_action :set_message, only: %i[show edit update destroy]
   before_action :set_chat
 
@@ -13,13 +13,8 @@ class MessagesController < ApplicationController
     @messages
   end
 
-  # GET /messages/new
-  def new
-    @message = Message.new
-  end
-
-  # GET /messages/1/edit
-  def edit; end
+  # GET /messages/1 or /messages/1.json
+  def show; end
 
   # POST /messages or /messages.json
   def create
@@ -36,16 +31,6 @@ class MessagesController < ApplicationController
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end
-    end
-  end
-
-  # DELETE /messages/1 or /messages/1.json
-  def destroy
-    @message.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
-      format.json { head :no_content }
     end
   end
 

@@ -127,7 +127,7 @@ class GenerateMessageResponseJob < ApplicationJob
     prompt = replace_tag_with_random(prompt, '{{DATA_TAG}}')
 
     llm_message.prompt = prompt
-    llm_message.content = assistant.name = ' is thinking...'
+    llm_message.content = assistant.name + ' is thinking...'
     llm_message.chat_id = message.chat_id
     llm_message.user_id = message.user_id
     llm_message.from = :assistant

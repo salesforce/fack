@@ -8,7 +8,7 @@ class BaseAssistantsController < ApplicationController
 
   # POST /assistants or /assistants.json
   def create
-    json = JSON.parse(params[:json])
+    json = JSON.parse(params[:json]) if params[:json].present?
     @assistant = Assistant.new(json || assistant_params)
 
     authorize @assistant
@@ -58,6 +58,6 @@ class BaseAssistantsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def assistant_params
-    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces)
+    params.require(:assistant).permit(:libraries, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces, :user_id)
   end
 end

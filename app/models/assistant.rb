@@ -8,8 +8,6 @@ class Assistant < ApplicationRecord
   validates :libraries, presence: true
 
   validates :input, presence: true
-  validates :instructions, presence: true
-  validates :output, presence: true
 
   validate :libraries_must_be_csv_with_numbers
 

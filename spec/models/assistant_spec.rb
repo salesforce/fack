@@ -6,8 +6,6 @@ RSpec.describe Assistant, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:libraries) }
     it { should validate_presence_of(:input) }
-    it { should validate_presence_of(:instructions) }
-    it { should validate_presence_of(:output) }
 
     context 'libraries CSV validation' do
       it 'is valid with a valid CSV string of numbers' do

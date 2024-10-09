@@ -59,4 +59,6 @@ Rails.application.routes.draw do
   end
 
   root 'questions#new' # Setting the questions new page as the root page
+
+  mount ActionCable.server => '/cable'
 end

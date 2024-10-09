@@ -76,6 +76,7 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+  gem 'websocket-client-simple'
 end
 
 # Nearest neighbor searches with vector embeddings

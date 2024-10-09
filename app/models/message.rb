@@ -20,7 +20,6 @@ class Message < ApplicationRecord
 
   def broadcast_message
     # This will broadcast the message to the 'messages_channel' after the message is saved
-    puts 'SENDING from model'
     ActionCable.server.broadcast('messages_channel', { message: self })
   end
 end

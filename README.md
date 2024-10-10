@@ -589,6 +589,131 @@ Each object in the `documents` array includes:
 >```
 </details>
 
+# WebSocket API Documentation for MessagesChannel
+The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
+
+## WebSocket URL
+
+To connect to the WebSocket API, use the following URL:
+
+```
+ws://yourserver.com/cable
+```
+
+Replace `yourserver.com` with the appropriate domain or IP where your Rails server is hosted.
+
+## Connection Steps
+
+### 1. Establish the WebSocket Connection
+
+To initiate a WebSocket connection, you must connect to the WebSocket endpoint and send a subscription request to the `MessagesChannel` with a valid token.
+
+### 2. Using Native WebSocket API in JavaScript
+
+If you want to use the native `WebSocket` API, here’s how you can establish a connection and subscribe to the `MessagesChannel`:
+
+```javascript
+const apiToken = 'your_api_token_here';
+
+// Establish WebSocket connection
+const ws = new WebSocket('ws://yourserver.com/cable');
+
+ws.onopen = function() {
+  console.log('Connected to WebSocket!');
+
+  // Send a subscription request to the MessagesChannel with the token
+  const subscriptionMessage = {
+    command: 'subscribe',
+    identifier: JSON.stringify({ channel: 'MessagesChannel', token: apiToken })
+  };
+
+  ws.send(JSON.stringify(subscriptionMessage));
+};
+
+ws.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+
+  // Ignore ping messages
+  if (data.type === 'ping') return;
+
+  // Handle messages from the server
+  if (data.message) {
+    console.log('Received message:', data.message);
+  }
+};
+
+ws.onerror = function(error) {
+  console.error('WebSocket error:', error);
+};
+
+ws.onclose = function() {
+  console.log('Disconnected from WebSocket');
+};
+```
+
+### 3. Using ActionCable in JavaScript
+
+If you're using the `@rails/actioncable` package, you can establish the connection and subscribe to channels in a more Rails-centric way:
+
+1. First, install the ActionCable JavaScript package if it’s not already installed:
+
+```bash
+npm install @rails/actioncable
+```
+
+2. Use the following JavaScript code to subscribe to `MessagesChannel`:
+
+```javascript
+import { createConsumer } from "@rails/actioncable";
+
+// Create a consumer instance connected to the WebSocket
+const consumer = createConsumer('ws://yourserver.com/cable');
+
+// Your API token for authentication
+const apiToken = 'your_api_token_here';
+
+// Subscribe to the MessagesChannel
+const subscription = consumer.subscriptions.create(
+  { channel: 'MessagesChannel', token: apiToken },
+  {
+    connected() {
+      console.log('Connected to MessagesChannel');
+    },
+
+    received(data) {
+      console.log('Received message:', data);
+    },
+
+    disconnected() {
+      console.log('Disconnected from MessagesChannel');
+    }
+  }
+);
+```
+
+### 4. Handling Subscription and Disconnection
+
+In both examples, we listen to the following events:
+- **`onopen/connected()`**: Fired when the WebSocket connection is successfully established.
+- **`onmessage/received()`**: Handles incoming messages from the server.
+- **`onclose/disconnected()`**: Fired when the WebSocket connection is closed.
+- **`onerror()`**: Handles WebSocket errors.
+
+## Message Format
+
+When subscribing to the `MessagesChannel`, messages from the server will follow the standard ActionCable format. Incoming messages might look like:
+
+```json
+{
+  "identifier": "{\"channel\":\"MessagesChannel\"}",
+  "message": {
+    "message": "Hello, World!"
+  }
+}
+```
+
+Ensure that your client is prepared to handle incoming data and filter out any `ping` or control messages.
+
 
 # Guides
 

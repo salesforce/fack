@@ -165,7 +165,7 @@ Coming soon
       4. If the answer is good, the user can give that feedback to benefit future users.
 
 
-# API
+# REST API
 
 ------------------------------------------------------------------------------------------
 
@@ -589,7 +589,7 @@ Each object in the `documents` array includes:
 >```
 </details>
 
-# WebSocket API Documentation for MessagesChannel
+# WebSocket API
 The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
 
 ## WebSocket URL

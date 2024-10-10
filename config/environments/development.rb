@@ -73,4 +73,9 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
   #
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
+
+  config.action_cable.disable_request_forgery_protection = true
+
+  # OR (if you want to allow specific origins)
+  config.action_cable.allowed_request_origins = ['http://localhost:3000', %r{http://localhost:.*}]
 end

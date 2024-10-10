@@ -651,55 +651,7 @@ ws.onclose = function() {
 };
 ```
 
-### 3. Using ActionCable in JavaScript
-
-If you're using the `@rails/actioncable` package, you can establish the connection and subscribe to channels in a more Rails-centric way:
-
-1. First, install the ActionCable JavaScript package if it’s not already installed:
-
-```bash
-npm install @rails/actioncable
-```
-
-2. Use the following JavaScript code to subscribe to `MessagesChannel`:
-
-```javascript
-import { createConsumer } from "@rails/actioncable";
-
-// Create a consumer instance connected to the WebSocket
-const consumer = createConsumer('ws://yourserver.com/cable');
-
-// Your API token for authentication
-const apiToken = 'your_api_token_here';
-
-// Subscribe to the MessagesChannel
-const subscription = consumer.subscriptions.create(
-  { channel: 'MessagesChannel', token: apiToken },
-  {
-    connected() {
-      console.log('Connected to MessagesChannel');
-    },
-
-    received(data) {
-      console.log('Received message:', data);
-    },
-
-    disconnected() {
-      console.log('Disconnected from MessagesChannel');
-    }
-  }
-);
-```
-
-### 4. Handling Subscription and Disconnection
-
-In both examples, we listen to the following events:
-- **`onopen/connected()`**: Fired when the WebSocket connection is successfully established.
-- **`onmessage/received()`**: Handles incoming messages from the server.
-- **`onclose/disconnected()`**: Fired when the WebSocket connection is closed.
-- **`onerror()`**: Handles WebSocket errors.
-
-## Message Format
+### 3. Handling Subscription and Disconnection
 
 When subscribing to the `MessagesChannel`, messages from the server will follow the standard ActionCable format. Incoming messages might look like:
 

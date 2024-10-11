@@ -168,21 +168,17 @@ This makes it easy to get answers quickly from a wide range of topics.
 
 The **Assistant** feature is designed to define Language Learning Model (LLM) assistants for specific topics. This form allows administrators or users to create, customize, and configure assistants according to their unique requirements. Below is an explanation of the fields and their purpose within the assistant creation form.
 
-## Form Fields
+## Fields
 
 ### 1. **Status**
    - **Purpose**: Defines the current status of the assistant.
    - **Options**: 
-     - Active
-     - Inactive
-     - Archived
-   - **Type**: Dropdown selection
-   - **Example**: Choose the state of the assistant to control its availability.
+     - Ready
+     - Development
 
 ### 2. **Owner (user_id)**
    - **Purpose**: Assigns the owner of the assistant.
    - **Type**: Dropdown that displays users (emails) in the system.
-   - **Options**: User list sorted by email.
    - **Example**: Select the appropriate user who will manage this assistant.
 
 ### 3. **Name**
@@ -206,9 +202,9 @@ The **Assistant** feature is designed to define Language Learning Model (LLM) as
    - **Example**: A detailed explanation of what this assistant will help with, such as "This assistant answers common programming questions related to Ruby on Rails."
 
 ### 7. **Libraries**
-   - **Purpose**: Lists the libraries or tools the assistant will use.
+   - **Purpose**: Lists the comma separated list of libraries the assistant will use.
    - **Type**: Text input.
-   - **Example**: Mention any specific libraries like `pandas`, `numpy`, or internal APIs that the assistant will rely on.
+   - **Example**: 2,3.
 
 ### 8. **Input**
    - **Purpose**: Describes the input that the assistant expects from the user.

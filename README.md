@@ -41,9 +41,8 @@ All documents are not equal.  You have different groups within your company and 
 Visibilty may be an issue.
 
 # Principles
-1. __Open Source__.  This should be reusable as far as possible.  Nothing in the tool should be hardcoded to Salesforce or any team in Salesforce.  The tool has clear deployment and development instructions.
-2. __API first__.  The end user interactions will likely happen through other bots and applications.  So, the service should be API first.
-3. __Multi-tenant__.  Different teams should be able to share the same technology, without mixing their data.
+1. __API first__.  The end user interactions will likely happen through other bots and applications.  So, the service should be API first.
+2. __Multi-tenant__.  Different teams should be able to share the same app, without mixing their data.
 
 # Design
 

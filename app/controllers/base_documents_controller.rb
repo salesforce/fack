@@ -8,7 +8,7 @@ class BaseDocumentsController < ApplicationController
 
   # GET /documents or /documents.json
   def index
-    @documents = Document.all
+    @documents = Document.includes(:library, :user)
 
     @documents = if params[:sort] == 'questions'
                    @documents.order(questions_count: :desc)

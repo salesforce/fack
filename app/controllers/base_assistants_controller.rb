@@ -3,7 +3,7 @@ class BaseAssistantsController < ApplicationController
 
   # GET /assistants or /assistants.json
   def index
-    @assistants = Assistant.all.order(status: :desc)
+    @assistants = Assistant.includes(:user).select(:id, :name, :user_id, :description, :created_at, :updated_at, :status).order(status: :desc)
   end
 
   # POST /assistants or /assistants.json

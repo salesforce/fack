@@ -4,9 +4,9 @@ class BaseChatsController < ApplicationController
   # GET /chats or /chats.json
   def index
     @chats = if params[:all].present?
-               Chat.all.page(params[:page])
+               Chat.includes(:assistant, :user).page(params[:page])
              else
-               Chat.where(user_id: current_user.id).page(params[:page])
+               Chat.includes(:assistant, :user).where(user_id: current_user.id).page(params[:page])
              end
   end
 

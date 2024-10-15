@@ -74,14 +74,8 @@ class Document < ApplicationRecord
   end
 
   # Sync the document with Quip if source_url is present, contains 'quip.com',
-  # and schedule the sync 24 hours in the future unless last_sync_date is empty
   def sync_quip_doc_if_needed
     return unless source_url.present? && source_url.include?('quip.com')
-
-    # TODO: check if sync is already scheduled.  Have a next sync time field?
-    # If embed runs, only the embedding may change.
-    # If quip sync runs, the doc checksum may change.
-    # How do we schedule the sync only from another sync?
 
     return unless synced_at.nil? # AND sync not scheduled
 

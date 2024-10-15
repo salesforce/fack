@@ -28,15 +28,18 @@ class SyncQuipDocJob < ApplicationJob
 
       document.document = markdown_quip
       document.synced_at = DateTime.current
-      document.external_id = document.source_url
+      document.last_sync_result = 'SUCCESS'
       document.save
     rescue Quip::Error => e
       # Handle Quip-specific errors
       Rails.logger.error("Quip API error while fetching document from #{document.source_url}: #{e.message}")
+      document.last_sync_result = "#{e.message}"
+      document.save
     rescue StandardError => e
       # Handle any other unforeseen errors
       Rails.logger.error("Unexpected error during sync for document id #{_doc_id}: #{e.message}")
-      return
+      document.last_sync_result = "#{e.message}"
+      document.save
     end
 
     # Reschedule the job to run again in 24 hours

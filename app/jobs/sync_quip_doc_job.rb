@@ -29,20 +29,26 @@ class SyncQuipDocJob < ApplicationJob
       document.document = markdown_quip
       document.synced_at = DateTime.current
       document.last_sync_result = 'SUCCESS'
-      document.save
+      document.save!
+      # Reschedule the job to run again in 24 hours
+      SyncQuipDocJob.set(wait: 24.hours).perform_later(_doc_id)
+      return
+    rescue ActiveRecord::RecordInvalid => e
+      # Handle save! failures (validation errors)
+      Rails.logger.error("Failed to save document with id #{_doc_id}: #{e.record.errors.full_messages.join(', ')}")
+      document.document = "Document save failed: #{e.record.errors.full_messages.join(', ')}"
     rescue Quip::Error => e
       # Handle Quip-specific errors
       Rails.logger.error("Quip API error while fetching document from #{document.source_url}: #{e.message}")
-      document.last_sync_result = "#{e.message}"
-      document.save
+      document.document = "Error from Quip: #{e.message}"
     rescue StandardError => e
       # Handle any other unforeseen errors
       Rails.logger.error("Unexpected error during sync for document id #{_doc_id}: #{e.message}")
-      document.last_sync_result = "#{e.message}"
-      document.save
+      document.document = "#{e.message}"
     end
 
-    # Reschedule the job to run again in 24 hours
-    SyncQuipDocJob.set(wait: 24.hours).perform_later(_doc_id)
+    document.last_sync_result = 'FAILED'
+    document.save
+    SyncQuipDocJob.set(wait: 30.minutes).perform_later(_doc_id)
   end
 end

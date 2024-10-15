@@ -26,7 +26,8 @@ class Document < ApplicationRecord
   validates :length, presence: true
 
   validates :document, presence: true,
-                       uniqueness: { scope: :check_hash, message: 'Document with same content already exists.' }
+                       uniqueness: { scope: :check_hash, message: 'Document with same content already exists.' },
+                       unless: -> { source_url.present? }
 
   before_validation :calculate_length, :calculate_tokens, :calculate_hash
 
@@ -78,14 +79,14 @@ class Document < ApplicationRecord
     return unless source_url.present? && source_url.include?('quip.com')
 
     # TODO: check if sync is already scheduled.  Have a next sync time field?
+    # If embed runs, only the embedding may change.
+    # If quip sync runs, the doc checksum may change.
+    # How do we schedule the sync only from another sync?
 
-    if synced_at.nil? # AND sync not scheduled
-      # If last_sync_date is nil, perform the job immediately
-      SyncQuipDocJob.perform_later(id)
-    else
-      # Schedule the job 24 hours in the future
-      SyncQuipDocJob.set(wait: 24.hours).perform_later(id)
-    end
+    return unless synced_at.nil? # AND sync not scheduled
+
+    # If last_sync_date is nil, perform the job immediately.  Doc just created.
+    SyncQuipDocJob.perform_later(id)
   end
 
   # Schedule the EmbedDocumentJob with a delay based on the number of jobs in the queue

@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="mb-2">
-          <strong>Run At:</strong> <%= time_ago_in_words(job.run_at) %> ago
+          <strong>Run At:</strong> <%= "#{distance_of_time_in_words(Time.now, job.run_at)} from now" %>
         </div>
         <div class="mb-2">
           <strong>Created At:</strong> <%= time_ago_in_words(job.created_at) %> ago

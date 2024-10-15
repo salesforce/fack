@@ -77,9 +77,8 @@ class Document < ApplicationRecord
   def sync_quip_doc_if_needed
     return unless source_url.present? && source_url.include?('quip.com')
 
-    return unless synced_at.nil? # AND sync not scheduled
+    return unless synced_at.nil? # only schedule if it is for the initial sync
 
-    # If last_sync_date is nil, perform the job immediately.  Doc just created.
     SyncQuipDocJob.perform_later(id)
   end
 

@@ -34,6 +34,16 @@ class Document < ApplicationRecord
   after_save :sync_quip_doc_if_needed
   after_commit :schedule_embed_document_job, if: -> { previous_changes.include?('check_hash') }
 
+  def source_type
+    if source_url.include?('quip.com')
+      'quip'
+    elsif source_url.present?
+      'other'
+    elsif source_url.blank?
+      'none'
+    end
+  end
+
   def calculate_length
     # Calculate the length of the 'document' column and store it in the 'length' column
     return unless document

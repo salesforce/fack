@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Document < ApplicationRecord
   include PgSearch::Model
 
@@ -31,6 +29,9 @@ class Document < ApplicationRecord
                        uniqueness: { scope: :check_hash, message: 'Document with same content already exists.' }
 
   before_validation :calculate_length, :calculate_tokens, :calculate_hash
+
+  after_save :sync_quip_doc_if_needed
+  after_commit :schedule_embed_document_job, if: -> { previous_changes.include?('check_hash') }
 
   def calculate_length
     # Calculate the length of the 'document' column and store it in the 'length' column
@@ -69,5 +70,30 @@ class Document < ApplicationRecord
     return unless token_count.present? && token_count >= 8_000
 
     errors.add(:token_count, "is #{token_count} and must be less than 8,000")
+  end
+
+  # Sync the document with Quip if source_url is present, contains 'quip.com',
+  # and schedule the sync 24 hours in the future unless last_sync_date is empty
+  def sync_quip_doc_if_needed
+    return unless source_url.present? && source_url.include?('quip.com')
+
+    # TODO: check if sync is already scheduled.  Have a next sync time field?
+
+    if synced_at.nil? # AND sync not scheduled
+      # If last_sync_date is nil, perform the job immediately
+      SyncQuipDocJob.perform_later(id)
+    else
+      # Schedule the job 24 hours in the future
+      SyncQuipDocJob.set(wait: 24.hours).perform_later(id)
+    end
+  end
+
+  # Schedule the EmbedDocumentJob with a delay based on the number of jobs in the queue
+  def schedule_embed_document_job
+    total_jobs = Delayed::Job.count
+    delay_seconds = total_jobs * 3 # 3-second delay per job in the queue
+
+    # Set the priority and delay, and queue the job if the check_hash has changed
+    EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(id)
   end
 end

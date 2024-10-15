@@ -82,13 +82,6 @@ class BaseDocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        # This will space out embeddings when jobs start to back up, especially during an import
-        # TODO: make this more configurable
-        total_jobs = Delayed::Job.count
-        delay_seconds = total_jobs * 3 # 3 second delay per job in the queue
-
-        EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(@document.id) if @document.previous_changes.include?('check_hash')
-
         format.html do
           redirect_to document_url(@document), notice: 'Document was successfully created.'
         end
@@ -120,6 +113,6 @@ class BaseDocumentsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def document_params
-    params.require(:document).permit(:document, :title, :enabled, :external_id, :url, :library_id)
+    params.require(:document).permit(:document, :title, :enabled, :external_id, :url, :library_id, :source_url)
   end
 end

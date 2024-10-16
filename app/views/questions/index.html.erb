@@ -1,9 +1,8 @@
 <% content_for :title, "Questions" %>
-
 <div class="">
   <div class="flex justify-between items-center">
     <%= render 'shared/page_header', title: 'Questions', subtitle: 'Answers generated from the documents.' %>
-    <%= link_to 'Ask', new_question_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+    <%= render partial: 'shared/button_group', locals: { buttons: { "Ask" => new_question_path } } %>
   </div>
   <%= paginate @questions %>
   <%= render 'question_list',  questions: @questions %>

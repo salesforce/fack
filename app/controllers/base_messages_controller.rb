@@ -28,8 +28,8 @@ class BaseMessagesController < ApplicationController
         format.html { redirect_to @chat }
         format.json { render :show, status: :created, location: @message }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @message.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @message.errors, status: :unprocessable_content }
       end
     end
   end

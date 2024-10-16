@@ -33,8 +33,8 @@ class BaseQuestionsController < ApplicationController
         format.json { render :show, status: :created, location: @question }
         format.turbo_stream
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @question.errors, status: :unprocessable_content }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(@question, partial: 'questions/form',
                                                                locals: { question: @question })

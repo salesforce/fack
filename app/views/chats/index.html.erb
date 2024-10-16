@@ -2,7 +2,7 @@
   <% content_for :title, "Chats" %>
   <div class="flex justify-between items-center mb-4">
     <%= render 'shared/page_header', title: 'Chats', subtitle: 'Discussion with assistants' %>
-    <%= link_to "New +", assistants_path, class: "rounded-lg py-3 px-5 bg-sky-900 text-white block font-medium" %>
+    <%= render partial: 'shared/button_group', locals: { buttons: { "New +" => assistants_path } } %>
   </div>
   
   <div class="flex justify-between items-center mb-4">

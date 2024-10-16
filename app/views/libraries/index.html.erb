@@ -3,7 +3,7 @@
   <div class="flex justify-between items-center">
     <%= render 'shared/page_header', title: 'Libraries', subtitle: 'Collections of similar documents.' %>
     <% if policy(Library.new).create? %>
-      <%= link_to 'New', new_library_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+      <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_library_path } } %>
     <% end %>
   </div>
   <%= paginate @libraries %>

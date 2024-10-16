@@ -5,12 +5,11 @@
     <div>
       <% if policy(Assistant.new).edit? %>
         <div class="inline-flex rounded-md shadow-sm" role="group">
-          <%= link_to "New +", new_assistant_path, class: "border border-sky-600 border-r-0 py-3 px-5 bg-sky-100 text-sky-600 font-medium border border-sky-900 rounded-l-lg hover:bg-sky-700 hover:text-sky-100" %>
-          <%= link_to "Import", import_assistants_path, class: "border border-sky-600 py-3 px-5 bg-sky-100 text-sky-600 font-medium border border-sky-900 rounded-r-lg hover:bg-sky-700 hover:text-sky-100" %>
+          <%= render partial: 'shared/button_group', locals: { buttons: { "New +" => new_assistant_path, "Import" =>  import_assistants_path} } %>
         </div>
       <% end %>
     </div>
-  </div> 
+  </div>
   <div id="assistants" class="mt-5 space-y-4">
     <% @assistants.each do |assistant| %>
       <div class="flex justify-between items-center bg-white rounded-lg shadow-lg p-4 border-stone-200 border">

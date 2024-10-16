@@ -1,0 +1,5 @@
+<div class="inline-flex rounded-md shadow-sm" role="group">
+  <% buttons.each_with_index do |(name, link), index| %>
+    <%= link_to name, link, class: "border border-sky-600 py-3 px-5 bg-white text-gray-800 font-medium border border-sky-900 #{'border-r-0' if index < buttons.size - 1 && buttons.size > 1} #{'rounded-l-lg' if index == 0} #{'rounded-r-lg' if index == buttons.size - 1} hover:bg-slate-100 hover:text-sky-600" %>
+  <% end %>
+</div>

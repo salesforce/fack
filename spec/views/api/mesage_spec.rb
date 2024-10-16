@@ -35,7 +35,7 @@ RSpec.describe 'Messages API', type: :request do
           post "/api/v1/chats/#{chat.id}/messages", params: { message: invalid_attributes }
         end.to change(Message, :count).by(0)
         expect(response.content_type).to match(a_string_including('application/json'))
-        expect(response).to have_http_status(:unprocessable_entity) # Adjust based on error handling
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end

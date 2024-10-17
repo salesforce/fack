@@ -77,7 +77,7 @@ end
 
 module MarkdownHelper
   def render_markdown(text)
-    renderer = CustomRender.new(escape_html: true)
+    renderer = CustomRender.new(escape_html: true, no_images: true)
     # renderer = Redcarpet::Render::HTML.new(hard_wrap: true)
 
     markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, tables: true)

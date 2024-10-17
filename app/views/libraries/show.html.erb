@@ -3,11 +3,14 @@
   <div class="flex justify-between items-center">
     <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name %></h1>
     <div class="flex space-x-2">
+      <% buttons = {
+        'Permissions' => library_library_users_path(@library)
+      } %>
       <% if policy(@library).edit? %>
-        <%= link_to 'New Document', new_document_path(library_id: @library.id), class: "rounded-lg p-2 bg-sky-600 text-white" %>
-        <%= link_to 'Edit', edit_library_path(@library), title: "Edit Library", class: "rounded-lg p-2 bg-sky-600 text-white" %>
-        <%= link_to 'Users', library_library_users_path(@library), class: "rounded-lg p-2 bg-sky-600 text-white" %>
+        <% buttons['Edit'] = edit_library_path(@library) %>
+        <% buttons['New Document'] = new_document_path(library_id: @library.id) %>
       <% end %>
+      <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
     </div>
   </div>
   <div class="py-2 text-stone-500 text-xs ">

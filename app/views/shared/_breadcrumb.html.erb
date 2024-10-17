@@ -1,0 +1,13 @@
+<!-- app/views/shared/_breadcrumb.html.erb -->
+<nav aria-label="breadcrumb" >
+  <div class="text-gray-600 my-2">
+    <% breadcrumbs.each_with_index do |(name, link), index| %>
+      <% if link.present? && index < breadcrumbs.size - 1 %>
+        <%= link_to name, link, class: "text-sky-500 hover:text-sky-600" %>
+      <% else %>
+        <span><%= name %></span>
+      <% end %>
+      <%= ' / ' unless index == breadcrumbs.size - 1 %>
+    <% end %>
+  </div>
+</nav>

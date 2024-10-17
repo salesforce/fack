@@ -1,17 +1,7 @@
 <div class="mx-auto w-full flex flex-col min-h-screen" id="chat-container">
   <% content_for :title, @chat.first_message.truncate(20) %>
-  <!-- Breadcrumbs -->
-  <nav class="mb-4">
-    <ul class="flex space-x-2 text-gray-600">
-      <li>
-        <%= link_to "Assistants", assistants_path, class: "text-sky-500 hover:text-sky-800" %>
-      </li>
-      <li>/</li>
-      <li>
-        <%= link_to @chat.assistant.name, assistant_path(@chat.assistant), class: "text-sky-500 hover:text-sky-800" %>
-      </li>
-    </ul>
-  </nav>
+  <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@chat.assistant.name, assistant_path(@chat.assistant)], ['Chats', nil]] } %>
+
   <!-- Main Content -->
   <div class="w-full flex justify-between items-center">
     <div>

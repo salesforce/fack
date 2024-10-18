@@ -57,7 +57,9 @@
         <% if @question.votes_for.up.size > 0 %>
           <div class="text-stone-900 text-xs font-italic"><%= @question.votes_for.up.by_type(User).voters.pluck(:email).join(",") %> found this helpful.</div>
         <% end %>
-        <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
+        <% cache question do %>
+          <%= render_markdown(question.answer.gsub(/^\s*\n/, '')) unless question.answer.nil? %>
+        <% end %>
       <% end %>
     </div>
     <p class="bg-stone-200 text-stone-400 text-xs px-4 py-2 rounded-b">

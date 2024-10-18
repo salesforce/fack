@@ -13,7 +13,7 @@
     <% end %>
   </div>
   <div id="chats" class="min-w-full mt-5 space-y-4">
-    <% @chats.order(created_at: :desc).each do |chat| %>
+    <% @chats.each do |chat| %>
       <% cache(chat) do %> <!-- Cache each chat entry -->
         <%= link_to chat_path(chat), class: "block bg-white rounded-lg shadow-lg p-4 hover:bg-gray-100" do %>
           <div class="flex justify-between items-center">

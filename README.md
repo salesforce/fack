@@ -41,9 +41,8 @@ All documents are not equal.  You have different groups within your company and 
 Visibilty may be an issue.
 
 # Principles
-1. __Open Source__.  This should be reusable as far as possible.  Nothing in the tool should be hardcoded to Salesforce or any team in Salesforce.  The tool has clear deployment and development instructions.
-2. __API first__.  The end user interactions will likely happen through other bots and applications.  So, the service should be API first.
-3. __Multi-tenant__.  Different teams should be able to share the same technology, without mixing their data.
+1. __API first__.  The end user interactions will likely happen through other bots and applications.  So, the service should be API first.
+2. __Multi-tenant__.  Different teams should be able to share the same app, without mixing their data.
 
 # Design
 
@@ -137,32 +136,96 @@ The tests are located under the `spec` directory.
 
 # Usage
 
-# UI
-Coming soon
+## Create or Edit a Library
+This page allows you to create or edit a library entry, providing key details like the name of the library, its source URL, and the owner of the library. Here’s how it works:
+
+1. **Library Name**:
+   - Enter the name of the library in the provided text box. This could be the subject or title of the library, like "Data Science Resources."
+
+2. **Source URL**:
+   - Provide the URL for the source of this library. This could be a link to the main website, document repository, or other related resources.
+
+3. **Owner Selection**:
+   - Select the owner (administrator or user) who will manage this library. The dropdown list shows all available users, sorted by their email addresses. If no specific owner is needed, you can leave this field blank.
+
+## Ask a Question
+
+This page allows you to ask a question and get an answer based on available libraries of knowledge. Here’s how it works:
+
+1. **Ask a Question**: 
+   - There is a text box where you can type your question. The placeholder text will give you examples of some topics the system can answer, based on the most frequently used libraries, such as specific subjects or categories.
+
+2. **Optional Library Selection**:
+   - You can limit the answers to a specific library if you want. This means you can choose a particular topic or area for your question, and the system will only look for answers in that library. If you're unsure, you can leave it as "optional," and the system will check all available sources.
+
+3. **Submit Your Question**:
+   - After typing your question, you can click the blue "Submit" button (which has an arrow icon) to send your question. The system will process your query and display the answer without refreshing the whole page, making it quicker and smoother.
+
+This makes it easy to get answers quickly from a wide range of topics.
 
 # Assistants
-1. Definition
-   1. Assistant format.  
-      1. User Input Prompt
-      2. LLM prompt. up to 50k tokens.
-   2. Libraries allowed
-2. Objects
-   1. Assistant
-   2. Session
-   3. Message (content, from: <user, llm>)
-3. Operation in UI
-   1. Click assistant of choice
-   2. User is prompted for input from definition.  Click start.
-   3. Taken to Session page /assistant/1/session/3 with message shown.
-   4. Fack sends user answer
-      1. Adds relevant docs from libraries to the prompt
-      2. Adds the custom prompts
-   5. LLM can respond with the answer or a request user for more information
-   6. User can continue to respond
-      1. Fack sends user answer and updated docs from libraries to the AI
-      2. Fack sends the prior user responses and ai questions
-      3. Continues until user is satisfied.
-      4. If the answer is good, the user can give that feedback to benefit future users.
+
+The **Assistant** feature is designed to define Language Learning Model (LLM) assistants for specific topics. This form allows administrators or users to create, customize, and configure assistants according to their unique requirements. Below is an explanation of the fields and their purpose within the assistant creation form.
+
+## Fields
+
+### 1. **Status**
+   - **Purpose**: Defines the current status of the assistant.
+   - **Options**: 
+     - Ready
+     - Development
+
+### 2. **Owner (user_id)**
+   - **Purpose**: Assigns the owner of the assistant.
+   - **Type**: Dropdown that displays users (emails) in the system.
+   - **Example**: Select the appropriate user who will manage this assistant.
+
+### 3. **Name**
+   - **Purpose**: Specifies the name of the assistant.
+   - **Type**: Text input.
+   - **Example**: Provide a descriptive name for the assistant, such as "Healthcare Expert Assistant."
+
+### 4. **Quip URL**
+   - **Purpose**: Optional link to any relevant **Quip** document associated with the assistant.
+   - **Type**: Text input.
+   - **Example**: Add a Quip URL that holds documentation or collaboration content related to the assistant.
+
+### 5. **Confluence Spaces**
+   - **Purpose**: Lists the Confluence spaces that are associated with the assistant, if applicable.
+   - **Type**: Text input.
+   - **Example**: Enter space keys or names from Confluence for knowledge sharing related to the assistant.
+
+### 6. **Description**
+   - **Purpose**: Provides a detailed description of the assistant's purpose and functionality.
+   - **Type**: Text area.
+   - **Example**: A detailed explanation of what this assistant will help with, such as "This assistant answers common programming questions related to Ruby on Rails."
+
+### 7. **Libraries**
+   - **Purpose**: Lists the comma separated list of libraries the assistant will use.
+   - **Type**: Text input.
+   - **Example**: 2,3.
+
+### 8. **Input**
+   - **Purpose**: Describes the input that the assistant expects from the user.
+   - **Type**: Text area.
+   - **Example**: Describe what kind of input the assistant will work with, e.g., "natural language queries related to medical conditions."
+
+### 9. **Instructions**
+   - **Purpose**: Outlines any specific instructions on how the assistant will process the input.
+   - **Type**: Text area.
+   - **Example**: Define any special processing rules or behaviors, e.g., "translate medical terminology into layman's terms."
+
+### 10. **Output**
+   - **Purpose**: Describes the expected output or response that the assistant will provide.
+   - **Type**: Text area.
+   - **Example**: Specify the type of responses the assistant will generate, such as "detailed text responses to programming queries."
+
+### 11. **Context**
+   - **Purpose**: Defines the context or scope in which the assistant operates.
+   - **Type**: Text area.
+   - **Example**: "This assistant operates within the domain of healthcare research."
+
+This structure provides flexibility in customizing assistants based on different user needs and topics, making it adaptable for various business or domain-specific requirements.
 
 
 # REST API

@@ -1,5 +1,7 @@
 <% content_for :title, @document.title %>
 
+<%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@document.library.name, library_path(@document.library)], [@document.title, document_path(@document)]] } %>
+
 <%= render @document %>
 
 <h2 class="text-2xl text-stone-500 mt-5">Related Questions (<%= @document.questions_count %>)

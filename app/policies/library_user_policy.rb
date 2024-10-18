@@ -8,8 +8,13 @@ class LibraryUserPolicy < ApplicationPolicy
     @library_user = library_user
   end
 
+  # Allow library owner to update other users on the library
   def create?
-    user.admin?
+    user.admin? || user.editor? || @library_user.library.user_id == @user.id
+  end
+
+  def destroy?
+    create?
   end
 
   def update?

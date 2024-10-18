@@ -3,12 +3,13 @@
     <div class="w-3/4">
       <p class="text-xs text-gray-500 mb-1 <%= message.from == 'assistant' ? 'text-right' : '' %>">
         <% if message.from == 'user' %>
-          <%= message.user.email %>
+          <span class="font-semibold"><%= message.user.email %></span>
         <% elsif message.from == 'assistant' %>
-          <%= message.chat.assistant.name %>
+          <span class="font-semibold"><%= message.chat.assistant.name %></span>
         <% else %>
-          <%= message.from %>
+          <span class="font-semibold"><%= message.from %></span>
         <% end %>
+        | <%= message.created_at %>
       </p>
       <% if message.status === 'generating' %>
         <div class="flex justify-end text-2xl text-gray-400">
@@ -18,7 +19,6 @@
         </div>
         <% if !message.user? %>
           <script>
-            console.log("Generating");
             setTimeout(function() {
               const turboFrame = document.getElementById('message-<%=message.id%>');
               turboFrame.src = null;  // Clear the src attribute

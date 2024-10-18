@@ -39,16 +39,16 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when the question saves successfully' do
       it 'enqueues an GenerateAnswerJob' do
-        expect {
+        expect do
           post :create, params: { question: valid_attributes }
-        }.to have_enqueued_job(GenerateAnswerJob).on_queue('default')
+        end.to have_enqueued_job(GenerateAnswerJob).on_queue('default')
       end
     end
 
     context 'with invalid params' do
       it 'fails to create' do
         post :create, params: { question: invalid_attributes }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
 

@@ -94,7 +94,7 @@ class Document < ApplicationRecord
 
     self.last_sync_result = 'SCHEDULED'
 
-    SyncQuipDocJob.set(wait: 5.seconds).perform_later(id) # Add delay to prevent race condition with schedule jobs
+    SyncQuipDocJob.set(wait: 5.seconds, priority: 10).perform_later(id) # Add delay to prevent race condition with schedule jobs
   end
 
   # Schedule the EmbedDocumentJob with a delay based on the number of jobs in the queue

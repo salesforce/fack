@@ -31,7 +31,7 @@ class SyncQuipDocJob < ApplicationJob
       document.last_sync_result = 'SUCCESS'
       document.save!
       # Reschedule the job to run again in 24 hours
-      SyncQuipDocJob.set(wait: 24.hours).perform_later(_doc_id)
+      SyncQuipDocJob.set(wait: 24.hours, priority: 10).perform_later(_doc_id)
       return
     rescue ActiveRecord::RecordInvalid => e
       # Handle save! failures (validation errors)
@@ -49,6 +49,6 @@ class SyncQuipDocJob < ApplicationJob
 
     document.last_sync_result = 'FAILED'
     document.save
-    SyncQuipDocJob.set(wait: 30.minutes).perform_later(_doc_id)
+    SyncQuipDocJob.set(wait: 30.minutes, priority: 10).perform_later(_doc_id)
   end
 end

@@ -90,7 +90,8 @@ class Document < ApplicationRecord
 
     return unless synced_at.nil? # only schedule if it is for the initial sync
 
-    return if last_sync_result == 'SCHEDULED' # Prevent duplicate
+    # TODO: improve this dup protection
+    return if last_sync_result == 'SCHEDULED' || last_sync_result == 'FAILED' # Prevent duplicate
 
     self.last_sync_result = 'SCHEDULED'
 

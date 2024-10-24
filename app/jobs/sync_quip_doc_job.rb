@@ -2,53 +2,93 @@ class SyncQuipDocJob < ApplicationJob
   queue_as :default
 
   def perform(_doc_id)
-    begin
-      document = Document.find(_doc_id)
-    rescue ActiveRecord::RecordNotFound => e
-      # Handle the case where the document is not found
-      Rails.logger.error("Document with id #{_doc_id} not found: #{e.message}")
-      return # Exit early since there's nothing to sync
-    end
+    document = fetch_document(_doc_id)
+    return unless document
 
-    # Log or handle cases where the document has no quip_url
     if document.source_url.blank?
-      Rails.logger.warn("Document with id #{_doc_id} has no source URL.")
+      log_warning("Document with id #{_doc_id} has no source URL.")
       return
     end
 
-    begin
-      # Initialize the Quip client
-      quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
-      uri = URI.parse(document.source_url)
-      path = uri.path.sub(%r{^/}, '') # Removes the leading /
-      quip_thread = quip_client.get_thread(path)
+    success = sync_document_with_quip(document)
+    update_sync_status(document, success:)
+    schedule_next_sync(document.id, success:)
+  end
 
-      # Convert Quip HTML content to Markdown
-      markdown_quip = ReverseMarkdown.convert(quip_thread['html'])
+  private
 
-      document.document = markdown_quip
-      document.synced_at = DateTime.current
-      document.last_sync_result = 'SUCCESS'
-      document.save!
-      # Reschedule the job to run again in 24 hours
-      SyncQuipDocJob.set(wait: 24.hours, priority: 10).perform_later(_doc_id)
-      return
-    rescue ActiveRecord::RecordInvalid => e
-      # Handle save! failures (validation errors)
-      Rails.logger.error("Failed to save document with id #{_doc_id}: #{e.record.errors.full_messages.join(', ')}")
-      document.document = "Document save failed: #{e.record.errors.full_messages.join(', ')}"
-    rescue Quip::Error => e
-      # Handle Quip-specific errors
-      Rails.logger.error("Quip API error while fetching document from #{document.source_url}: #{e.message}")
-      document.document = "Error from Quip: #{e.message}"
-    rescue StandardError => e
-      # Handle any other unforeseen errors
-      Rails.logger.error("Unexpected error during sync for document id #{_doc_id}: #{e.message}")
-      document.document = "#{e.message}"
-    end
+  def fetch_document(doc_id)
+    Document.find(doc_id)
+  rescue ActiveRecord::RecordNotFound => e
+    log_error("Document with id #{doc_id} not found: #{e.message}")
+    nil
+  end
 
-    document.last_sync_result = 'FAILED'
-    document.save
-    SyncQuipDocJob.set(wait: 30.minutes, priority: 10).perform_later(_doc_id)
+  def sync_document_with_quip(document)
+    quip_client = initialize_quip_client
+    quip_thread = fetch_quip_thread(document.source_url, quip_client)
+    return false unless quip_thread
+
+    update_document_from_quip(document, quip_thread)
+    true
+  rescue ActiveRecord::RecordInvalid => e
+    handle_save_error(document, e)
+    false
+  rescue Quip::Error => e
+    handle_quip_error(document, e)
+    false
+  rescue StandardError => e
+    handle_unexpected_error(document, e)
+    false
+  end
+
+  def initialize_quip_client
+    Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
+  end
+
+  def fetch_quip_thread(source_url, quip_client)
+    uri = URI.parse(source_url)
+    path = uri.path.sub(%r{^/}, '')
+    quip_client.get_thread(path)
+  rescue Quip::Error => e
+    log_error("Quip API error while fetching document from #{source_url}: #{e.message}")
+    nil
+  end
+
+  def update_document_from_quip(document, quip_thread)
+    markdown_quip = ReverseMarkdown.convert(quip_thread['html'])
+    document.update!(document: markdown_quip, synced_at: DateTime.current, last_sync_result: 'SUCCESS')
+  end
+
+  def handle_save_error(document, exception)
+    log_error("Failed to save document with id #{document.id}: #{exception.record.errors.full_messages.join(', ')}")
+    document.update(document: "Document save failed: #{exception.record.errors.full_messages.join(', ')}")
+  end
+
+  def handle_quip_error(document, exception)
+    log_error("Quip API error for document id #{document.id}: #{exception.message}")
+    document.update(document: "Error from Quip: #{exception.message}")
+  end
+
+  def handle_unexpected_error(document, exception)
+    log_error("Unexpected error during sync for document id #{document.id}: #{exception.message}")
+    document.update(document: exception.message)
+  end
+
+  def update_sync_status(document, success:)
+    document.update(synced_at: DateTime.current, last_sync_result: success ? 'SUCCESS' : 'FAILED')
+  end
+
+  def schedule_next_sync(doc_id, success:)
+    delay = success ? 24.hours : 3.hours
+    SyncQuipDocJob.set(wait: delay, priority: 10).perform_later(doc_id)
+  end
+
+  def log_error(message)
+    Rails.logger.error(message)
+  end
+
+  def log_warning(message)
+    Rails.logger.warn(message)
   end
 end

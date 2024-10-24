@@ -7,7 +7,8 @@ class Document < ApplicationRecord
   pg_search_scope :search_by_title_and_document,
                   against: %i[title document],
                   using: {
-                    tsearch: { prefix: true } # This option allows partial matches
+                    tsearch: { prefix: true, dictionary: 'english',
+                               tsvector_column: 'search_vector' } # This option allows partial matches
                   }
 
   has_neighbors :embedding
@@ -34,6 +35,7 @@ class Document < ApplicationRecord
 
   after_save :sync_quip_doc_if_needed
   after_commit :schedule_embed_document_job, if: -> { previous_changes.include?('check_hash') }
+  before_save :update_search_vector
 
   def source_type
     if source_url.include?('quip.com')
@@ -105,5 +107,18 @@ class Document < ApplicationRecord
 
     # Set the priority and delay, and queue the job if the check_hash has changed
     EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(id)
+  end
+
+  def update_search_vector
+    # Properly updates the tsvector column using raw SQL
+    sanitized_sql = Document.sanitize_sql([
+                                            "to_tsvector('english', coalesce(?, '') || ' ' || coalesce(?, ''))",
+                                            title,
+                                            document
+                                          ])
+
+    self.search_vector = Document.connection.execute(
+      "SELECT #{sanitized_sql} AS tsvector"
+    ).first['tsvector']
   end
 end

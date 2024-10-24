@@ -137,13 +137,10 @@
           AI Generated Answers From <b>Your</b> Documentation
         </div>
         <div class="text-left">
-          <% cache "footer", expires_in: 60.seconds do %>
+          <% cache "footer", expires_in: 1.hours do %>
             <span class="text-xs text-stone-300">LAST 7 DAYS</span>
             <div class="text-sky-300 text-sm ">
               <%= Question.all.where("created_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> questions</span>
-            </div>
-            <div class="text-sky-300 text-sm ">
-              <%= Question.all.where("created_at >= ?", 7.days.ago).map(&:get_upvotes).sum(&:size) %> <span class="font-light text-stone-400"> helpful answers</span>
             </div>
             <div class="text-sky-300 text-sm ">
               <%= Document.all.where("updated_at >= ?", 7.days.ago).count %> <span class="font-light text-stone-400"> updated documents</span>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_24_182331) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_24_192237) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -94,6 +94,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_182331) do
     t.datetime "synced_at"
     t.string "last_sync_result"
     t.tsvector "search_vector"
+    t.index ["check_hash"], name: "index_documents_on_check_hash"
     t.index ["created_at"], name: "index_documents_on_created_at"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true

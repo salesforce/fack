@@ -87,19 +87,18 @@ class Document < ApplicationRecord
   # Sync the document with Quip if source_url is present, contains 'quip.com',
   def sync_quip_doc_if_needed
     return unless source_url.present? && source_url.include?('quip.com')
-
-    return unless synced_at.nil? # only schedule if it is for the initial sync
+    return unless new_record? || saved_change_to_source_url? # Only schedule if new or source_url changed
 
     # TODO: improve this dup protection
-    return if last_sync_result == 'SCHEDULED' || last_sync_result == 'FAILED' # Prevent duplicate
-
     self.last_sync_result = 'SCHEDULED'
 
-    SyncQuipDocJob.set(wait: 5.seconds, priority: 10).perform_later(id) # Add delay to prevent race condition with schedule jobs
+    SyncQuipDocJob.set(wait: 5.seconds, priority: 10).perform_later(id) # Add delay to prevent race condition with scheduled jobs
   end
 
   # Schedule the EmbedDocumentJob with a delay based on the number of jobs in the queue
   def schedule_embed_document_job
+    return unless document.present?
+
     total_jobs = Delayed::Job.count
     delay_seconds = total_jobs * 3 # 3-second delay per job in the queue
 

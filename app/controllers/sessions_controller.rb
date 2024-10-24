@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SessionsController < ApplicationController
   skip_before_action :require_login
 
@@ -9,7 +7,7 @@ class SessionsController < ApplicationController
     user = User.find_by_email(params[:session][:email])
     if user&.authenticate(params[:session][:password])
       login_user(user)
-      redirect_to root_path
+      redirect_back(fallback_location: root_path)
     else
       redirect_to new_session_url, notice: 'Error logging in.'
     end
@@ -17,12 +15,12 @@ class SessionsController < ApplicationController
 
   def set_debug
     session[:debug] = params[:debug]
-    redirect_to root_url, notice: "Debug mode: #{session[:debug]}"
+    redirect_back(fallback_location: root_url, notice: "Debug mode: #{session[:debug]}")
   end
 
   def set_beta
     session[:beta] = params[:beta]
-    redirect_to root_url, notice: "Beta mode: #{session[:beta]}"
+    redirect_back(fallback_location: root_url, notice: "Beta mode: #{session[:beta]}")
   end
 
   def logout
@@ -30,6 +28,6 @@ class SessionsController < ApplicationController
     Rails.logger.info "Logout called: #{request.referrer}, #{request.user_agent}, #{request.remote_ip}, #{session.to_hash}"
 
     session[:user_id] = nil
-    redirect_to root_url
+    redirect_back(fallback_location: root_url)
   end
 end

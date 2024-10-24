@@ -38,7 +38,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :delayed_jobs, only: %i[index destroy]
+  resources :delayed_jobs, only: %i[index destroy] do
+    member do
+      post :run_now
+    end
+  end
 
   # API Routes - Setting default format to JSON
   namespace :api, defaults: { format: :json } do

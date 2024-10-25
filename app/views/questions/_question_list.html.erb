@@ -1,14 +1,14 @@
-<ul class="space-y-3">
+<ul class="space-y-4">
   <% questions.each do |question| %>
-    <li class="bg-white p-4 rounded hover:shadow border border-stone-300 ">
+    <li class="bg-white p-6 rounded-lg border border-stone-300 hover:shadow-lg hover:bg-stone-50 transition-all">
       <details class="text-base">
-        <summary class="relative font-light cursor-pointer flex items-center justify-between">
-          <div class="flex items-center">
+        <summary class="flex justify-between items-center cursor-pointer font-light">
+          <div class="flex items-center space-x-2">
             <%= render partial: 'question_status_icon', locals: {question: question} %>
-            <span class="text-lg"><%= question.question.truncate(100) %></span>
-            <span class="text-stone-400 text-xs ml-2"><%= time_ago_in_words(question.created_at) %> ago</span>
+            <span class="text-lg font-medium text-stone-800"><%= question.question.truncate(80) %></span>
+            <span class="text-xs text-stone-500"><%= time_ago_in_words(question.created_at) %> ago</span>
           </div>
-          <div class="text-sky-600 text-sm">
+          <div class="text-sky-600 text-sm flex items-center space-x-1">
             <% if question.votes_for.size > 0 %>
               <span class="flex items-center">
                 <%= question.votes_for.size %>
@@ -19,15 +19,16 @@
             <% end %>
           </div>
         </summary>
-        <p class="mt-3">
-          <%= link_to question.question, question, class: "text-sky-600 mt-2 text-xl font-bold hover:underline", "data-turbo-frame": "_top" %>
-        </p>
-        <p class="mt-2">
-          <span class="text-stone-400 text-xs"><%= time_ago_in_words(question.created_at) %> ago</span>
-          <% cache question do %>
-            <%= render partial: 'shared/markdown', locals: {text: question.answer } %>
-          <% end %>
-        </p>
+        <div class="mt-4">
+          <p class="text-sky-600 text-lg font-semibold hover:underline">
+            <%= link_to question.question, question, class: "text-sky-600", "data-turbo-frame": "_top" %>
+          </p>
+          <div class="mt-2 text-stone-600 text-sm">
+            <% cache question do %>
+              <%= render partial: 'shared/markdown', locals: {text: question.answer } %>
+            <% end %>
+          </div>
+        </div>
       </details>
     </li>
   <% end %>

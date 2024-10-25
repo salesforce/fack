@@ -1,5 +1,5 @@
 class Assistant < ApplicationRecord
-  has_many :chats
+  has_many :chats, dependent: :destroy
   belongs_to :user
 
   enum status: { development: 0, ready: 1 }

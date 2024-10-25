@@ -1,55 +1,57 @@
-<div id="<%= dom_id document %>" class="border">
-  <div class="text-xs text-stone-500">
-    <div class="flex justify-between p-3 <%= @document.enabled ? "bg-sky-800" : "bg-stone-400" %> rounded-t-lg">
-      <h1 class="text-3xl font-light <%= @document.enabled ? "text-sky-100" : "text-stone-200" %>"><%= document.title %></h1>
+<div id="<%= dom_id document %>" class="border bg-gray-100 rounded-lg shadow-lg">
+  <div class="text-sm text-gray-700">
+    <div class="flex justify-between p-4 <%= @document.enabled ? 'bg-sky-700' : 'bg-gray-500' %> rounded-t-lg">
+      <h1 class="text-2xl font-semibold <%= @document.enabled ? 'text-white' : 'text-gray-200' %>"><%= document.title %></h1>
       <% if policy(@document).edit? %>
-        <div class="text-stone-800">
+        <div class="text-gray-100">
           <%= form_with model: @document, url: document_path(@document), method: :patch, data: { turbo_frame: dom_id(@document) } do |form| %>
-            <div class="flex items-center space-x-2"> <!-- Use a flex container to align buttons -->
+            <div class="flex items-center space-x-3">
               <% if !@document.enabled %>
                 <%= form.hidden_field :enabled, value: true %>
-                <button type="submit" class="text-stone-500 bg-stone-50 p-2 text-sm rounded-lg border hover:border-stone-300">
+                <button type="submit" class="text-yellow-500 bg-white hover:bg-sky-100  px-3 py-2 rounded-lg border">
                   <span class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
                     </svg>
+                    <span>Enable</span>
                   </span>
                 </button>
               <% else %>
                 <%= form.hidden_field :enabled, value: false %>
-                <button type="submit" class="text-yellow-500 bg-stone-50 p-2 text-sm rounded-lg border hover:border-stone-300">
+                <button type="submit" class="text-stone-500 bg-white hover:bg-sky-100 px-3 py-2 rounded-lg border">
                   <span class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                       <path d="M12 .75a8.25 8.25 0 0 0-4.135 15.39c.686.398 1.115 1.008 1.134 1.623a.75.75 0 0 0 .577.706c.352.083.71.148 1.074.195.323.041.6-.218.6-.544v-4.661a6.714 6.714 0 0 1-.937-.171.75.75 0 1 1 .374-1.453 5.261 5.261 0 0 0 2.626 0 .75.75 0 1 1 .374 1.452 6.712 6.712 0 0 1-.937.172v4.66c0 .327.277.586.6.545.364-.047.722-.112 1.074-.195a.75.75 0 0 0 .577-.706c.02-.615.448-1.225 1.134-1.623A8.25 8.25 0 0 0 12 .75Z" />
                       <path fill-rule="evenodd" d="M9.013 19.9a.75.75 0 0 1 .877-.597 11.319 11.319 0 0 0 4.22 0 .75.75 0 1 1 .28 1.473 12.819 12.819 0 0 1-4.78 0 .75.75 0 0 1-.597-.876ZM9.754 22.344a.75.75 0 0 1 .824-.668 13.682 13.682 0 0 0 2.844 0 .75.75 0 1 1 .156 1.492 15.156 15.156 0 0 1-3.156 0 .75.75 0 0 1-.668-.824Z" clip-rule="evenodd" />
                     </svg>
+                    <span>Disable</span>
                   </span>
                 </button>
               <% end %>
-              <%= link_to edit_document_path(@document), class: "inline-flex items-center bg-white hover:bg-sky-100 text-sky-500 p-2 text-sm border rounded-lg" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <%= link_to edit_document_path(@document), class: "inline-flex items-center bg-white hover:bg-sky-100 text-stone-500 px-3 py-2 text-sm border rounded-lg" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                 </svg>
+                <span class="ml-2">Edit</span>
               <% end %>
             </div>
           <% end %>
         </div>
       <% end %>
     </div>
-    <div class="flex justify-between items-center p-3 bg-stone-100">
+    <div class="flex justify-between items-center p-4 bg-gray-200">
       <div class="w-full">
-        <p class="text-xs text-stone-500 mt-1">
-          Created <%= time_ago_in_words(document.created_at) %> ago 
-          | Updated <%= time_ago_in_words(document.updated_at) %> ago
+        <p class="text-xs text-gray-600 mt-1">
+          <%= render partial: 'shared/meta_info', locals: { email: document.user.email, created_at: document.created_at, updated_at: document.updated_at } %>
           <%= "| Synced #{time_ago_in_words(document.synced_at)} ago" if document.synced_at.present? %>
         </p>
         <% if document.source_url %>
-          <div class="flex items-center space-x-2 text-xs mt-2">
-            <span>Source</span>
-            <%= link_to document.source_url, document.source_url, class:"text-sky-500", target:"_source" %>
+          <div class="flex items-center space-x-3 text-xs mt-2">
+            <span>Source:</span>
+            <%= link_to document.source_url, document.source_url, class:"text-blue-600 underline", target:"_source" %>
             <% if document.source_type == 'quip' %>
-              <%= image_tag 'quip_logo.png', alt: 'Quip Logo', class: 'h-6 mb-1' %>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mb-2 <%= "text-green-500" if document.last_sync_result == "SUCCESS" %> <%= "text-red-500" if document.last_sync_result == "FAILED" %>">
+              <%= image_tag 'quip_logo.png', alt: 'Quip Logo', class: 'h-6' %>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 <%= "text-green-600" if document.last_sync_result == "SUCCESS" %> <%= "text-red-600" if document.last_sync_result == "FAILED" %>">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
             <% end %>
@@ -58,20 +60,20 @@
       </div>
     </div>
   </div>
-  <div class="px-3 py-5 text-stone-800 bg-white font-light">
+  <div class="px-4 py-6 text-gray-800 bg-white font-normal">
     <% cache document do %>
       <%= render partial: 'shared/markdown', locals: {text: document.document } %>
     <% end %>
   </div>
-  <div class="text-xs p-3 text-stone-500  bg-stone-800 rounded-b-lg">
-    <p class="text-stone-400">Info for nerds:</p>
-    <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%>  | External id <%= document.external_id.present? ? document.external_id : " not provided"%>| <%= document.enabled ? "Enabled" : "Disabled" %> </p>
+  <div class="text-xs px-4 py-3 text-gray-400 bg-gray-900 rounded-b-lg">
+    <p class="text-gray-500">Info for nerds:</p>
+    <p class=""><%= document.token_count %> Tokens | <%= document.embedding.present? ? "Embedding Ready" : "Embedding Missing"%> | External id <%= document.external_id.present? ? document.external_id : " not provided"%> | <%= document.enabled ? "Enabled" : "Disabled" %></p>
   </div>
 </div>
 <% if session[:debug] == "true" then %>
-  <h1 class="text-3xl font-light py-4 text-stone-500">Embedding</h1>
-  <div class="markdown-content leading-5">
-    <div class="break-words font-mono p-5 border border-sky-600 rounded-b-lg bg-stone-200">
+  <h1 class="text-2xl font-semibold py-4 text-gray-600">Embedding</h1>
+  <div class="markdown-content leading-6">
+    <div class="break-words font-mono p-5 border border-blue-500 rounded-b-lg bg-gray-300">
       <%= document.embedding unless document.embedding.nil? %>
     </div>
   </div>

@@ -1,10 +1,14 @@
 <ul class="space-y-4 text-sm">
   <% questions.each_with_index do |question, index| %>
-    <li class="bg-white p-2 rounded shadow leading-8  hover:bg-stone-50">
-      <div class="block">
-        <span class="text-stone-500 border border-sky-800 rounded-3xl p-1 mr-2 font-light"><%= index + 1%></span>
-        <%= link_to question.question, question, class:"text-sky-400 hover:underline"%>
-        <div class="text-xs text-stone-400">Created <%= time_ago_in_words(question.created_at) %> ago</div>
+    <li class="bg-white p-4 rounded-lg border border-stone-300 hover:shadow-lg hover:bg-stone-50 transition-all">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <span class="text-xs text-stone-500 border border-sky-800 rounded-full px-3 py-1 mr-3 font-light"><%= index + 1 %></span>
+          <%= link_to question.question, question, class: "text-sky-600 hover:underline text-base font-medium" %>
+        </div>
+        <div class="text-xs text-stone-400">
+          Created <%= time_ago_in_words(question.created_at) %> ago
+        </div>
       </div>
     </li>
   <% end %>

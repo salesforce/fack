@@ -38,7 +38,7 @@
     </div>
     <div class="flex justify-between items-center p-3 bg-stone-100">
       <div class="w-full">
-        <p class="text-xs text-stone-500 font-semibold mt-1">
+        <p class="text-xs text-stone-500 mt-1">
           Created <%= time_ago_in_words(document.created_at) %> ago 
           | Updated <%= time_ago_in_words(document.updated_at) %> ago
           <%= "| Synced #{time_ago_in_words(document.synced_at)} ago" if document.synced_at.present? %>

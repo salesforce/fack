@@ -1,6 +1,6 @@
 <% content_for :title, @document.title %>
 
-<%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@document.library.name, library_path(@document.library)], [@document.title, document_path(@document)]] } %>
+<%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@document.library.name, library_path(@document.library)], ["Document", document_path(@document)]] } %>
 
 <%= render @document %>
 

@@ -2,7 +2,7 @@
   <% content_for :title, "Chats" %>
   <div class="flex justify-between items-center mb-4">
     <%= render 'shared/page_header', title: 'Chats', subtitle: 'Discussion with assistants' %>
-    <%= render partial: 'shared/button_group', locals: { buttons: { "New +" => assistants_path } } %>
+    <%= render partial: 'shared/button_group', locals: { buttons: { "New" => assistants_path } } %>
   </div>
   <div class="flex justify-between items-center mb-4">
     <%= paginate @chats, class: "flex-1" %>

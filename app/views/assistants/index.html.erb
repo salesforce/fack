@@ -5,7 +5,7 @@
     <div>
       <% if policy(Assistant.new).edit? %>
         <div class="inline-flex rounded-md shadow-sm" role="group">
-          <%= render partial: 'shared/button_group', locals: { buttons: { "New +" => new_assistant_path, "Import" =>  import_assistants_path} } %>
+          <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_assistant_path, "Import" =>  import_assistants_path} } %>
         </div>
       <% end %>
     </div>

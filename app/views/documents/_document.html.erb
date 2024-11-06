@@ -39,16 +39,22 @@
         </div>
       <% end %>
     </div>
-    <div class="flex justify-between items-center p-4 bg-gray-200">
+    <div class="flex justify-between items-center py-2 pl-4 bg-gray-200">
       <div class="w-full">
         <p class="text-xs text-gray-600 mt-1">
           <%= render partial: 'shared/meta_info', locals: { email: document.user.email, created_at: document.created_at, updated_at: document.updated_at } %>
           <%= "| Synced #{time_ago_in_words(document.synced_at)} ago" if document.synced_at.present? %>
         </p>
+        <% if document.url %>
+          <div class="flex items-center space-x-1 text-xs mt-2">
+            <span class="text-stone-500">Related URL:</span>
+            <%= link_to document.url, document.url, class:"text-sky-500 hover:underline", target:"_source" %>
+          </div>
+        <% end %>
         <% if document.source_url %>
           <div class="flex items-center space-x-3 text-xs mt-2">
-            <span>Source:</span>
-            <%= link_to document.source_url, document.source_url, class:"text-blue-600 underline", target:"_source" %>
+            <span class="text-stone-500">Source:</span>
+            <%= link_to document.source_url, document.source_url, class:"text-sky-500 hover:underline", target:"_source" %>
             <% if document.source_type == 'quip' %>
               <%= image_tag 'quip_logo.png', alt: 'Quip Logo', class: 'h-6' %>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 <%= "text-green-600" if document.last_sync_result == "SUCCESS" %> <%= "text-red-600" if document.last_sync_result == "FAILED" %>">

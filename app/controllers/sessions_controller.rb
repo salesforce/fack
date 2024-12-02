@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     user = User.find_by_email(params[:session][:email])
     if user&.authenticate(params[:session][:password])
       login_user(user)
-      redirect_back(fallback_location: root_path)
+      redirect_to root_path, notice:
     else
       redirect_to new_session_url, notice: 'Error logging in.'
     end

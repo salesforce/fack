@@ -4,7 +4,7 @@
   <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], ['Assistants', assistants_path], [@assistant.name, assistant_path(@assistant)]] } %>
   <div class="flex justify-between items-center">
     <div>
-      <h2 class="text-3xl font-bold flex items-center">
+      <h2 class="text-4xl font-bold flex items-center">
         <%= @assistant.name %>
         <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
       </h2>
@@ -33,5 +33,12 @@
       <% end %>
     </div>
   </div>
+  <h2 class="text-3xl font-bold text-stone-600 mt-4">Recent Chats</h2>
+  <div id="chats" class="min-w-full mt-5 space-y-4">
+    <% @assistant.chats.limit(10).each do |chat| %>
+      <%= render 'chats/chat_list_item', chat: chat %>
+    <% end %>
+  </div>
+  <h2 class="text-3xl font-bold text-stone-600 mt-4">Details</h2>
   <%= render @assistant %>
 </div>

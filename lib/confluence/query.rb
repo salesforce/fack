@@ -32,7 +32,14 @@ module Confluence
 
     def build_cql(spaces, query)
       cql = "(type = 'page' AND "
-      cql += "space in (\"#{spaces}\") AND " if spaces && !spaces.empty?
+
+      # Format spaces if provided
+      if spaces && !spaces.empty?
+        formatted_spaces = spaces.split(',').map { |space| "\"#{space.strip}\"" }.join(',')
+        cql += "space in (#{formatted_spaces}) AND "
+      end
+
+      # Add the query
       cql += "siteSearch ~ \"#{query}\")"
       cql
     end

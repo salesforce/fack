@@ -11,6 +11,8 @@ class BaseAssistantsController < ApplicationController
     json = JSON.parse(params[:json]) if params[:json].present?
     @assistant = Assistant.new(json || assistant_params)
 
+    @assistant.user_id = current_user.id
+
     authorize @assistant
 
     respond_to do |format|

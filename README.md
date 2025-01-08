@@ -656,13 +656,15 @@ Each object in the `documents` array includes:
 #### Assistants
      
 <details>
- <summary><code>POST</code> <code><b>/api/v1/assistants</b></code> <code>Create a new Assistants</code></summary>
+ <summary><code>POST</code> <code><b>/api/v1/assistants</b></code> <code>Create a new Assistant</code></summary>
 
 ##### Parameters
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | name  |  required | text                    | The name of the assistant   | 
+> | libraries  |  required | text                    | CSV list of library ids   | 
+> | input  |  required | text                    | What should the user enter in the chat?   | 
 
 
 ##### Responses
@@ -675,7 +677,7 @@ Each object in the `documents` array includes:
 ##### Example cURL
 
 > ```javascript
-> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Assistant Name"}' http://localhost:3000/api/v1/assistants
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Assistant Name", "libraries":"1,2", "input": "A good question."}' http://localhost:3000/api/v1/assistants
 > ```
 
 </details>

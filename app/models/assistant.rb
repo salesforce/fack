@@ -1,14 +1,10 @@
 class Assistant < ApplicationRecord
   has_many :chats, dependent: :destroy
   belongs_to :user
-
   enum status: { development: 0, ready: 1 }
-
-  # Add this line to make the libraries field required
   validates :libraries, presence: true
 
   validates :input, presence: true
-
   validate :libraries_must_be_csv_with_numbers
 
   # Override as_json to exclude specific fields

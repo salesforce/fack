@@ -652,6 +652,244 @@ Each object in the `documents` array includes:
 >```
 </details>
 
+     
+#### Assistants
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/assistants</b></code> <code>Create a new Assistant</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | name  |  required | text                    | The name of the assistant   | 
+> | libraries  |  required | text                    | CSV list of library ids   | 
+> | input  |  required | text                    | What should the user enter in the chat?   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Assistant created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Assistant Name", "libraries":"1,2", "input": "A good question."}' http://localhost:3000/api/v1/assistants
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/assistants/_id_</b></code> <code>Retrieve Assistants</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/assistants/<id>
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "name": "My Docs",
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/libraries/1"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/assistants</b></code> <code>List Assistants</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| assistants |      | array     | An array of assistant objects, each containing assistant details |
+
+Each object in the `documents` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the assistant                              |
+| name        |      | text       | Name of the assistant                          |
+| created_at |      | datetime   | The creation date and time of the assistant          |
+| updated_at |      | datetime   | The last update date and time of the assistant       |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of assistants     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/assistants"
+>```
+
+>```
+>{
+>  "assistants": [
+>    {
+>      "id": 1,
+>      "name": "My Assistant",
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "name": "My Second Library",
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
+     
+#### Chats
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/chats</b></code> <code>Create a new Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | name  |  required | text                    | The id of the assistant   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Chat created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"assistant_id":"Assistant Id"}' http://localhost:3000/api/v1/chats
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/chats/_id_</b></code> <code>Retrieve Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/<id>
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/chats/1"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/chats</b></code> <code>List Chats</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| chats |      | array     | An array of chat objects, each containing chat details |
+
+Each object in the `chats` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the chat                              |
+| created_at |      | datetime   | The creation date and time          |
+| updated_at |      | datetime   | The last update date and time      |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of libraries     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/chats"
+>```
+
+>```
+>{
+>  "chats": [
+>    {
+>      "id": 1,
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
 # WebSocket API
 The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
 

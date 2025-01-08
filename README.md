@@ -656,33 +656,33 @@ Each object in the `documents` array includes:
 #### Assistants
      
 <details>
- <summary><code>POST</code> <code><b>/api/v1/libraries</b></code> <code>Create a new Library</code></summary>
+ <summary><code>POST</code> <code><b>/api/v1/assistants</b></code> <code>Create a new Assistants</code></summary>
 
 ##### Parameters
 
 > | name      |  type     | data type               | description                                                           |
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | name  |  required | text                    | The name of the library   | 
+> | name  |  required | text                    | The name of the assistant   | 
 
 
 ##### Responses
 
 > | http code     | content-type                      | response                                                            |
 > |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
+> | `201`         | `text/plain;charset=UTF-8`        | `Assistant created successfully`                                     |
 > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
 
 ##### Example cURL
 
 > ```javascript
-> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Library Name"}' http://localhost:3000/api/v1/libraries
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Assistant Name"}' http://localhost:3000/api/v1/assistants
 > ```
 
 </details>
     
     
 <details>
- <summary><code>GET</code> <code><b>/api/v1/library/_id_</b></code> <code>Retrieve Library</code></summary>
+ <summary><code>GET</code> <code><b>/api/v1/assistants/_id_</b></code> <code>Retrieve Assistants</code></summary>
 
 ##### Parameters
 
@@ -700,7 +700,7 @@ Each object in the `documents` array includes:
 ##### Example cURL
 
 > ```
-> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/libraries/<id>
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/assistants/<id>
 > ```
 
 >```javascript
@@ -717,7 +717,7 @@ Each object in the `documents` array includes:
 
 
 <details>
-<summary><code>GET</code> <code><b>/api/v1/libraries</b></code> <code>List Libraries</code></summary>
+<summary><code>GET</code> <code><b>/api/v1/assistants</b></code> <code>List Assistants</code></summary>
 
 ##### Parameters
 
@@ -729,34 +729,34 @@ Each object in the `documents` array includes:
 
 | name      | type | data type | description                                                    |
 |-----------|------|-----------|----------------------------------------------------------------|
-| libraries |      | array     | An array of library objects, each containing library details |
+| assistants |      | array     | An array of assistant objects, each containing assistant details |
 
 Each object in the `documents` array includes:
 
 | name       | type | data type  | description                                         |
 |------------|------|------------|-----------------------------------------------------|
-| id         |      | integer    | The ID of the library                              |
-| name        |      | text       | Name of the library                          |
-| created_at |      | datetime   | The creation date and time of the library          |
-| updated_at |      | datetime   | The last update date and time of the library       |
+| id         |      | integer    | The ID of the assistant                              |
+| name        |      | text       | Name of the assistant                          |
+| created_at |      | datetime   | The creation date and time of the assistant          |
+| updated_at |      | datetime   | The last update date and time of the assistant       |
 
 | http code | content-type                 | response                    |
 |-----------|------------------------------|-----------------------------|
-| `200`     | `application/json`           | JSON array of libraries     |
+| `200`     | `application/json`           | JSON array of assistants     |
 | `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
 
 ##### Example cURL
 
 >```
->curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/assistants"
 >```
 
 >```
 >{
->  "libraries": [
+>  "assistants": [
 >    {
 >      "id": 1,
->      "name": "My Library",
+>      "name": "My Assistant",
 >      "created_at": "2023-11-14T01:55:11.731Z",
 >      "updated_at": "2024-03-01T22:58:55.865Z"
 >    },
@@ -836,7 +836,7 @@ Each object in the `documents` array includes:
 
 
 <details>
-<summary><code>GET</code> <code><b>/api/v1/libraries</b></code> <code>List Libraries</code></summary>
+<summary><code>GET</code> <code><b>/api/v1/chats</b></code> <code>List Chats</code></summary>
 
 ##### Parameters
 
@@ -848,16 +848,15 @@ Each object in the `documents` array includes:
 
 | name      | type | data type | description                                                    |
 |-----------|------|-----------|----------------------------------------------------------------|
-| libraries |      | array     | An array of library objects, each containing library details |
+| chats |      | array     | An array of chat objects, each containing chat details |
 
-Each object in the `documents` array includes:
+Each object in the `chats` array includes:
 
 | name       | type | data type  | description                                         |
 |------------|------|------------|-----------------------------------------------------|
-| id         |      | integer    | The ID of the library                              |
-| name        |      | text       | Name of the library                          |
-| created_at |      | datetime   | The creation date and time of the library          |
-| updated_at |      | datetime   | The last update date and time of the library       |
+| id         |      | integer    | The ID of the chat                              |
+| created_at |      | datetime   | The creation date and time          |
+| updated_at |      | datetime   | The last update date and time      |
 
 | http code | content-type                 | response                    |
 |-----------|------------------------------|-----------------------------|
@@ -867,21 +866,19 @@ Each object in the `documents` array includes:
 ##### Example cURL
 
 >```
->curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/chats"
 >```
 
 >```
 >{
->  "libraries": [
+>  "chats": [
 >    {
 >      "id": 1,
->      "name": "My Library",
 >      "created_at": "2023-11-14T01:55:11.731Z",
 >      "updated_at": "2024-03-01T22:58:55.865Z"
 >    },
 >    {
 >      "id": 2,
->      "name": "My Second Library",
 >      "created_at": "2023-01-14T01:55:11.731Z",
 >      "updated_at": "2023-03-01T22:58:55.865Z"
 >    },

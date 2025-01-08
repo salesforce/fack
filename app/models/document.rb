@@ -101,11 +101,13 @@ class Document < ApplicationRecord
   def schedule_embed_document_job
     return unless document.present?
 
-    total_jobs = Delayed::Job.count
-    delay_seconds = total_jobs * 3 # 3-second delay per job in the queue
+    doc_priority = 5
+
+    total_jobs = Delayed::Job.where(priority: doc_priority).count
+    delay_seconds = total_jobs * 3 # 3-second delay per job in the queue to avoid rate limits on LLM
 
     # Set the priority and delay, and queue the job if the check_hash has changed
-    EmbedDocumentJob.set(priority: 5, wait: delay_seconds.seconds).perform_later(id)
+    EmbedDocumentJob.set(priority: doc_priority, wait: delay_seconds.seconds).perform_later(id)
   end
 
   def update_search_vector

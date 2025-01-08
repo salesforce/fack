@@ -652,6 +652,245 @@ Each object in the `documents` array includes:
 >```
 </details>
 
+     
+#### Assistants
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/libraries</b></code> <code>Create a new Library</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | name  |  required | text                    | The name of the library   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Library created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"name":"Library Name"}' http://localhost:3000/api/v1/libraries
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/library/_id_</b></code> <code>Retrieve Library</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/libraries/<id>
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "name": "My Docs",
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/libraries/1"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/libraries</b></code> <code>List Libraries</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| libraries |      | array     | An array of library objects, each containing library details |
+
+Each object in the `documents` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the library                              |
+| name        |      | text       | Name of the library                          |
+| created_at |      | datetime   | The creation date and time of the library          |
+| updated_at |      | datetime   | The last update date and time of the library       |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of libraries     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
+>```
+
+>```
+>{
+>  "libraries": [
+>    {
+>      "id": 1,
+>      "name": "My Library",
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "name": "My Second Library",
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
+     
+#### Chats
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/chats</b></code> <code>Create a new Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | name  |  required | text                    | The id of the assistant   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Chat created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"assistant_id":"Assistant Id"}' http://localhost:3000/api/v1/chats
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/chats/_id_</b></code> <code>Retrieve Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/<id>
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/chats/1"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/libraries</b></code> <code>List Libraries</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| libraries |      | array     | An array of library objects, each containing library details |
+
+Each object in the `documents` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the library                              |
+| name        |      | text       | Name of the library                          |
+| created_at |      | datetime   | The creation date and time of the library          |
+| updated_at |      | datetime   | The last update date and time of the library       |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of libraries     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/libraries"
+>```
+
+>```
+>{
+>  "libraries": [
+>    {
+>      "id": 1,
+>      "name": "My Library",
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "name": "My Second Library",
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
 # WebSocket API
 The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
 

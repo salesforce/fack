@@ -905,6 +905,244 @@ Each object in the `chats` array includes:
 >```
 </details>
 
+
+#### Messages
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/chats/_id_/messages</b></code> <code>Create a new Message</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | content  |  required | text                    | The text to send   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Message created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST http://localhost:3000/api/v1/chats/<id>/messages \
+>  -H "Authorization: Bearer <token>" \
+>  -H "Content-Type: application/json" \
+>  -d '{"message": {"content": "please explain more"}}'
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/chats/_id_/messages/_id_</b></code> <code>Retrieve Message</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/<id>/messages
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "content": "please explain"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/chats/_id_/messages</b></code> <code>List Messages</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| messages |      | array     | An array of message objects, each containing chat details |
+
+Each object in the `messages` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the chat                              |
+| created_at |      | datetime   | The creation date and time          |
+| updated_at |      | datetime   | The last update date and time      |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of messages     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/chats/_id_/messages"
+>```
+
+>```
+>{
+>  "messages": [
+>    {
+>      "id": 1,
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
+
+#### Chats
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/chats</b></code> <code>Create a new Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | name  |  required | text                    | The id of the assistant   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `text/plain;charset=UTF-8`        | `Chat created successfully`                                     |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST http://localhost:3000/api/v1/chats \
+>  -H "Authorization: Bearer <token>" \
+>  -H "Content-Type: application/json" \
+>  -d '{"chat": {"assistant_id": "1"}}'
+> ```
+
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/chats/_id_</b></code> <code>Retrieve Chat</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `text/plain;charset=UTF-8`        ||
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/<id>
+> ```
+
+>```javascript
+>{
+>  "id": 1,
+>  "created_at": "2023-11-15T20:17:25.665Z",
+>  "updated_at": "2023-12-01T19:59:44.618Z",
+>  "url": "http://localhost:3000/chats/1"
+>}
+>```
+
+</details>
+
+
+<details>
+<summary><code>GET</code> <code><b>/api/v1/chats</b></code> <code>List Chats</code></summary>
+
+##### Parameters
+
+| name  | type     | data type | description                     |
+|-------|----------|-----------|---------------------------------|
+| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+
+##### Responses
+
+| name      | type | data type | description                                                    |
+|-----------|------|-----------|----------------------------------------------------------------|
+| chats |      | array     | An array of chat objects, each containing chat details |
+
+Each object in the `chats` array includes:
+
+| name       | type | data type  | description                                         |
+|------------|------|------------|-----------------------------------------------------|
+| id         |      | integer    | The ID of the chat                              |
+| created_at |      | datetime   | The creation date and time          |
+| updated_at |      | datetime   | The last update date and time      |
+
+| http code | content-type                 | response                    |
+|-----------|------------------------------|-----------------------------|
+| `200`     | `application/json`           | JSON array of libraries     |
+| `400`     | `application/json`           | `{"code":"400","message":"Bad Request"}` |
+
+##### Example cURL
+
+>```
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/chats"
+>```
+
+>```
+>{
+>  "chats": [
+>    {
+>      "id": 1,
+>      "created_at": "2023-11-14T01:55:11.731Z",
+>      "updated_at": "2024-03-01T22:58:55.865Z"
+>    },
+>    {
+>      "id": 2,
+>      "created_at": "2023-01-14T01:55:11.731Z",
+>      "updated_at": "2023-03-01T22:58:55.865Z"
+>    },
+>    ...
+>  ]
+>}
+>```
+</details>
+
 # WebSocket API
 The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
 

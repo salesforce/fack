@@ -556,9 +556,9 @@ Each object in the `documents` array includes:
 
 > ```javascript
 > curl -X POST http://localhost:3000/api/v1/libraries \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"library": {"name": "New Library"}}'
+>  -H "Authorization: Bearer <token>" \
+>  -H "Content-Type: application/json" \
+>  -d '{"library": {"name": "New Library"}}'
 > ```
 
 </details>
@@ -681,15 +681,15 @@ Each object in the `documents` array includes:
 
 > ```javascript
 > curl -X POST http://localhost:3000/api/v1/assistants \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "assistant": {
-      "name": "Assistant Name",
-      "libraries": "1,2",
-      "input": "A good question."
-    }
-  }'
+>  -H "Authorization: Bearer <token>" \
+>  -H "Content-Type: application/json" \
+>  -d '{
+>    "assistant": {
+>      "name": "Assistant Name",
+>      "libraries": "1,2",
+>      "input": "A good question."
+>    }
+>  }'
 > ```
 
 </details>
@@ -810,9 +810,9 @@ Each object in the `documents` array includes:
 
 > ```javascript
 > curl -X POST http://localhost:3000/api/v1/chats \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"chat": {"assistant_id": "1"}}'
+>  -H "Authorization: Bearer <token>" \
+>  -H "Content-Type: application/json" \
+>  -d '{"chat": {"assistant_id": "1"}}'
 > ```
 
 </details>

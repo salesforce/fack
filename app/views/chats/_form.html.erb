@@ -10,10 +10,10 @@
     </div>
   <% end %>
   <div class="my-5">
-    <p class="text-md font-italic font-light text-stone-500"><%= chat.assistant.description %></p>
+    <p class="text-sm font-italic font-light text-stone-800"><%= chat.assistant.description %></p>
     <%= form.text_area :first_message, rows: 5,placeholder: ("Please give me " + chat.assistant.input).capitalize, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="inline">
-    <%= form.submit "Start Chatting", class: "rounded-lg py-3 px-5 bg-sky-600 hover:bg-yellow-500 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit "Start Chatting", class: "rounded-lg py-3 px-5 bg-sky-600 hover:bg-stone-800 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>

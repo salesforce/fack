@@ -1,36 +1,30 @@
 <div class="w-full">
   <% content_for :title, "Assistants" %>
   <div class="flex justify-between items-center">
-    <%= render 'shared/page_header', title: 'Assistants', subtitle: 'Assistants have special instructions and context to answer specific problems better than general Q/A. Click "Chat" to begin!' %>
+    <%= render 'shared/page_header', title: 'Assistants', subtitle: 'Assistants have special instructions and context to answer specific problems better than general Q/A. Click an assistant to begin!' %>
     <div>
       <% if policy(Assistant.new).edit? %>
         <div class="inline-flex rounded-md shadow-sm" role="group">
-          <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_assistant_path, "Import" =>  import_assistants_path} } %>
+          <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_assistant_path, "Import" => import_assistants_path } } %>
         </div>
       <% end %>
     </div>
   </div>
-  <div id="assistants" class="mt-5 space-y-4">
+  <ul id="assistants" class="mt-5 border border-gray-200 rounded-lg divide-y divide-gray-200 bg-white">
     <% @assistants.each do |assistant| %>
-      <% cache(assistant) do %> <!-- Cache each chat entry -->
-        <div class="flex justify-between items-center bg-white rounded-lg shadow-lg p-4 border-stone-200 border">
-          <div class="w-5/6">
-            <h2 class="text-xl flex items-center ">
-              <%= link_to assistant.name, assistant, class: "text-sky-500 hover:underline" %>
-              <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
-            </h2>
-            <p class="text-stone-600 text-sm"><%= assistant.description %></p>
-          </div>
-          <div class="">
-            <%= link_to new_assistant_chat_path(assistant_id: assistant.id), class: "rounded-lg py-2 px-4 bg-white text-sky-500 font-medium hover:bg-yellow-500 hover:text-white flex items-center space-x-2" do %>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-              </svg>
-              <span>Chat</span>
-            <% end %>
-          </div>
-        </div>
+      <% cache(assistant) do %> <!-- Cache each assistant entry -->
+        <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg">
+          <%= link_to assistant_path(assistant), class: "flex justify-between items-center p-3 block" do %>
+            <div class="w-full">
+              <h2 class="text-lg flex items-center text-stone-700 font-bold">
+                <%= assistant.name %>
+                <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
+              </h2>
+              <p class="text-stone-600 text-sm"><%= assistant.description %></p>
+            </div>
+          <% end %>
+        </li>
       <% end %>
     <% end %>
-  </div>
+  </ul>
 </div>

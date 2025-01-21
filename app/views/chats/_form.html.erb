@@ -1,4 +1,4 @@
-<%= form_with(model: chat, url: assistant_chats_path(assistant), class: "contents") do |form| %>
+<%= form_with(model: chat, url: assistant_chats_path(assistant_id: chat.assistant_id), class: "contents") do |form| %>
   <% if chat.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
       <h2><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h2>
@@ -10,10 +10,10 @@
     </div>
   <% end %>
   <div class="my-5">
-    <p class="text-sm font-italic"><%= chat.assistant.description %></p>
+    <p class="text-sm text-stone-900"><%= chat.assistant.description %></p>
     <%= form.text_area :first_message, rows: 5,placeholder: ("Please give me " + chat.assistant.input).capitalize, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="inline">
-    <%= form.submit "Start Chatting", class: "rounded-lg py-3 px-5 bg-sky-600 hover:bg-yellow-500 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit "Start Chatting", class: "rounded-lg py-3 px-5 bg-sky-600 hover:bg-stone-800 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>

@@ -1,0 +1,17 @@
+<ul id="chats" class="min-w-full mt-3 border border-gray-200 rounded-lg divide-y divide-gray-200 bg-white">
+  <% chats.each do |chat| %>
+    <% cache(chat) do %> <!-- Cache each chat entry -->
+      <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg">
+        <%= link_to chat_path(chat), class: "flex justify-between items-center p-3 block" do %>
+          <div class="w-4/5">
+            <p class="text-gray-700 text-sm font-mono"><%= truncate(chat.first_message, length: 80) %></p>
+          </div>
+          <div class="text-gray-400 text-xs w-1/5">
+            <%= chat.created_at.strftime("%b %d, %Y %I:%M %p") %>
+            <p>By: <%= chat.user.email %></p>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

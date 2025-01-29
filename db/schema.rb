@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_29_010423) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_29_213540) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -196,6 +196,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_29_010423) do
     t.index ["voter_type", "voter_id"], name: "index_votes_on_voter"
   end
 
+  create_table "webhooks", force: :cascade do |t|
+    t.string "secret_key", null: false
+    t.bigint "assistant_id", null: false
+    t.integer "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assistant_id"], name: "index_webhooks_on_assistant_id"
+    t.index ["secret_key"], name: "index_webhooks_on_secret_key", unique: true
+  end
+
   add_foreign_key "api_tokens", "users"
   add_foreign_key "assistants", "users"
   add_foreign_key "chats", "assistants"
@@ -209,4 +219,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_29_010423) do
   add_foreign_key "messages", "users"
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
+  add_foreign_key "webhooks", "assistants"
 end

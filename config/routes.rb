@@ -53,7 +53,12 @@ Rails.application.routes.draw do
       resources :chats do
         resources :messages
       end
-      resources :assistants
+      resources :assistants do
+        # Adding the pdwebhook route for a specific assistant
+        member do
+          post 'pdwebhook'
+        end
+      end
     end
   end
 

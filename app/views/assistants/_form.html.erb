@@ -37,6 +37,10 @@
     <%= form.label "Libraries (comma separated)" %>
     <%= form.text_field :libraries, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
+    <div class="my-5">
+    <%= form.label "Library Search Text" %>
+    <%= form.text_field :library_search_text, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
   <div class="my-5">
     <%= form.label :input %>
     <%= form.text_area :input, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>

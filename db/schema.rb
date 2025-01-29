@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_24_192237) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_29_010423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_24_192237) do
     t.string "quip_url"
     t.string "confluence_spaces"
     t.bigint "user_id"
+    t.string "library_search_text"
     t.index ["status"], name: "index_assistants_on_status"
     t.index ["user_id"], name: "index_assistants_on_user_id"
   end

@@ -21,6 +21,9 @@ class GenerateMessageResponseJob < ApplicationJob
     library_ids = message.chat.assistant.libraries.split(',')
     related_docs = related_documents_from_embedding(embedding).where(enabled: true, library_id: library_ids)
 
+    search_text = assistant.library_search_text.to_s.strip
+    related_docs = related_docs.where('document ILIKE ?', "%#{search_text}%") if search_text.present?
+
     # question.library_ids_included.push(question.library_id) if question.library_id
     # if question.library_ids_included.present? && question.library_ids_included.none?(&:nil?) && question.library_ids_included.length.positive?
     #  related_docs = related_docs.where(library_id: question.library_ids_included)

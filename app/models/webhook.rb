@@ -1,7 +1,8 @@
 class Webhook < ApplicationRecord
   belongs_to :assistant
 
-  enum type: { pagerduty: 0 }
+  enum hook_type: { pagerduty: 0 }
+  validates :hook_type, presence: true
 
   before_create :generate_secret_key
 

@@ -60,6 +60,12 @@ Rails.application.routes.draw do
           post 'pdwebhook'
         end
       end
+
+      resources :webhooks do
+        member do
+          post 'receive'
+        end
+      end
     end
   end
 

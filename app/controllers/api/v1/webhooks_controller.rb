@@ -25,7 +25,7 @@ module Api
         return unless resource_type == "incident"
 
         # Get the incident ID from the event data
-        incident_id = event['event']['data']['id']
+        incident_id = event['event']['data']['incident']['id']
 
         @chat = Chat.find_by(webhook_external_id: incident_id)
         if @chat.nil?

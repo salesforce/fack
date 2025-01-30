@@ -14,17 +14,16 @@ module Api
         # Add check if is PD webhook.  Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 
-        resource_type = event['event']['resource_type']
-
-        return unless resource_type == "incident"
-
         payload = request.body.read
         logger.info "Webhook received for Webhook ID: #{params[:id]}"
         logger.info "Payload: #{payload}"
 
         event = JSON.parse(payload)
 
-        # Get the incident ID from the event data
+        resource_type = event['event']['resource_type']
+
+        return unless resource_type == 'incident'
+
         incident_id = event['event']['data']['id']
 
         @chat = Chat.find_by(webhook_external_id: incident_id)

@@ -163,7 +163,7 @@ class GenerateMessageResponseJob < ApplicationJob
       response = pagerduty.post("incidents/#{incident_id}/notes", {
                                   body: {
                                     note: {
-                                      content: llm_message.content
+                                      content: llm_message.content + ENV.fetch('WEBHOOK_TAGLINE', nil)
                                     }
                                   },
                                   headers: {

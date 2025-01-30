@@ -12,8 +12,6 @@ module Api
       # We can then respond to PD alerts with GenAI responses
       def receive
         # Add check if is PD webhook.  Other Types will be handled later.
-        puts @webhook.inspect
-
         return unless @webhook.hook_type == 'pagerduty'
 
         payload = request.body.read

@@ -26,7 +26,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
               type: 'incident_reference'
             },
             id: 'PEUPADO',
-            content: "Based on the incident details provided, here are some helpful links and tips to resolve the issue:\n\n### Helpful Links:\n1. **PagerDuty Incident Details**: [Incident Q2L14QSCMS21O0](https://salesforce.pagerduty.com/incidents/Q2L14QSCMS21O0)\n2. **Service Details**: [SEARCH test (Vijay Ignore)](https://salesforce.pagerduty.com/services/PFGLA6A)\n3. **Escalation Policy**: [Vijay Test](https://salesforce.pagerduty.com/escalation_policies/P61I1Q5)\n\n### Tips to Solve the Problem:\n1. **Acknowledge the Incident**: Ensure the incident is acknowledged by the responsible team member. This has already been done by Vijay Swamidass.\n2. **Investigate the Root Cause**: Review the incident details and logs to identify the root cause of the issue. Since this is a test incident, ensure that all test parameters are correctly set.\n3. **Communication**: Keep all stakeholders informed about the status of the incident and any actions being taken.\n4. **Resolution Steps**: Follow the predefined resolution steps for similar incidents. If this is a new type of incident, document the steps taken for future reference.\n5. **Post-Incident Review**: Conduct a post-incident review to identify any gaps in the incident response process and update the incident management plan accordingly.\n\nIf you need further assistance, please refer to the provided links or contact the responsible team members.",
+            content: "This is a test.",
             trimmed: false,
             type: 'incident_note'
           }

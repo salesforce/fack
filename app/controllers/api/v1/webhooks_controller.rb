@@ -31,6 +31,7 @@ module Api
           @chat.user_id = current_user.id
           @chat.assistant = @webhook.assistant
           @chat.first_message = payload
+          @chat.webhook_id = @webhook.id
           @chat.webhook_external_id = incident_id
         end
 

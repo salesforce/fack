@@ -11,21 +11,26 @@ module Api
       # This can be configured to receive PD messages from https://salesforce.pagerduty.com/integrations/webhooks/add
       # We can then respond to PD alerts with GenAI responses
       def receive
-        # TODO - add key verification from webhook
-      
+        # TODO: - add key verification from webhook
+
         # Add check if is PD webhook.  Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 
         payload = request.body.read
         logger.info "Webhook received for Webhook ID: #{params[:id]}"
-        
+
         event = JSON.parse(payload)
 
         resource_type = event['event']['resource_type']
-        return unless resource_type == "incident"
+        return unless resource_type == 'incident'
 
-        # Get the incident ID from the event data
-        incident_id = event['event']['data']['incident']['id']
+        # Get the incident ID from the event data.  It varies in the payload
+        event_type = event['event']['event_type']
+        incident_id = if event_type == 'incident.annotated'
+                        event['event']['data']['incident']['id']
+                      else
+                        event['event']['data']['id']
+                      end
 
         @chat = Chat.find_by(webhook_external_id: incident_id)
         if @chat.nil?

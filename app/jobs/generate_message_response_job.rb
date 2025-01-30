@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pager_duty/connection'
+
 class GenerateMessageResponseJob < ApplicationJob
   include GptConcern
   include NeighborConcern
@@ -148,6 +150,28 @@ class GenerateMessageResponseJob < ApplicationJob
     rescue StandardError => e
       # TODO: add more error messaging
       Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
+    end
+
+    # update webhooks
+    return unless llm_message.chat.webhook.present?
+
+    webhook = llm_message.chat.webhook
+    nil unless webhook.hook_type == 'pagerduty'
+    begin
+      pagerduty = PagerDuty::Connection.new(ENV.fetch('PAGERDUTY_API_TOKEN'))
+      incident_id = llm_message.chat.webhook_external_id
+      response = pagerduty.post("incidents/#{incident_id}/notes", {
+                                  body: {
+                                    note: {
+                                      content: llm_message.content
+                                    }
+                                  },
+                                  headers: {
+                                    'From' => ENV.fetch('PAGERDUTY_API_FROM')
+                                  }
+                                })
+    rescue StandardError => e
+      Rails.logger.error("Error calling Pagerduty.#{e.inspect}")
     end
   end
 end

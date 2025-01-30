@@ -135,8 +135,15 @@ GEM
       railties (>= 5.0.0)
     faker (3.4.1)
       i18n (>= 1.8.11, < 2)
+    faraday (2.12.2)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.0)
+      net-http (>= 0.5.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    hashie (5.0.0)
     httparty (0.22.0)
       csv
       mini_mime (>= 1.0.0)
@@ -187,6 +194,8 @@ GEM
     mutex_m (0.3.0)
     neighbor (0.3.2)
       activerecord (>= 6.1)
+    net-http (0.6.0)
+      uri
     net-imap (0.4.12)
       date
       net-protocol
@@ -204,6 +213,10 @@ GEM
     nokogiri (1.17.2-x86_64-linux)
       racc (~> 1.4)
     optparse (0.5.0)
+    pager_duty-connection (3.0.0)
+      activesupport (>= 3.2, < 8.0)
+      faraday (>= 1.10, < 3)
+      hashie (>= 1.2)
     parallel (1.24.0)
     parser (3.3.2.0)
       ast (~> 2.4.1)
@@ -344,6 +357,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
+    uri (1.0.2)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -390,6 +404,7 @@ DEPENDENCIES
   kaminari
   neighbor
   optparse
+  pager_duty-connection
   pg (~> 1.1)
   pg_search
   pgvector

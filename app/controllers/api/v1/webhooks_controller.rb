@@ -11,6 +11,8 @@ module Api
       # This can be configured to receive PD messages from https://salesforce.pagerduty.com/integrations/webhooks/add
       # We can then respond to PD alerts with GenAI responses
       def receive
+        # TODO - add key verification from webhook
+      
         # Add check if is PD webhook.  Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 

@@ -32,6 +32,8 @@ module Api
                         event['event']['data']['id']
                       end
 
+        # We want to respond to annotations, but not our own.  Otherwise, it will get in an endless loop
+        # So we add a tagline to detect when our agent is posting vs. a normal user
         tagline = ENV.fetch('WEBHOOK_TAGLINE', '')
         return if event_type == 'incident.annotated' && tagline && payload.include?(tagline)
 

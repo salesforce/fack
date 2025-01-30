@@ -1,7 +1,5 @@
 FactoryBot.define do
   factory :webhook do
-    secret_key { "MyString" }
-    assistant { nil }
-    type { 1 }
+    hook_type { 0 }
   end
 end

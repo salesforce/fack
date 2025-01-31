@@ -27,6 +27,7 @@ module Api
         # Get the incident ID from the event data.  It varies in the payload
         event_type = event['event']['event_type']
         event_text = ''
+        incident_id = ''
         if event_type == 'incident.annotated'
           incident_id = event['event']['data']['incident']['id']
           event_text += 'content: ' + event['event']['data']['content']

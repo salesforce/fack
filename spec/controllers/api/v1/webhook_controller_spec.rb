@@ -153,11 +153,13 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
         expect(response).to have_http_status(:created)
 
+        parsed_payload_ack = JSON.parse(payload_ack)
+
         chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        expect(chat.first_message).to eq(payload_ack)
+        expect(chat.first_message).to eq('title: ' + parsed_payload_ack['event']['data']['title'])
         expect(chat.webhook_id).to eq(webhook.id)
 
         message = chat.messages.first
@@ -173,11 +175,13 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
         expect(response).to have_http_status(:created)
 
+        parsed_payload_annotate = JSON.parse(payload_annotate)
+
         chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        expect(chat.first_message).to eq(payload_annotate)
+        expect(chat.first_message).to eq('content: ' + parsed_payload_annotate['event']['data']['content'])
         expect(chat.webhook_id).to eq(webhook.id)
 
         message = chat.messages.first
@@ -208,9 +212,11 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
         expect(response).to have_http_status(:created)
 
+        parsed_payload_annotate = JSON.parse(payload_without_tagline)
+
         chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
         expect(chat).not_to be_nil
-        expect(chat.first_message).to eq(payload_without_tagline)
+        expect(chat.first_message).to eq('content: ' + parsed_payload_annotate['event']['data']['content'])
 
         message = chat.messages.first
         expect(message.content).to eq(payload_without_tagline)

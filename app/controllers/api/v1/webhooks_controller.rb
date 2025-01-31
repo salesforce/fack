@@ -26,11 +26,15 @@ module Api
 
         # Get the incident ID from the event data.  It varies in the payload
         event_type = event['event']['event_type']
-        incident_id = if event_type == 'incident.annotated'
-                        event['event']['data']['incident']['id']
-                      else
-                        event['event']['data']['id']
-                      end
+        event_text = ''
+        incident_id = ''
+        if event_type == 'incident.annotated'
+          incident_id = event['event']['data']['incident']['id']
+          event_text += 'content: ' + event['event']['data']['content']
+        else
+          incident_id = event['event']['data']['id']
+          event_text += 'title: ' + event['event']['data']['title']
+        end
 
         # We want to respond to annotations, but not our own.  Otherwise, it will get in an endless loop
         # So we add a tagline to detect when our agent is posting vs. a normal user
@@ -42,7 +46,7 @@ module Api
           @chat = Chat.new
           @chat.user_id = current_user.id
           @chat.assistant = @webhook.assistant
-          @chat.first_message = payload
+          @chat.first_message = event_text
           @chat.webhook_id = @webhook.id
           @chat.webhook_external_id = incident_id
         end

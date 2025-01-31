@@ -159,11 +159,12 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        expect(chat.first_message).to eq('title: ' + parsed_payload_ack['event']['data']['title'])
+        message_text = 'title: ' + parsed_payload_ack['event']['data']['title']
+        expect(chat.first_message).to eq(message_text)
         expect(chat.webhook_id).to eq(webhook.id)
 
         message = chat.messages.first
-        expect(message.content).to eq(payload_ack)
+        expect(message.content).to eq(message_text)
         expect(message.user_id).to eq(user.id)
         expect(message.from.to_sym).to eq(:user)
       end
@@ -181,11 +182,13 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        expect(chat.first_message).to eq('content: ' + parsed_payload_annotate['event']['data']['content'])
+
+        message_text = 'content: ' + parsed_payload_annotate['event']['data']['content']
+        expect(chat.first_message).to eq(message_text)
         expect(chat.webhook_id).to eq(webhook.id)
 
         message = chat.messages.first
-        expect(message.content).to eq(payload_annotate)
+        expect(message.content).to eq(message_text)
         expect(message.user_id).to eq(user.id)
         expect(message.from.to_sym).to eq(:user)
       end
@@ -216,10 +219,12 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
         chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
         expect(chat).not_to be_nil
-        expect(chat.first_message).to eq('content: ' + parsed_payload_annotate['event']['data']['content'])
+
+        message_text = 'content: ' + parsed_payload_annotate['event']['data']['content']
+        expect(chat.first_message).to eq(message_text)
 
         message = chat.messages.first
-        expect(message.content).to eq(payload_without_tagline)
+        expect(message.content).to eq(message_text)
       end
     end
 

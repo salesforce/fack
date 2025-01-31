@@ -53,7 +53,7 @@ module Api
 
         respond_to do |format|
           if @chat.save
-            @chat.messages.create(content: payload, user_id: @chat.user_id, from: :user)
+            @chat.messages.create(content: event_text, user_id: @chat.user_id, from: :user)
             format.json { render json: { id: @chat.id }, status: :created }
           else
             format.json { render json: @chat.errors, status: :unprocessable_content }

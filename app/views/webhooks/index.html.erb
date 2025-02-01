@@ -1,21 +1,20 @@
 <div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
   <% content_for :title, "Webhooks" %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Webhooks</h1>
-    <%= link_to "New webhook", new_webhook_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
+  <div class="flex justify-between items-center mb-4">
+    <%= render 'shared/page_header', title: 'Webhooks', subtitle: 'Easy integrations' %>
+    <%= render partial: 'shared/button_group', locals: { buttons: { "New Webhook" => new_webhook_path } } %>
   </div>
-
-  <div id="webhooks" class="min-w-full">
+  <div id="webhooks" class="w-full bg-white shadow rounded-lg">
     <% @webhooks.each do |webhook| %>
-      <%= render webhook %>
-      <p>
-        <%= link_to "Show this webhook", webhook, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-      </p>
+      <%= link_to webhook, class: "block px-3 py-2 border-b last:border-b-0 hover:bg-blue-50 text-gray-700 font-medium" do %>
+        <div class="flex justify-between items-center">
+          <div>
+            <span><%= webhook.assistant.name %></span>
+            <span class="block text-xs text-gray-500">Type: <%= webhook.hook_type %></span>
+          </div>
+          <span class="text-xs text-gray-500">View Details</span>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

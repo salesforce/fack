@@ -13,13 +13,13 @@ module ApplicationHelper
   def flash_class(type)
     case type
     when 'notice'
-      'bg-sky-500'
+      'bg-sky-100'
     when 'alert'
-      'bg-yellow-500'
+      'bg-yellow-100'
     when 'error'
-      'bg-red-500'
+      'bg-red-100'
     else
-      'bg-gray-500'
+      'bg-gray-100'
     end
   end
 

@@ -1,15 +1,16 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
-
-    <%= render @webhook %>
-
-    <%= link_to "Edit this webhook", edit_webhook_path(@webhook), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Back to webhooks", webhooks_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this webhook", @webhook, method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+<div class="w-full">
+  <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path],  ["Webhooks", webhooks_path], ["Webhook", webhooks_path]] } %>
+  <div class="mx-auto flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-gray-700">Webhook</h2>
+    <div>
+      <%= button_to "Delete", @webhook, method: :delete, class: "text-red-600 rounded-lg py-3 px-5 bg-gray-200 font-medium" %>
     </div>
   </div>
+  <div class="mt-4">
+    <%= render @webhook %>
+  </div>
+</div>
+<div>
+  <h1 class="text-stone-700 font-light text-3xl mt-6">Recent Chats</h1>
+  <%= render "shared/chat_list", chats: @webhook.chats.limit(10).order(created_at: :desc) %>
 </div>

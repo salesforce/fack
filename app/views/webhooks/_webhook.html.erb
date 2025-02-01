@@ -1,19 +1,19 @@
 <div id="<%= dom_id webhook %>" class="w-full p-6 bg-white shadow rounded-md border border-gray-300">
   <p class="my-5">
     <strong class="block font-medium text-gray-600 mb-1">Secret Key:</strong>
-    <span class="block text-gray-800 px-3 py-2 bg-gray-100 rounded-md">
+    <span class="block text-gray-800 px-3 py-2 bg-gray-100 rounded-md text-2xl">
       <%= webhook.secret_key %>
     </span>
   </p>
   <p class="my-5">
     <strong class="block font-medium text-gray-600 mb-1">Assistant:</strong>
-    <span class="block text-gray-800 px-3 py-2 bg-gray-100 rounded-md">
-      <%= webhook.assistant_id %>
+    <span class="text-2xl">
+      <%= webhook.assistant.name %>
     </span>
   </p>
   <p class="my-5">
     <strong class="block font-medium text-gray-600 mb-1">Type:</strong>
-    <span class="block text-gray-800 px-3 py-2 bg-gray-100 rounded-md">
+    <span class="text-2xl">
       <%= webhook.hook_type %>
     </span>
   </p>

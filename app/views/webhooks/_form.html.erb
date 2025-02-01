@@ -9,17 +9,18 @@
       </ul>
     </div>
   <% end %>
-
+  <div class="my-5">
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+  </div>
   <div class="my-5">
     <%= form.label :assistant_id, "Select Assistant" %>
     <%= form.collection_select :assistant_id, Assistant.all.order(name: :asc), :id, :name, { prompt: "Choose an assistant" }, { class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" } %>
   </div>
-
   <div class="my-5">
     <%= form.label :hook_type, "Webhook Type" %>
     <%= form.select :hook_type, Webhook.hook_types.keys.map { |t| [t.humanize, t] }, { prompt: "Select Webhook Type" }, { class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" } %>
   </div>
-
   <div class="inline">
     <%= form.submit "Save", class: "rounded-lg py-3 px-5 bg-sky-600 text-white inline-block font-medium cursor-pointer" %>
   </div>

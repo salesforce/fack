@@ -1,9 +1,9 @@
 <div class="w-full">
   <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path],  ["Webhooks", webhooks_path], ["Webhook", webhooks_path]] } %>
   <div class="mx-auto flex items-center justify-between">
-    <h2 class="text-2xl font-bold text-gray-700">Webhook</h2>
+    <h2 class="text-2xl font-bold text-gray-700"> <%= @webhook.name %></h2>
     <div>
-      <%= button_to "Delete", @webhook, method: :delete, class: "text-red-600 rounded-lg py-3 px-5 bg-gray-200 font-medium" %>
+      <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_webhook_path(@webhook)} } %>
     </div>
   </div>
   <div class="mt-4">

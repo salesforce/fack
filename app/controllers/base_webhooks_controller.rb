@@ -59,6 +59,6 @@ class BaseWebhooksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def webhook_params
-    params.require(:webhook).permit(:secret_key, :assistant_id, :hook_type)
+    params.require(:webhook).permit(:name, :assistant_id, :hook_type)
   end
 end

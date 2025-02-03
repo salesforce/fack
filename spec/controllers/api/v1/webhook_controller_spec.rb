@@ -3,6 +3,32 @@ require 'rails_helper'
 RSpec.describe Api::V1::WebhooksController, type: :controller do
   describe 'POST #receive' do
     let(:tagline) { 'SPECIAL_TAGLINE' }
+    let(:library) { Library.create!(name: 'My Library', user:) }
+    let(:document) { instance_double('Document', save: false) } # Simulate a failed save
+
+    let(:user) { create(:user) }
+    let(:assistant) { create(:assistant, name: 'genai_assistant', user:) }
+    let(:webhook) { create(:webhook, hook_type: :pagerduty, assistant:, library:) }
+
+    let(:payload_with_resolution_note) do
+      {
+        event: {
+          id: '01FEW8TGIDWE21FOHP5WGIHUSX',
+          event_type: 'incident.annotated',
+          resource_type: 'incident',
+          data: {
+            content: 'Resolution Note: Restarted the cluster.',
+            incident: {
+              html_url: 'https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ',
+              id: 'Q1VVXNR9VO48ZJ',
+              self: 'https://api.pagerduty.com/incidents/Q1VVXNR9VO48ZJ0',
+              summary: 'Argus is down (TEST)',
+              type: 'incident_reference'
+            }
+          }
+        }
+      }.to_json
+    end
 
     let(:payload_with_tagline) do
       {
@@ -137,13 +163,10 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       }.to_json
     end
 
-    let(:user) { create(:user) }
-    let(:assistant) { create(:assistant, name: 'genai_assistant', user:) }
-    let(:webhook) { create(:webhook, hook_type: :pagerduty, assistant:) }
-
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
       allow(controller).to receive(:current_user).and_return(user)
+      allow(Document).to receive(:new).and_return(document)
       request.headers['Content-Type'] = 'application/json'
     end
 
@@ -236,6 +259,22 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(response).to have_http_status(:no_content)
         expect(Chat.count).to eq(0)
       end
+    end
+
+    it 'creates a new Document with the correct content and library association' do
+      post :receive, params: { id: webhook.id }, body: payload_with_resolution_note, as: :json
+
+      expect(response).to have_http_status(:created)
+
+      parsed_payload = JSON.parse(payload_with_resolution_note)
+      resolution_note_text = parsed_payload['event']['data']['content']
+
+      expect(Document).to have_received(:new).with(
+        document: resolution_note_text,
+        user_id: user.id,
+        library_id: library.id
+      )
+      expect(document).to have_received(:save)
     end
   end
 end

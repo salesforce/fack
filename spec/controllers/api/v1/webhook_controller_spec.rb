@@ -268,9 +268,13 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
       parsed_payload = JSON.parse(payload_with_resolution_note)
       resolution_note_text = parsed_payload['event']['data']['content']
+      incident_url = parsed_payload['event']['data']['incident']['html_url']
+      incident_summary_text = parsed_payload['event']['data']['incident']['summary']
+
+      doc_text = resolution_note_text + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
 
       expect(Document).to have_received(:new).with(
-        document: resolution_note_text,
+        document: doc_text,
         user_id: user.id,
         library_id: library.id
       )

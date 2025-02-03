@@ -32,3 +32,4 @@
     <h1 class="text-stone-700 font-light text-3xl mt-6">Recent Chats</h1>
     <%= render "shared/chat_list", chats: @assistant.chats.limit(10).order(created_at: :desc) %>
   </div>
+</div>

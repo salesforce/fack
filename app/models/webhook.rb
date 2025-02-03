@@ -1,5 +1,6 @@
 class Webhook < ApplicationRecord
   belongs_to :assistant
+  has_many :chats
 
   enum hook_type: { pagerduty: 0 }
   validates :hook_type, presence: true

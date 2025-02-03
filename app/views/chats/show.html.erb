@@ -1,7 +1,6 @@
-<div class="mx-auto w-full flex flex-col min-h-screen" id="chat-container">
+<div class="mx-auto flex flex-col min-h-screen w-full" id="chat-container">
   <% content_for :title, @chat.first_message.truncate(20) %>
   <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@chat.assistant.name, assistant_path(@chat.assistant)], ['Chats', nil]] } %>
-
   <!-- Main Content -->
   <div class="w-full flex justify-between items-center">
     <div>
@@ -17,6 +16,11 @@
       <% end %>
     </div>
   </div>
+  <% if @chat.webhook %>
+    <div class="mt-2 bg-green-500 text-white p-2 text-xs rounded inline-block max-w-max">
+      Webhook: <%= link_to @chat.webhook.name, @chat.webhook, class: 'hover:underline' %>
+    </div>
+  <% end %>
   <!-- Messages -->
   <turbo-frame id="messages-<%=@chat.id%>" src="<%= chat_messages_path(@chat) %>"></turbo-frame>
   <div class="text-center text-xs text-stone-400">

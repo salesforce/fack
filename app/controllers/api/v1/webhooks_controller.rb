@@ -30,7 +30,19 @@ module Api
         incident_id = ''
         if event_type == 'incident.annotated'
           incident_id = event['event']['data']['incident']['id']
+          incident_url = event['event']['data']['incident']['html_url']
+          incident_summary_text = event['event']['data']['incident']['summary']
+
           event_text += 'content: ' + event['event']['data']['content']
+
+          # if text contains "Resolution Note:" Then created a doc
+          # Get the webhook library and create a doc
+          if event_text.include?('Resolution Note:')
+            # Create a doc
+            doc_text = event['event']['data']['content'] + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
+            doc = Document.create(document: doc_text, user_id: current_user.id, library_id: @webhook.library.id)
+          end
+
         else
           incident_id = event['event']['data']['id']
           event_text += 'title: ' + event['event']['data']['title']

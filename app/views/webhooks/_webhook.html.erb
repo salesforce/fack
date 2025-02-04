@@ -8,7 +8,13 @@
   <p class="my-5">
     <strong class="block font-medium text-gray-600 mb-1">Assistant:</strong>
     <span class="text-2xl">
-      <%= webhook.assistant.name %>
+      <%= link_to webhook.assistant.name, assistant_path(webhook.assistant), class: 'text-sky-500 hover:text-sky-400' %>
+    </span>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium text-gray-600 mb-1">Library:</strong>
+    <span class="text-2xl">
+      <%= link_to webhook.library.name, library_path(webhook.library), class: 'text-sky-500 hover:text-sky-400' %>
     </span>
   </p>
   <p class="my-5">

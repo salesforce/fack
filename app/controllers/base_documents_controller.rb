@@ -5,9 +5,24 @@ class BaseDocumentsController < ApplicationController
   before_action :set_document, only: %i[show edit update]
 
   include Hashable
+  def read_document(doc_id)
+    docs_service = Google::Apis::DocsV1::DocsService.new
+
+    # Retrieve the document
+    begin
+      docs_service = Google::Apis::DocsV1::DocsService.new
+      document = docs_service.get_document('YOUR_DOC_ID')
+      puts document.title
+    rescue Google::Apis::AuthorizationError => e
+      puts "Authorization Error: #{e.message}"
+      puts "Details: #{e.body}"
+    end
+  end
 
   # GET /documents or /documents.json
   def index
+    read_document('1tOBz4SdSxUEu79mikVtlts_6rGA_fwXfdKOzNviQeM4')
+
     @documents = Document.includes(:library, :user)
 
     @documents = if params[:sort] == 'questions'

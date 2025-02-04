@@ -122,3 +122,6 @@ gem 'brakeman'
 gem 'reverse_markdown'
 
 gem 'pager_duty-connection'
+
+gem 'google-api-client'
+gem 'googleauth'

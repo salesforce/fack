@@ -4,9 +4,7 @@
     <% if policy(@document).edit? %>
       <div class="text-gray-700">
         <div class="flex items-center">
-          <% if policy(Document.new).update? %>
-            <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_document_path } } %>
-          <% end %>
+          <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_document_path } } %>
         </div>
       </div>
     <% end %>

@@ -1,5 +1,6 @@
 class Webhook < ApplicationRecord
   belongs_to :assistant
+  belongs_to :library
   has_many :chats
 
   enum hook_type: { pagerduty: 0 }

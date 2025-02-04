@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_01_004948) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_03_220814) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -207,7 +207,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_01_004948) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.bigint "library_id"
     t.index ["assistant_id"], name: "index_webhooks_on_assistant_id"
+    t.index ["library_id"], name: "index_webhooks_on_library_id"
     t.index ["secret_key"], name: "index_webhooks_on_secret_key", unique: true
   end
 
@@ -226,4 +228,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_01_004948) do
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
   add_foreign_key "webhooks", "assistants"
+  add_foreign_key "webhooks", "libraries"
 end

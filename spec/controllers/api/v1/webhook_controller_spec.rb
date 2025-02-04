@@ -163,13 +163,10 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       }.to_json
     end
 
-    let(:user) { create(:user) }
-    let(:assistant) { create(:assistant, name: 'genai_assistant', user:) }
-    let(:webhook) { create(:webhook, hook_type: :pagerduty, assistant:) }
-
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
       allow(controller).to receive(:current_user).and_return(user)
+      allow(Document).to receive(:new).and_return(document)
       request.headers['Content-Type'] = 'application/json'
     end
 

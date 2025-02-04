@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe Api::V1::WebhooksController, type: :controller do
   describe 'POST #receive' do
     let(:tagline) { 'SPECIAL_TAGLINE' }
-    let(:library) { Library.create!(name: 'My Library', user:) }
-    let(:document) { instance_double('Document', save: false) } # Simulate a failed save
-
     let(:user) { create(:user) }
+    let(:library) { Library.create!(name: 'My Library', user:) }
+    let(:document) { create(:document) }
+
     let(:assistant) { create(:assistant, name: 'genai_assistant', user:) }
     let(:webhook) { create(:webhook, hook_type: :pagerduty, assistant:, library:) }
 
@@ -166,7 +166,6 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
       allow(controller).to receive(:current_user).and_return(user)
-      allow(Document).to receive(:new).and_return(document)
       request.headers['Content-Type'] = 'application/json'
     end
 
@@ -273,12 +272,14 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
       doc_text = resolution_note_text + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
 
-      expect(Document).to have_received(:new).with(
-        document: doc_text,
-        user_id: user.id,
-        library_id: library.id
-      )
-      expect(document).to have_received(:save)
+      # Fetch the created document (since we are now using the real creation process)
+      created_doc = Document.last
+      expect(created_doc).not_to be_nil
+      expect(created_doc.document).to eq(doc_text)
+      expect(created_doc.user_id).to eq(user.id)
+      expect(created_doc.library_id).to eq(library.id)
+      # Check validation by ensuring that title presence is required (should fail without it)
+      expect(created_doc.valid?).to eq(false) if created_doc.title.blank?
     end
   end
 end

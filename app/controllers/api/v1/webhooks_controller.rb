@@ -39,8 +39,9 @@ module Api
           # Get the webhook library and create a doc
           if event_text.include?('Resolution Note:')
             # Create a doc
+            doc_title = 'PD Incident: ' + incident_summary_text
             doc_text = event['event']['data']['content'] + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
-            doc = Document.create(document: doc_text, user_id: current_user.id, library_id: @webhook.library.id)
+            doc = Document.create(document: doc_text, user_id: current_user.id, library_id: @webhook.library.id, title: doc_title)
           end
 
         else

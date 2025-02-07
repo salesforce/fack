@@ -9,6 +9,18 @@ class GenerateMessageResponseJob < ApplicationJob
 
   queue_as :default
 
+  def post_slack_message(text)
+    client = Slack::Web::Client.new
+
+    client.chat_postMessage(
+      channel: '#gpt-support-vijaylaptop', # Or a specific channel ID, like 'C12345678'
+      text:,
+      as_user: true
+    )
+  rescue Slack::Web::Api::Errors::SlackError => e
+    Rails.logger.error(e.message)
+  end
+
   def perform(_message_id)
     message = Message.find(_message_id)
 
@@ -151,6 +163,8 @@ class GenerateMessageResponseJob < ApplicationJob
       # TODO: add more error messaging
       Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
     end
+
+    # post_slack_message(llm_message.content)
 
     # update webhooks
     return unless llm_message.chat.webhook.present?

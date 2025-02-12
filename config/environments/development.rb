@@ -4,6 +4,8 @@ require 'active_support/core_ext/integer/time'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+  #
+  config.hosts << /.*\.ngrok-free\.app/
 
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
@@ -78,4 +80,6 @@ Rails.application.configure do
 
   # OR (if you want to allow specific origins)
   config.action_cable.allowed_request_origins = ['http://localhost:3000', %r{http://localhost:.*}]
+
+  Rails.application.routes.default_url_options[:host] = 'http://localhost:3000'
 end

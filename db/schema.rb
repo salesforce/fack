@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_12_081128) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_12_185754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -46,6 +46,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_081128) do
     t.bigint "user_id"
     t.string "library_search_text"
     t.string "slack_channel_name"
+    t.string "approval_keywords"
+    t.boolean "create_doc_on_approval"
+    t.bigint "library_id"
+    t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["status"], name: "index_assistants_on_status"
     t.index ["user_id"], name: "index_assistants_on_user_id"
   end
@@ -215,6 +219,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_081128) do
   end
 
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "assistants", "libraries"
   add_foreign_key "assistants", "users"
   add_foreign_key "chats", "assistants"
   add_foreign_key "chats", "users"

@@ -110,6 +110,11 @@ class GenerateMessageResponseJob < ApplicationJob
       prompt += confluence_results.to_json.truncate(70_000)
     end
 
+    prompt += '\n\nSLACK THREADS'
+    slack_messages = SlackService.new.fetch_recent_threads(assistant.slack_channel_name, 30) if assistant.slack_channel_name.present?
+    Rails.logger.info(slack_messages)
+    prompt += slack_messages.to_s
+
     prompt += '\n\nDOCUMENTS'
     if related_docs.each_with_index do |doc, index|
       # Make sure we don't exceed the max document tokens limit

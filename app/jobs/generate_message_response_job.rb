@@ -100,7 +100,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       prompt += '<CONTEXT>'
       prompt += 'SPECIAL INFORMATION\n\n'
-      prompt += message.chat.assistant.context
+      prompt += message.chat.assistant.context || ''
 
       # QUIP Doc
       if assistant.quip_url.present?

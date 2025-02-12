@@ -9,28 +9,23 @@ class GenerateMessageResponseJob < ApplicationJob
 
   queue_as :default
 
-  def post_slack_message(text)
-    client = Slack::Web::Client.new
-
-    client.chat_postMessage(
-      channel: '#gpt-support-vijaylaptop', # Or a specific channel ID, like 'C12345678'
-      text:,
-      as_user: true
-    )
-  rescue Slack::Web::Api::Errors::SlackError => e
-    Rails.logger.error(e.message)
-  end
-
   def perform(_message_id)
     message = Message.find(_message_id)
+
+    # get the previous message history to send to prompt
+    message_history = message.chat.messages.where(from: 'user').pluck(:content)
 
     assistant = message.chat.assistant
 
     llm_message = Message.new
 
+    # Check if there is an approval keyword in previous message
+    # Convert the prior message to a doc if "create_doc_on_approval is set"
+    # Save and post confirmation with link.
+    # If there are approval key words, add the instructions in the message somewhere.
+
     # Get embedding from GPT
-    # TODO - get the previous user messages in embedding
-    embedding = get_embedding(message.content)
+    embedding = get_embedding(message_history.to_s)
 
     library_ids = message.chat.assistant.libraries.split(',')
     related_docs = related_documents_from_embedding(embedding).where(enabled: true, library_id: library_ids)
@@ -67,7 +62,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       <{{PROGRAM_TAG}}>
       You are a helpful assistant which answers a user's question based on provided documents and messages.
-      1. Try to fullfill the user request in the <{{DATA_TAG}}>.
+      1. Read the message history in <{{DATA_TAG}}> and answer the last user message or question.  Use the message history for context, but answer the last question directly.
 
       2. Follow these rules when answering the question:
       #{message.chat.assistant.instructions}
@@ -141,7 +136,8 @@ class GenerateMessageResponseJob < ApplicationJob
 
     prompt += <<~END_PROMPT
       <{{DATA_TAG}}>
-        #{message.content}
+        Message History
+        #{message_history.each_with_index.map { |msg, i| "#{i + 1}. #{msg}" }.join("\n")}
       </{{DATA_TAG}}>
     END_PROMPT
 
@@ -168,8 +164,6 @@ class GenerateMessageResponseJob < ApplicationJob
       # TODO: add more error messaging
       Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
     end
-
-    # post_slack_message(llm_message.content)
 
     # update webhooks
     return unless llm_message.chat.webhook.present?

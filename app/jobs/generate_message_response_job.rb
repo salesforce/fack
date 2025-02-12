@@ -41,7 +41,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ Saved document! [View Document](#{document_url(new_doc)})"
+      llm_message.content = "✨ Saved document! [View Document](#{new_doc})"
       llm_message.save
       llm_message.ready!
     else

@@ -46,7 +46,11 @@ module Api
 
         else
           incident_id = event['event']['data']['id']
-          event_text += 'title: ' + event['event']['data']['title']
+          event_text += if event_type == 'incident.resolved'
+                          'Incident resolved.'
+                        else
+                          'Incident: ' + event['event']['data']['title']
+                        end
         end
 
         # We want to respond to annotations, but not our own.  Otherwise, it will get in an endless loop

@@ -122,3 +122,5 @@ gem 'brakeman'
 gem 'reverse_markdown'
 
 gem 'pager_duty-connection'
+
+gem 'slack-ruby-client'

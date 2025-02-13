@@ -3,6 +3,7 @@ class Assistant < ApplicationRecord
   belongs_to :user
   enum status: { development: 0, ready: 1 }
   validates :libraries, presence: true
+  validates :slack_channel_name, uniqueness: true
 
   validates :input, presence: true
   validate :libraries_must_be_csv_with_numbers

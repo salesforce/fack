@@ -76,5 +76,7 @@ Rails.application.routes.draw do
 
   root 'questions#new' # Setting the questions new page as the root page
 
+  post '/slack/events', to: 'slack#events'
+
   mount ActionCable.server => '/cable'
 end

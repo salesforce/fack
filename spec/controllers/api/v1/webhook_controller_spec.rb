@@ -181,7 +181,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        message_text = 'title: ' + parsed_payload_ack['event']['data']['title']
+        message_text = 'Incident: ' + parsed_payload_ack['event']['data']['title']
         expect(chat.first_message).to eq(message_text)
         expect(chat.webhook_id).to eq(webhook.id)
 

@@ -17,6 +17,21 @@ class SlackService
     nil
   end
 
+  def add_reaction(channel:, timestamp:, emoji:)
+    unless channel && timestamp && emoji
+      Rails.logger.error("[Slack Error] Missing arguments for add_reaction: channel=#{channel}, ts=#{timestamp}, emoji=#{emoji}")
+      return
+    end
+
+    @client.reactions_add(
+      channel:,
+      timestamp:,
+      name: emoji
+    )
+  rescue Slack::Web::Api::Errors::SlackError => e
+    Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
+  end
+
   # Post a message to a Slack channel or a thread
   def post_message(channel, text, thread_ts = nil)
     @client.chat_postMessage(

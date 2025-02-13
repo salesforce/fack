@@ -79,6 +79,9 @@ class SlackController < ApplicationController
         slack_thread: thread_ts
       )
       chat.save!
+
+      # Post an emoji
+      SlackService.new.add_reaction(channel:, timestamp: thread_ts, emoji: 'star')
     end
 
     # Step 3: Store the message in the chat

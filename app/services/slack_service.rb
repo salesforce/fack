@@ -9,12 +9,29 @@ class SlackService
     @client = Slack::Web::Client.new
   end
 
-  # Post a message to a Slack channel
-  def post_message(channel, text)
+  # Fetch the bot's user ID
+  def bot_id
+    @bot_id ||= @client.auth_test['user_id']
+  rescue Slack::Web::Api::Errors::SlackError => e
+    Rails.logger.error("[Slack Error] Failed to fetch bot ID: #{e.message}")
+    nil
+  end
+
+  # Post a message to a Slack channel or a thread
+  def post_message(channel, text, thread_ts = nil)
     @client.chat_postMessage(
       channel:,
-      text:,
-      as_user: true
+      as_user: true,
+      thread_ts:,
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text:
+          }
+        }
+      ]
     )
   rescue Slack::Web::Api::Errors::SlackError => e
     Rails.logger.error("[Slack Error] #{e.message}")

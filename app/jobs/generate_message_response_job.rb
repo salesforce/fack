@@ -12,10 +12,12 @@ class GenerateMessageResponseJob < ApplicationJob
   def perform(_message_id)
     message = Message.find(_message_id)
 
-    # get the previous message history to send to prompt
-    message_history = message.chat.messages.where(from: 'user').pluck(:content)
+    chat = message.chat
 
-    assistant = message.chat.assistant
+    # get the previous message history to send to prompt
+    message_history = chat.messages.where(from: 'user').pluck(:content)
+
+    assistant = chat.assistant
 
     llm_message = Message.new
 
@@ -41,7 +43,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ Saved document! [View Document](#{new_doc})"
+      llm_message.content = "✨ Saved document! [View Document](#{document_url(new_doc)})"
       llm_message.save
       llm_message.ready!
     else
@@ -188,26 +190,28 @@ class GenerateMessageResponseJob < ApplicationJob
       end
 
       # update webhooks
-      return unless llm_message.chat.webhook.present?
-
-      webhook = llm_message.chat.webhook
-      nil unless webhook.hook_type == 'pagerduty'
-      begin
-        pagerduty = PagerDuty::Connection.new(ENV.fetch('PAGERDUTY_API_TOKEN'))
-        incident_id = llm_message.chat.webhook_external_id
-        response = pagerduty.post("incidents/#{incident_id}/notes", {
-                                    body: {
-                                      note: {
-                                        content: llm_message.content + ENV.fetch('WEBHOOK_TAGLINE', nil)
+      if llm_message.chat.webhook.present?
+        webhook = llm_message.chat.webhook
+        nil unless webhook.hook_type == 'pagerduty'
+        begin
+          pagerduty = PagerDuty::Connection.new(ENV.fetch('PAGERDUTY_API_TOKEN'))
+          incident_id = llm_message.chat.webhook_external_id
+          response = pagerduty.post("incidents/#{incident_id}/notes", {
+                                      body: {
+                                        note: {
+                                          content: llm_message.content + ENV.fetch('WEBHOOK_TAGLINE', nil)
+                                        }
+                                      },
+                                      headers: {
+                                        'From' => ENV.fetch('PAGERDUTY_API_FROM')
                                       }
-                                    },
-                                    headers: {
-                                      'From' => ENV.fetch('PAGERDUTY_API_FROM')
-                                    }
-                                  })
-      rescue StandardError => e
-        Rails.logger.error("Error calling Pagerduty.#{e.inspect}")
+                                    })
+        rescue StandardError => e
+          Rails.logger.error("Error calling Pagerduty.#{e.inspect}")
+        end
       end
     end
+
+    SlackService.new.post_message(chat.assistant.slack_channel_name, 'Please check these answers: ' + llm_message.content, chat.slack_thread) if chat.slack_thread
   end
 end

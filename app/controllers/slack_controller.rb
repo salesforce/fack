@@ -49,14 +49,39 @@ class SlackController < ApplicationController
     user = event['user']
     text = event['text']
     channel = event['channel']
+    thread_ts = event['thread_ts'] || event['ts'] # Use `thread_ts` if it's part of a thread, else use `ts`
 
-    # Example: log or process the reply
-    Rails.logger.info "User #{user} said: #{text} in channel #{channel}"
+    # Get bot's user ID
+    slack_service = SlackService.new
+    bot_user_id = slack_service.bot_id
 
-    # Optionally, you can respond back to the user
-    Slack::Web::Client.new.chat_postMessage(
-      channel:,
-      text: "Thanks for your reply, <@#{user}>! We received: '#{text}'"
-    )
+    # Ignore messages from the bot itself
+    return if user == bot_user_id || event['bot_id'] # Skip bot messages
+
+    Rails.logger.info "User #{user} said: #{text} in channel #{channel} (Thread: #{thread_ts})"
+
+    # Step 1: Find the assistant based on the channel name
+    assistant = Assistant.find_by(slack_channel_name: channel)
+
+    unless assistant
+      Rails.logger.error "No assistant found for channel: #{channel}"
+      return
+    end
+
+    # Step 2: Find an existing chat by thread_ts, or create a new one
+    chat = Chat.find_by(slack_thread: thread_ts)
+
+    if chat.nil?
+      chat = Chat.new(
+        user_id: User.first.id,
+        assistant:,
+        first_message: text,
+        slack_thread: thread_ts
+      )
+      chat.save!
+    end
+
+    # Step 3: Store the message in the chat
+    chat.messages.create!(content: text, user_id: chat.user_id, from: 'user')
   end
 end

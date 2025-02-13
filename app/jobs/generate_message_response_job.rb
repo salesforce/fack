@@ -42,9 +42,11 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ Saved document! #{document_url(new_doc)}"
+      llm_message.content = "✨ Saved document! #{ENV.fetch('ROOT_URL', nil)}#{document_path(new_doc)}"
       llm_message.save
       llm_message.ready!
+
+      SlackService.new.add_reaction(channel: assistant.slack_channel_name, timestamp: chat.slack_thread, emoji: 'check') if chat.slack_thread
     else
 
       # Get embedding from GPT

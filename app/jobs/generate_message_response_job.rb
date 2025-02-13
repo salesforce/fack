@@ -16,6 +16,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
     # get the previous message history to send to prompt
     message_history = chat.messages.where(from: 'user').pluck(:content)
+    assistant_messages_text = chat.messages.where(from: 'assistant').pluck(:content).join("\n# -------\n")
 
     assistant = chat.assistant
 
@@ -25,14 +26,12 @@ class GenerateMessageResponseJob < ApplicationJob
     # Convert the prior message to a doc if "create_doc_on_approval is set"
     # Save and post confirmation with link.
     # If there are approval key words, add the instructions in the message somewhere.
-    keywords_array = assistant.approval_keywords.split(', ').map(&:strip)
+    keywords_array = assistant.approval_keywords.split(/[\s,]+/).map(&:strip)
     regex = Regexp.union(keywords_array)
 
     if message.content.match?(regex)
-
-      assistant_messages = message.chat.messages.where(from: 'assistant').pluck(:content).join("\n# -------\n")
       title = "#{assistant.name}:#{message.chat.first_message.truncate(50)}"
-      new_doc = Document.create(document: assistant_messages, title:, user_id: message.user_id, library_id: assistant.library_id)
+      new_doc = Document.create(document: assistant_messages_text, title:, user_id: message.user_id, library_id: assistant.library_id)
 
       llm_message.chat_id = message.chat_id
       llm_message.user_id = message.user_id
@@ -43,7 +42,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ Saved document! [View Document](#{document_url(new_doc)})"
+      llm_message.content = "✨ Saved document! #{document_url(new_doc)}"
       llm_message.save
       llm_message.ready!
     else

@@ -16,10 +16,12 @@ class Message < ApplicationRecord
   def create_slack_thread
     return if chat.slack_thread.present? || chat.assistant.slack_channel_name.blank?
 
-    response = SlackService.new.post_message(chat.assistant.slack_channel_name, content)
+    slack_service = SlackService.new
+    response = slack_service.post_message(chat.assistant.slack_channel_name, content)
 
     if (ts = response&.dig('ts')) # Safely retrieve the thread timestamp
       chat.update(slack_thread: ts) # One-liner update instead of separate assignment + save
+      slack_service.add_reaction(channel: chat.slack_thread, timestamp: ts, emoji: 'pagerduty') if chat.webhook.hook_type == 'pagerduty'
     else
       Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
     end

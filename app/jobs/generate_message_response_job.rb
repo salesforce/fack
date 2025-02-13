@@ -26,10 +26,10 @@ class GenerateMessageResponseJob < ApplicationJob
     # Convert the prior message to a doc if "create_doc_on_approval is set"
     # Save and post confirmation with link.
     # If there are approval key words, add the instructions in the message somewhere.
-    keywords_array = assistant.approval_keywords.split(/[\s,]+/).map(&:strip)
-    regex = Regexp.union(keywords_array)
+    keywords_array = assistant.approval_keywords&.split(/[\s,]+/)&.map(&:strip) || []
+    regex = keywords_array.any? ? Regexp.union(keywords_array) : nil
 
-    if message.content.match?(regex)
+    if regex && message.content.match?(regex)
       title = "#{assistant.name}:#{message.chat.first_message.truncate(50)}"
       new_doc = Document.create(document: assistant_messages_text, title:, user_id: message.user_id, library_id: assistant.library_id)
 

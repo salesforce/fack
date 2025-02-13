@@ -30,9 +30,9 @@ class GenerateMessageResponseJob < ApplicationJob
 
     if message.content.match?(regex)
 
-      last_message = message.chat.messages.where(from: 'assistant').pluck(:content).last
+      assistant_messages = message.chat.messages.where(from: 'assistant').pluck(:content).join("\n# -------\n")
       title = "#{assistant.name}:#{message.chat.first_message.truncate(50)}"
-      new_doc = Document.create(document: last_message, title:, user_id: message.user_id, library_id: assistant.library_id)
+      new_doc = Document.create(document: assistant_messages, title:, user_id: message.user_id, library_id: assistant.library_id)
 
       llm_message.chat_id = message.chat_id
       llm_message.user_id = message.user_id
@@ -212,6 +212,6 @@ class GenerateMessageResponseJob < ApplicationJob
       end
     end
 
-    SlackService.new.post_message(chat.assistant.slack_channel_name, 'Please check these answers: ' + llm_message.content, chat.slack_thread) if chat.slack_thread
+    SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content, chat.slack_thread) if chat.slack_thread
   end
 end

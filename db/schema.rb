@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_12_233421) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_14_024721) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_12_233421) do
     t.string "approval_keywords"
     t.boolean "create_doc_on_approval"
     t.bigint "library_id"
+    t.boolean "disable_nonbot_chat"
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["status"], name: "index_assistants_on_status"
     t.index ["user_id"], name: "index_assistants_on_user_id"

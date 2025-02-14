@@ -61,6 +61,6 @@ class BaseAssistantsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def assistant_params
     params.require(:assistant).permit(:libraries, :library_search_text, :name, :input, :output, :context, :instructions, :description, :status, :quip_url, :confluence_spaces, :user_id,
-                                      :slack_channel_name, :approval_keywords, :create_doc_on_approval, :library_id)
+                                      :slack_channel_name, :approval_keywords, :create_doc_on_approval, :disable_nonbot_chat, :library_id)
   end
 end

@@ -69,10 +69,14 @@
     <%= form.text_field :approval_keywords, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
   <div class="my-5">
+    <%= form.label :disable_nonbot_chat %>
+    <%= form.check_box :disable_nonbot_chat, class: "block shadow rounded" %>
+  </div>
+  <div class="my-5">
     <%= form.label :create_doc_on_approval %>
     <%= form.check_box :create_doc_on_approval, class: "block shadow rounded" %>
   </div>
-    <div class="my-5">
+  <div class="my-5">
     <%= form.label :library_id, 'Library' %>
     <%= form.collection_select :library_id, Library.all.order(name: :asc), :id, :name, {include_blank: 'Select a Library'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
   </div>

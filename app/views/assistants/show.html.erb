@@ -13,6 +13,7 @@
     <% if policy(@assistant).edit? %>
       <div class="flex justify-between items-center">
         <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_assistant_path(@assistant) } } %>
+        <!--
         <div>
           <%= button_to @assistant, method: :delete, data: { confirm: 'Are you sure?' }, class: 'ml-3 text-red-500 hover:text-red-800 flex items-center' do %>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -20,6 +21,7 @@
             </svg>
           <% end %>
         </div>
+            -->
       </div>
     <% end %>
   </div>

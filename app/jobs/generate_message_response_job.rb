@@ -43,7 +43,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ *Saved document!* #{ENV.fetch('ROOT_URL', nil)}#{document_path(new_doc)}"
+      llm_message.content = "✨ Saved document! #{ENV.fetch('ROOT_URL', nil)}#{document_path(new_doc)}"
       llm_message.save
       llm_message.ready!
 

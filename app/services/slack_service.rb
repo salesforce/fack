@@ -72,14 +72,17 @@ class SlackService
     []
   end
 
-  # Fetch recent threads in a Slack channel from the last X minutes
   def fetch_recent_threads(channel, minutes)
     messages = fetch_recent_messages(channel, minutes)
 
-    threads = messages
-              .select { |msg| msg['thread_ts'] } # Filter messages that started threads
-              .map { |msg| fetch_thread_replies(channel, msg['thread_ts']) }
+    # Separate thread starters and standalone messages
+    thread_starters = messages.select { |msg| msg['thread_ts'] }
+    standalone_messages = messages.reject { |msg| msg['thread_ts'] } # Standalone messages (no replies)
 
-    threads.flatten
+    # Fetch all replies for thread starters
+    threads_with_replies = thread_starters.map { |msg| fetch_thread_replies(channel, msg['thread_ts']) }
+
+    # Combine standalone messages with full threads
+    (standalone_messages + threads_with_replies.flatten)
   end
 end

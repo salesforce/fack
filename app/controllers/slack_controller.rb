@@ -49,6 +49,7 @@ class SlackController < ApplicationController
     user = event['user']
     text = event['text']
     channel = event['channel']
+    parent_user_id = event['parent_user_id']
     thread_ts = event['thread_ts'] || event['ts'] # Use `thread_ts` if it's part of a thread, else use `ts`
 
     # Get bot's user ID
@@ -58,8 +59,6 @@ class SlackController < ApplicationController
     # Ignore messages from the bot itself
     return if user == bot_user_id || event['bot_id'] # Skip bot messages
 
-    Rails.logger.info "User #{user} said: #{text} in channel #{channel} (Thread: #{thread_ts})"
-
     # Step 1: Find the assistant based on the channel name
     assistant = Assistant.find_by(slack_channel_name: channel)
 
@@ -67,6 +66,9 @@ class SlackController < ApplicationController
       Rails.logger.error "No assistant found for channel: #{channel}"
       return
     end
+
+    # Disable reply to non-bot created threads. Eventually we should enable @fack for other threads
+    return if parent_user_id != bot_user_id && assistant.disable_nonbot_chat
 
     # Step 2: Find an existing chat by thread_ts, or create a new one
     chat = Chat.find_by(slack_thread: thread_ts)

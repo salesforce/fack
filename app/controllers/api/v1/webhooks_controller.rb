@@ -46,8 +46,10 @@ module Api
 
         else
           incident_id = event['event']['data']['id']
+          incident_start_time = event['event']['data']['created_at']
+          incident_end_time = event['event']['occurred_at']
           event_text += if event_type == 'incident.resolved'
-                          'Incident resolved.'
+                          "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time}"
                         else
                           'Incident: ' + event['event']['data']['title']
                         end

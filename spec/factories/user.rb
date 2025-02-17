@@ -1,14 +1,11 @@
-# frozen_string_literal: true
-
 FactoryBot.define do
   factory :user do
-    # Define attributes for user
-    email { 'vijay@gmail.com' }
-    password { 'Lettestthis1!' }
+    email { Faker::Internet.email }
+    password { 'Lettestthis1!' } # Ensure it meets your app's password validation
+    admin { false } # Explicitly define if `admin` is a boolean column
 
     factory :admin_user do
-      # Define attributes for user
-      email { 'vijayadmin@gmail.com' }
+      email { Faker::Internet.email(domain: 'admin.com') }
       admin { true }
     end
   end

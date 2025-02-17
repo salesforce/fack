@@ -2,10 +2,9 @@ class Assistant < ApplicationRecord
   has_many :chats, dependent: :destroy
   belongs_to :user
   enum status: { development: 0, ready: 1 }
-  validates :libraries, presence: true
-  validates :slack_channel_name, uniqueness: true
+  validates :name, presence: true
+  validates :slack_channel_name, uniqueness: true, allow_blank: true
 
-  validates :input, presence: true
   validate :libraries_must_be_csv_with_numbers
 
   # Override as_json to exclude specific fields
@@ -16,7 +15,7 @@ class Assistant < ApplicationRecord
   private
 
   def libraries_must_be_csv_with_numbers
-    return if libraries.blank?
+    return true if libraries.blank?
 
     # Split the string by commas and check if each element is a valid number
     csv_parts = libraries.split(',')

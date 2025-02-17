@@ -9,78 +9,85 @@
       </ul>
     </div>
   <% end %>
-  <h1 class="text-2xl text-stone-500 mt-5">About</h1>
-  <div class="my-5">
-    <%= form.label :name %>
-    <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.select :status, Assistant.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :user_id, 'Owner' %>
-    <%= form.collection_select :user_id, User.all.order(email: :asc), :id, :email, {include_blank: 'Select a User'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
-  </div>
-  <div class="my-5">
-    <%= form.label :description %>
-    <%= form.text_area :description, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <h1 class="text-2xl text-stone-500 mt-5">Data Sources</h1>
-  <div class="my-5">
-    <%= form.label :quip_url %>
-    <%= form.text_field :quip_url, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label "Confluence Spaces (comma separated)" %>
-    <%= form.text_field :confluence_spaces, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label "Slack Channel (last 60 minutes)" %>
-    <%= form.text_field :slack_channel_name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label "Libraries (comma separated)" %>
-    <%= form.text_field :libraries, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label "Library Search Text" %>
-    <%= form.text_field :library_search_text, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <h1 class="text-2xl text-stone-500 mt-5">Prompts and Settings</h1>
-  <div class="my-5">
-    <%= form.label :input %>
-    <%= form.text_area :input, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :instructions %>
-    <%= form.text_area :instructions, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :output %>
-    <%= form.text_area :output, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :context %>
-    <%= form.text_area :context, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label "Approval Keywords" %>
-    <%= form.text_field :approval_keywords, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :disable_nonbot_chat %>
-    <%= form.check_box :disable_nonbot_chat, class: "block shadow rounded" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :create_doc_on_approval %>
-    <%= form.check_box :create_doc_on_approval, class: "block shadow rounded" %>
-  </div>
-  <div class="my-5">
-    <%= form.label :library_id, 'Library' %>
-    <%= form.collection_select :library_id, Library.all.order(name: :asc), :id, :name, {include_blank: 'Select a Library'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
-  </div>
-  <div class="inline">
+  <%= render "shared/form_section", title: "About" do %>
+    <div class="my-5">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :status %>
+      <%= form.select :status, Assistant.statuses.keys.map { |status| [status.humanize, status] }, {}, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :user_id, 'Owner' %>
+      <%= form.collection_select :user_id, User.all.order(email: :asc), :id, :email, {include_blank: 'Select a User'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
+    </div>
+    <div class="my-5">
+      <%= form.label :description %>
+      <%= form.text_area :description, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+  <% end %>
+  <%= render "shared/form_section", title: "Data Sources" do %>
+    <div class="my-5">
+      <%= form.label :quip_url %>
+      <%= form.text_field :quip_url, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label "Confluence Spaces (comma separated)" %>
+      <%= form.text_field :confluence_spaces, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label "Libraries (comma separated)" %>
+      <%= form.text_field :libraries, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label "Library Search Text" %>
+      <%= form.text_field :library_search_text, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+  <% end %>
+  <%= render "shared/form_section", title: "Prompts and Settings" do %>
+    <div class="my-5">
+      <%= form.label :input %>
+      <%= form.text_area :input, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :instructions %>
+      <%= form.text_area :instructions, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :output %>
+      <%= form.text_area :output, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :context %>
+      <%= form.text_area :context, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+  <% end %>
+  <%= render "shared/form_section", title: "Slack" do %>
+    <div class="my-5">
+      <%= form.label "Slack Channel" %>
+      <%= form.text_field :slack_channel_name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :disable_nonbot_chat %>
+      <%= form.check_box :disable_nonbot_chat, class: "block shadow rounded" %>
+    </div>
+  <% end %>
+  <%= render "shared/form_section", title: "Document Creation (Optional)" do %>
+    <div class="my-5">
+      <%= form.label :create_doc_on_approval %>
+      <%= form.check_box :create_doc_on_approval, class: "block shadow rounded" %>
+    </div>
+    <div class="my-5">
+      <%= form.label "Approval Keywords" %>
+      <%= form.text_field :approval_keywords, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
+    <div class="my-5">
+      <%= form.label :library_id, 'Library' %>
+      <%= form.collection_select :library_id, Library.all.order(name: :asc), :id, :name, {include_blank: 'Select a Library'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
+    </div>
+  <% end %>
+  <div class="inline my-3">
     <%= form.submit "Save", class: "rounded-lg py-3 px-5 bg-sky-600 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>

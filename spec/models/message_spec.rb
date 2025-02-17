@@ -8,6 +8,7 @@ RSpec.describe Message, type: :model do
   # Ensure valid data for all required fields in the Assistant model
   let(:assistant) do
     create(:assistant,
+           name: 'test assistant',
            input: 'Sample input',
            instructions: 'Sample instructions',
            output: 'Sample output',

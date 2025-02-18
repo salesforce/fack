@@ -1,6 +1,7 @@
 class Assistant < ApplicationRecord
   has_many :chats, dependent: :destroy
   belongs_to :user
+  belongs_to :library
   enum status: { development: 0, ready: 1 }
   validates :name, presence: true
   validates :slack_channel_name, uniqueness: true, allow_blank: true

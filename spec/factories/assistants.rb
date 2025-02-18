@@ -4,6 +4,7 @@ FactoryBot.define do
     llm_prompt { 'MyText' }
     libraries { '1' }
     input { 'some input' }
+    name { 'Test Assistant' }
     association :user
   end
 end

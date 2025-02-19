@@ -124,3 +124,7 @@ gem 'reverse_markdown'
 gem 'pager_duty-connection'
 
 gem 'slack-ruby-client'
+
+gem 'savon'
+
+gem 'restforce'

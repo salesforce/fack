@@ -6,6 +6,7 @@ class BaseLibrariesController < ApplicationController
   # GET /libraries or /libraries.json
   def index
     @libraries = Library.all.order(name: :asc).page(params[:page])
+    @libraries = @libraries.search_by_name(params[:contains]) if params[:contains].present?
   end
 
   # POST /libraries or /libraries.json

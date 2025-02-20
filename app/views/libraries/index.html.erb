@@ -6,6 +6,13 @@
       <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_library_path } } %>
     <% end %>
   </div>
+  <div class="flex-grow flex items-center mt-3">
+    <% action_path = libraries_path %>
+    <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
+      <input type="text" name="contains" id="contains" placeholder="Search libraries..." class="flex-grow rounded-lg p-2 border border-stone-300">
+      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+    <% end %>
+  </div>
   <%= paginate @libraries %>
   <ul class="border mt-2 rounded-xl">
     <% @libraries.each do |library| %>

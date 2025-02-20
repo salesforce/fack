@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_20_174545) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_20_182220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -131,8 +131,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_174545) do
     t.bigint "user_id"
     t.integer "documents_count", default: 0, null: false
     t.string "source_url"
+    t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, (name)::text)", stored: true
     t.index ["documents_count"], name: "index_libraries_on_documents_count"
     t.index ["name"], name: "index_libraries_on_name"
+    t.index ["search_vector"], name: "index_libraries_on_search_vector", using: :gin
     t.index ["user_id"], name: "index_libraries_on_user_id"
   end
 

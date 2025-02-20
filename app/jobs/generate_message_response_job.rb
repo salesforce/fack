@@ -132,6 +132,15 @@ class GenerateMessageResponseJob < ApplicationJob
         prompt += '</CONFLUENCE_DOCUMENTS>'
       end
 
+      if assistant.soql.present?
+        prompt += "<SOQL>\n\n"
+        salesforce_client = Salesforce::Client.new
+
+        salesforce_results = salesforce_client.query(assistant.soql)
+        prompt += JSON.pretty_generate(salesforce_results.map(&:to_h))
+        prompt += '</SOQL>'
+      end
+
       prompt += "\n\n<RECENT_SLACK_MESSAGES>"
 
       slack_service = SlackService.new

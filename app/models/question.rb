@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Question < ApplicationRecord
+  include PgSearch::Model
+
   has_neighbors :embedding
 
   has_many :documents_questions
@@ -15,6 +17,13 @@ class Question < ApplicationRecord
   belongs_to :user, optional: true
 
   before_save :check_unable_to_answer
+
+  pg_search_scope :search_by_title_and_question,
+                  against: %i[title question],
+                  using: {
+                    tsearch: { prefix: true, dictionary: 'english',
+                               tsvector_column: 'search_vector' } # This option allows partial matches
+                  }
 
   def slack_markdown_answer
     return if answer.nil?

@@ -7,6 +7,7 @@ class BaseQuestionsController < ApplicationController
   # GET /questions or /questions.json
   def index
     @questions = Question.order(created_at: :desc).page(params[:page])
+    @questions = @questions.search_by_title_and_question(params[:contains]) if params[:contains].present?
   end
 
   # POST /questions or /questions.json

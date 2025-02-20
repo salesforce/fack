@@ -81,6 +81,10 @@ GEM
     acts_as_votable (0.14.0)
     addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
+    akami (1.3.3)
+      base64
+      gyoku (>= 0.4.0)
+      nokogiri
     ast (2.4.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
@@ -139,6 +143,8 @@ GEM
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
+    faraday-follow_redirects (0.3.0)
+      faraday (>= 1, < 3)
     faraday-mashify (0.1.1)
       faraday (~> 2.0)
       hashie
@@ -150,11 +156,19 @@ GEM
       ostruct
     globalid (1.2.1)
       activesupport (>= 6.1)
+    gyoku (1.4.0)
+      builder (>= 2.1.2)
+      rexml (~> 3.0)
     hashie (5.0.0)
     httparty (0.22.0)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
+    httpi (4.0.4)
+      base64
+      mutex_m
+      nkf
+      rack (>= 2.0, < 4)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.0.1)
@@ -169,6 +183,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.7.2)
+    jwt (2.10.1)
+      base64
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
@@ -214,12 +230,15 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
+    nkf (0.2.0)
     nokogiri (1.18.3-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.3-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.18.3-x86_64-linux-gnu)
       racc (~> 1.4)
+    nori (2.7.1)
+      bigdecimal
     optparse (0.5.0)
     ostruct (0.6.1)
     pager_duty-connection (3.0.0)
@@ -293,6 +312,13 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.8)
       io-console (~> 0.5)
+    restforce (8.0.0)
+      faraday (>= 1.1.0, < 3.0.0)
+      faraday-follow_redirects (<= 0.3.0, < 1.0.0)
+      faraday-multipart (>= 1.0.0, < 2.0.0)
+      faraday-net_http (< 4.0.0)
+      hashie (>= 1.2.0, < 6.0)
+      jwt (>= 1.5.6)
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.3.9)
@@ -331,6 +357,15 @@ GEM
       nokogiri (>= 1.13.10)
       rexml
     rubyzip (2.3.2)
+    savon (2.15.1)
+      akami (~> 1.2)
+      builder (>= 2.1.2)
+      gyoku (~> 1.2)
+      httpi (>= 4, < 5)
+      mail (~> 2.5)
+      nokogiri (>= 1.8.1)
+      nori (~> 2.4)
+      wasabi (>= 3.7, < 6)
     securerandom (0.4.1)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -373,6 +408,10 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
     uri (1.0.2)
+    wasabi (5.1.0)
+      addressable
+      faraday (>= 1.9, < 3)
+      nokogiri (>= 1.13.9)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -429,10 +468,12 @@ DEPENDENCIES
   rails-controller-testing
   redcarpet
   redis (~> 4.0)
+  restforce
   reverse_markdown
   rspec-rails (~> 6.1)
   rubocop
   ruby-saml
+  savon
   selenium-webdriver
   shoulda-matchers (~> 4.0)
   slack-ruby-client

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_20_182220) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_04_211142) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -124,6 +124,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_182220) do
     t.bigint "question_id", null: false
   end
 
+  create_table "google_authorizations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "access_token"
+    t.string "refresh_token"
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_google_authorizations_on_user_id"
+  end
+
   create_table "libraries", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -234,6 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_20_182220) do
   add_foreign_key "chats", "webhooks"
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
+  add_foreign_key "google_authorizations", "users"
   add_foreign_key "libraries", "users"
   add_foreign_key "library_users", "libraries"
   add_foreign_key "library_users", "users"

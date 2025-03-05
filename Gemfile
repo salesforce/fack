@@ -128,3 +128,8 @@ gem 'slack-ruby-client'
 gem 'savon'
 
 gem 'restforce'
+
+gem 'omniauth-google-oauth2'
+
+gem 'google-api-client'
+gem 'googleauth'

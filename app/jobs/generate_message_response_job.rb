@@ -28,7 +28,7 @@ class GenerateMessageResponseJob < ApplicationJob
     # Save and post confirmation with link.
     # If there are approval key words, add the instructions in the message somewhere.
     keywords_array = assistant.approval_keywords&.split(/[\s,]+/)&.map(&:strip) || []
-    regex = keywords_array.any? ? Regexp.union(keywords_array) : nil
+    regex = keywords_array.any? ? /\A(?:#{Regexp.union(keywords_array)})\z/i : nil
 
     if regex && message.content.match?(regex)
       title = "#{assistant.name}:#{message.chat.first_message.truncate(50)}"

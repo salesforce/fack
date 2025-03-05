@@ -30,4 +30,19 @@ class SessionsController < ApplicationController
     session[:user_id] = nil
     redirect_back(fallback_location: root_url)
   end
+
+  def google_oauth2
+    auth = request.env['omniauth.auth']
+    user = current_user # Assuming you have a current_user method
+    google_authorization = user.google_authorization || user.create_google_authorization
+
+    google_authorization.update(
+      access_token: auth.credentials.token,
+      refresh_token: auth.credentials.refresh_token,
+      expires_at: Time.at(auth.credentials.expires_at)
+    )
+
+    # Redirect to the desired page after successful authorization
+    redirect_to root_path, notice: 'Google Docs connected successfully!'
+  end
 end

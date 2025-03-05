@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   resources :documents
   resources :api_tokens
 
+  get 'users/me', to: 'users#redirect_to_profile'
+  resources :users
+
   # Nested Resources
   resources :libraries do
     resources :library_users

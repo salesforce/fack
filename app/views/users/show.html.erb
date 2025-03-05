@@ -1,13 +1,6 @@
 <div class="mx-auto md:w-2/3 w-full flex">
   <div class="mx-auto">
-
-
     <%= render @user %>
-
-    <%= link_to 'Edit this user', edit_user_path(@user), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to 'Destroy this user', user_path(@user), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-    </div>
     <%= link_to 'Back to users', users_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

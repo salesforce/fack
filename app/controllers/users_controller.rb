@@ -3,6 +3,14 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
 
+  def redirect_to_profile
+    if current_user
+      redirect_to user_path(current_user) # Redirect to /users/:id
+    else
+      redirect_to root_path, alert: 'You need to sign in first.'
+    end
+  end
+
   # GET /users or /users.json
   def index
     @users = User.all

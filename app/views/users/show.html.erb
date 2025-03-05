@@ -1,4 +1,6 @@
-<div class="mx-auto md:w-2/3 w-full flex">
+<div class="mx-auto md:w-2/3 w-full">
+  <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], ["Users", users_path], [@user.email, document_path(@user)]] } %>
+
   <div class="mx-auto">
     <%= render @user %>
     <%= link_to 'Back to users', users_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>

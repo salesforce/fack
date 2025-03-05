@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   resources :api_tokens
 
   get 'users/me', to: 'users#redirect_to_profile'
-  resources :users
+  resources :users, only: %i[index show edit update]
 
   # Nested Resources
   resources :libraries do

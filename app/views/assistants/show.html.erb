@@ -10,12 +10,12 @@
       </h2>
       <%= render partial: 'shared/meta_info', locals: { email: @assistant.user ? @assistant.user.email : "admin", created_at: @assistant.created_at, updated_at: @assistant.updated_at } %>
     </div>
-    <% if policy(@assistant).edit? %>
-      <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center">
+      <% if policy(@assistant).edit? %>
         <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_assistant_path(@assistant)} } %>
-        <button id="details-button" class="border text-stone border-stone-500 hover:bg-stone-200 py-3 px-5 bg-slate-100 text-gray-800 font-medium border rounded-lg ml-2">Details</button>
-      </div>
-    <% end %>
+      <% end %>
+      <button id="details-button" class="border text-stone border-stone-500 hover:bg-stone-200 py-3 px-5 bg-slate-100 text-gray-800 font-medium border rounded-lg ml-2">Details</button>
+    </div>
   </div>
   <div class="mx-auto w-full">
     <div class="">

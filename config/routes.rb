@@ -78,7 +78,8 @@ Rails.application.routes.draw do
 
   post '/slack/events', to: 'slack#events'
 
-  get '/auth/:provider/callback', to: 'sessions#google_oauth2'
+  get '/auth/:provider/callback', to: 'sessions#oauth_callback'
+
   get '/auth/failure', to: redirect('/') # Handle authentication failures
 
   mount ActionCable.server => '/cable'

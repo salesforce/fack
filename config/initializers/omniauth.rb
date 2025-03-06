@@ -5,5 +5,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
              prompt: 'select_account',
              skip_jwt: true
            }
+  provider :github, ENV.fetch('GITHUB_CLIENT_ID', nil), ENV.fetch('GITHUB_CLIENT_SECRET', nil), scope: 'user:email, repo'
 end
 OmniAuth.config.allowed_request_methods = %i[get]

@@ -31,6 +31,28 @@ class SessionsController < ApplicationController
     redirect_back(fallback_location: root_url)
   end
 
+  def oauth_callback
+    if params[:provider] == 'google_oauth2'
+      google_oauth2
+    elsif params[:provider] == 'github'
+      github_oauth2
+    end
+  end
+
+  def github_oauth2
+    auth = request.env['omniauth.auth']
+    user = current_user # Assuming you have a current_user method
+
+    github_authorization = user.github_authorization || user.create_github_authorization
+
+    github_authorization.update(
+      token: auth.credentials.token
+    )
+
+    # Redirect to the desired page after successful authorization
+    redirect_to root_path, notice: 'GitHub connected successfully!'
+  end
+
   def google_oauth2
     auth = request.env['omniauth.auth']
     user = current_user # Assuming you have a current_user method

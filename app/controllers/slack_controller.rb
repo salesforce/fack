@@ -16,7 +16,7 @@ class SlackController < ApplicationController
       return
     end
 
-    handle_message_event(payload['event']) if payload['event'] && payload['event']['type'] == 'message'
+    handle_message_event(payload['event']) if payload['event'] && payload['event']['type'] == 'app_mention'
 
     head :ok
   end

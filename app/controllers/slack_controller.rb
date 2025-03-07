@@ -56,6 +56,12 @@ class SlackController < ApplicationController
     slack_service = SlackService.new
     bot_user_id = slack_service.bot_id
 
+    # Check if channel is blank
+    if channel.blank?
+      Rails.logger.error 'Received event with blank channel'
+      return
+    end
+
     # Ignore messages from the bot itself
     return if user == bot_user_id || event['bot_id'] # Skip bot messages
 

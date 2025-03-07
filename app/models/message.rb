@@ -18,7 +18,7 @@ class Message < ApplicationRecord
     return if chat.slack_thread.present? || chat.assistant.slack_channel_name.blank?
 
     # Only respond to @mentions in slack, but don't post chats intiated from elsewhere like webhooks, ui, etc.
-    # return unless chat.assistant.slack_reply_only
+    return if chat.assistant.slack_reply_only
 
     slack_service = SlackService.new
     response = slack_service.post_message(chat.assistant.slack_channel_name, content)

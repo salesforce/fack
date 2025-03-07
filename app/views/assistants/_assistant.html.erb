@@ -59,6 +59,10 @@
     <strong class="block text-lg font-semibold text-gray-800 mb-2">Disable Non-Bot Chat</strong>
     <p class="text-gray-700"><%= assistant.disable_nonbot_chat ? 'Yes' : 'No' %></p>
   </div>
+  <div class="my-5">
+    <strong class="block text-lg font-semibold text-gray-800 mb-2">Slack Reply Only (Only respond to @mentions, but don't post otherwise to slack)</strong>
+    <p class="text-gray-700"><%= assistant.slack_reply_only ? 'Yes' : 'No' %></p>
+  </div>
   <!-- Document Creation -->
   <div class="my-5">
     <strong class="block text-lg font-semibold text-gray-800 mb-2">Create Document on Approval</strong>

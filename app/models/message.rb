@@ -14,7 +14,11 @@ class Message < ApplicationRecord
   private
 
   def create_slack_thread
+    # Skip if there is already a thread linked or the assistant doesn't have a slack channel
     return if chat.slack_thread.present? || chat.assistant.slack_channel_name.blank?
+
+    # Only respond to @mentions in slack, but don't post chats intiated from elsewhere like webhooks, ui, etc.
+    return if chat.assistant.slack_reply_only
 
     slack_service = SlackService.new
     response = slack_service.post_message(chat.assistant.slack_channel_name, content)

@@ -73,6 +73,10 @@
       <%= form.text_field :slack_channel_name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
+      <%= form.label :slack_reply_only %>
+      <%= form.check_box :slack_reply_only, class: "block shadow rounded" %>
+    </div>
+    <div class="my-5">
       <%= form.label :disable_nonbot_chat %>
       <%= form.check_box :disable_nonbot_chat, class: "block shadow rounded" %>
     </div>

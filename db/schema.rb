@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_04_211142) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_07_201747) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_04_211142) do
     t.bigint "library_id"
     t.boolean "disable_nonbot_chat"
     t.text "soql"
+    t.boolean "slack_reply_only"
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["status"], name: "index_assistants_on_status"
     t.index ["user_id"], name: "index_assistants_on_user_id"

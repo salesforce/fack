@@ -21,6 +21,11 @@
       Webhook: <%= link_to @chat.webhook.name, @chat.webhook, class: 'hover:underline' %>
     </div>
   <% end %>
+  <% if @chat.slack_thread %>
+    <div class="mt-2 bg-yellow-500 text-white p-2 text-xs rounded inline-block max-w-max">
+      Slack: <%= @chat.slack_thread %>
+    </div>
+  <% end %>
   <!-- Messages -->
   <turbo-frame id="messages-<%=@chat.id%>" src="<%= chat_messages_path(@chat) %>"></turbo-frame>
   <div class="text-center text-xs text-stone-400">

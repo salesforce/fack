@@ -21,6 +21,9 @@
                 <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
               </h2>
               <p class="text-stone-600 text-sm"><%= assistant.description %></p>
+              <% if assistant.slack_channel_name.present? %>
+                <div class="text-xs text-stone-400">Slack Channel: <%= assistant.slack_channel_name %></div>
+              <% end %>
             </div>
           <% end %>
         </li>

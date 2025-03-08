@@ -79,6 +79,8 @@ class SlackController < ApplicationController
     # Step 2: Find an existing chat by thread_ts, or create a new one
     chat = Chat.find_by(slack_thread: thread_ts)
 
+    text&.gsub!(/<@U[A-Z0-9]+>/, '') # Removes Slack mentions safely
+
     if chat.nil?
       chat = Chat.new(
         user_id: User.first.id,

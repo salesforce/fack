@@ -142,29 +142,6 @@ class GenerateMessageResponseJob < ApplicationJob
         prompt += '</SOQL>'
       end
 
-      prompt += "\n\n<RECENT_SLACK_MESSAGES>"
-
-      slack_service = SlackService.new
-      bot_id = slack_service.bot_id
-      slack_messages = SlackService.new.fetch_recent_threads(assistant.slack_channel_name, 120) if assistant.slack_channel_name.present?
-      if slack_messages.present?
-        slack_messages.each do |message|
-          # Skip messages created by the bot
-          next if message['user'] == bot_id
-
-          prompt += "\nDate: #{Time.at(message['ts'].to_f).utc}" # Converts timestamp to readable format
-          prompt += "\nUser: #{message['user']}"
-          prompt += "\nMessage: #{message['text']}"
-          prompt += "\n-----------------------"
-        end
-
-        # Generate AI Summary of just the Slack Content
-        ai_slack_summary = get_generation('Summarize ')
-      else
-        prompt += "\nNo messages found."
-      end
-      prompt += "\n\n</RECENT_SLACK_MESSAGES>"
-
       prompt += "\n\n#<DOCUMENTS>\n\n"
       if related_docs.each_with_index do |doc, index|
         # Make sure we don't exceed the max document tokens limit

@@ -142,7 +142,7 @@ class GenerateMessageResponseJob < ApplicationJob
         prompt += '</SOQL>'
       end
 
-      prompt += "\n\n#<DOCUMENTS>\n\n"
+      prompt += "\n\n<DOCUMENTS>\n\n"
       if related_docs.each_with_index do |doc, index|
         # Make sure we don't exceed the max document tokens limit
         max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10_000
@@ -155,7 +155,7 @@ class GenerateMessageResponseJob < ApplicationJob
       end.empty?
         prompt += "No documents available\n"
       end
-      prompt += "\n\n#</DOCUMENTS>\n\n"
+      prompt += "\n\n</DOCUMENTS>\n\n"
 
       prompt += "</CONTEXT>\n\n"
 

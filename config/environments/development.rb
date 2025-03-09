@@ -78,6 +78,8 @@ Rails.application.configure do
 
   config.action_cable.disable_request_forgery_protection = true
 
+  config.log_level = :info
+
   # OR (if you want to allow specific origins)
   config.action_cable.allowed_request_origins = ['http://localhost:3000', %r{http://localhost:.*}]
 

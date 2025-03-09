@@ -32,22 +32,38 @@ class SlackService
     Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
   end
 
+  # Max length constants.  Need to leave extra room for tag lines, warnings, etc.
+  TEXT_LIMIT = 3500
+  BLOCKS_LIMIT = 2500
+
   # Post a message to a Slack channel or a thread
   def post_message(channel, text, thread_ts = nil)
-    @client.chat_postMessage(
+    # Ensure text is within Slack limits
+    truncated_text = text.length > TEXT_LIMIT ? text[0...TEXT_LIMIT] + '...' : text
+    truncated_blocks_text = text.length > BLOCKS_LIMIT ? text[0...BLOCKS_LIMIT] + '...' : text
+
+    payload = {
       channel:,
       as_user: true,
-      thread_ts:,
-      blocks: [
+      text: truncated_text # Ensure fallback text does not exceed 4000 chars
+    }
+
+    # Only add blocks if text is not empty
+    unless text.to_s.strip.empty?
+      payload[:blocks] = [
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text:
+            text: truncated_blocks_text # Ensure block text does not exceed 3000 chars
           }
         }
       ]
-    )
+    end
+
+    payload[:thread_ts] = thread_ts if thread_ts.to_s.strip != ''
+
+    @client.chat_postMessage(payload)
   rescue Slack::Web::Api::Errors::SlackError => e
     Rails.logger.error("[Slack Error] #{e.message}")
   end

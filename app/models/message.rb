@@ -23,7 +23,7 @@ class Message < ApplicationRecord
     slack_service = SlackService.new
     ts = slack_service.post_message(chat.assistant.slack_channel_name, content)
 
-    if ts # Safely retrieve the thread timestamp
+    if ts
       chat.update(slack_thread: ts) # One-liner update instead of separate assignment + save
       # TODO - allow webhook to dynamically choose emoji
       slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')

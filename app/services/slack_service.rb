@@ -38,6 +38,8 @@ class SlackService
     return if text.to_s.strip.empty?
 
     # Function to split text into chunks under the TEXT_LIMIT, breaking at newlines when possible
+    # Slack has a limit of about 3000 characters per post section
+    # So we are breaking up long responses into chunks which fit into the slack limit.
     def split_text(text, limit)
       chunks = []
       while text.length > limit

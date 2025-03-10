@@ -38,8 +38,6 @@ class SlackService
   def post_message(channel, text, thread_ts = nil)
     return if text.to_s.strip.empty?
 
-    Rails.logger.info('Posting message...')
-
     # Function to split text into chunks under the TEXT_LIMIT, breaking at newlines when possible
     def split_text(text, limit)
       chunks = []

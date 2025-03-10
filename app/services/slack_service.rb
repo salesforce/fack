@@ -33,39 +33,63 @@ class SlackService
   end
 
   # Max length constants.  Need to leave extra room for tag lines, warnings, etc.
-  TEXT_LIMIT = 3500
   BLOCKS_LIMIT = 2500
-
-  # Post a message to a Slack channel or a thread
+  TEXT_LIMIT = 2500
   def post_message(channel, text, thread_ts = nil)
-    # Ensure text is within Slack limits
-    truncated_text = text.length > TEXT_LIMIT ? text[0...TEXT_LIMIT] + '...' : text
-    truncated_blocks_text = text.length > BLOCKS_LIMIT ? text[0...BLOCKS_LIMIT] + '...' : text
+    return if text.to_s.strip.empty?
 
-    payload = {
-      channel:,
-      as_user: true,
-      text: truncated_text # Ensure fallback text does not exceed 4000 chars
-    }
+    Rails.logger.info('Posting message...')
 
-    # Only add blocks if text is not empty
-    unless text.to_s.strip.empty?
+    # Function to split text into chunks under the TEXT_LIMIT, breaking at newlines when possible
+    def split_text(text, limit)
+      chunks = []
+      while text.length > limit
+        split_index = text.rindex("\n", limit) || text.rindex(' ', limit) || limit
+        chunks << text[0...split_index].strip
+        text = text[split_index..].strip
+      end
+      chunks << text unless text.empty?
+      chunks
+    end
+
+    body_chunks = split_text(text, TEXT_LIMIT)
+
+    body_chunks.each_with_index do |chunk, index|
+      payload = {
+        channel:,
+        as_user: true,
+        text: chunk
+      }
+
+      # Only add blocks if there's a body
+      next if chunk.empty?
+
       payload[:blocks] = [
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: truncated_blocks_text # Ensure block text does not exceed 3000 chars
+            text: chunk
           }
         }
       ]
+      begin
+        if index == 0 && thread_ts.nil?
+          # First message, and no existing thread_ts, so create a new thread
+          response = @client.chat_postMessage(payload)
+          thread_ts = response&.ts # Store the ts for threading
+          Rails.logger.info("First message sent. New thread created with thread_ts: #{thread_ts}")
+        else
+          # Use existing thread_ts for threading
+          payload[:thread_ts] = thread_ts
+          response = @client.chat_postMessage(payload)
+          Rails.logger.info("Threaded message sent under thread_ts: #{thread_ts}")
+        end
+      rescue Slack::Web::Api::Errors::SlackError => e
+        Rails.logger.error("[Slack Error] #{e.message}")
+      end
     end
-
-    payload[:thread_ts] = thread_ts if thread_ts.to_s.strip != ''
-
-    @client.chat_postMessage(payload)
-  rescue Slack::Web::Api::Errors::SlackError => e
-    Rails.logger.error("[Slack Error] #{e.message}")
+    thread_ts
   end
 
   # Fetch messages from the last X minutes in a channel

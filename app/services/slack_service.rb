@@ -32,8 +32,7 @@ class SlackService
     Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
   end
 
-  # Max length constants.  Need to leave extra room for tag lines, warnings, etc.
-  BLOCKS_LIMIT = 2500
+  # Max length constant.  Need to leave extra room for tag lines, warnings, etc.
   TEXT_LIMIT = 2500
   def post_message(channel, text, thread_ts = nil)
     return if text.to_s.strip.empty?

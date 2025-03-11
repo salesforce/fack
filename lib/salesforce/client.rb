@@ -65,6 +65,7 @@ module Salesforce
 
     def initialize_restforce
       @restforce_client = Restforce.new(
+        api_version: '60.0',
         instance_url: @instance_url,
         oauth_token: @session_id,
         authentication_middleware: Restforce::Middleware::Authentication::Token

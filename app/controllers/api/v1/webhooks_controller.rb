@@ -8,11 +8,18 @@ module Api
       skip_before_action :verify_authenticity_token, only: %i[create receive]
       before_action :set_webhook
 
+      def authenticate_api_with_token
+        authenticate_with_http_token do |token, _options|
+          webhook_token = Webhook.find_by_secret_key(token)
+          return true if webhook_token
+
+          return false
+        end
+      end
+
       # This can be configured to receive PD messages from https://salesforce.pagerduty.com/integrations/webhooks/add
       # We can then respond to PD alerts with GenAI responses
       def receive
-        # TODO: - add key verification from webhook
-
         # Add check if is PD webhook.  Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 

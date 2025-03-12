@@ -219,27 +219,6 @@ class GenerateMessageResponseJob < ApplicationJob
         Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
       end
 
-      # update webhooks
-      if llm_message.chat.webhook.present?
-        webhook = llm_message.chat.webhook
-        nil unless webhook.hook_type == 'pagerduty'
-        begin
-          pagerduty = PagerDuty::Connection.new(ENV.fetch('PAGERDUTY_API_TOKEN'))
-          incident_id = llm_message.chat.webhook_external_id
-          response = pagerduty.post("incidents/#{incident_id}/notes", {
-                                      body: {
-                                        note: {
-                                          content: llm_message.content + ENV.fetch('WEBHOOK_TAGLINE', nil)
-                                        }
-                                      },
-                                      headers: {
-                                        'From' => ENV.fetch('PAGERDUTY_API_FROM')
-                                      }
-                                    })
-        rescue StandardError => e
-          Rails.logger.error("Error calling Pagerduty.#{e.inspect}")
-        end
-      end
     end
 
     return unless chat.slack_thread

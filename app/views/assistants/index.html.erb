@@ -20,9 +20,9 @@
   <ul id="assistants" class="mt-5 border border-gray-200 rounded-lg divide-y divide-gray-200 bg-white">
     <% @assistants.order(name: :asc).each do |assistant| %>
       <% cache(assistant) do %>
-        <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg w-full flex justify-between items-center p-3">
+        <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg w-full flex justify-between items-center">
           <div class="flex-grow">
-            <%= link_to assistant_path(assistant), class: "block text-stone-700 " do %>
+            <%= link_to assistant_path(assistant), class: "block text-stone-700 p-3" do %>
               <div class="text-lg flex items-center space-x-2 font-bold">
                 <span><%= assistant.name %></span>
                 <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
@@ -31,7 +31,9 @@
             <% end %>
           </div>
           <% if assistant.slack_channel_name.present? %>
-            <%= render 'shared/slack_link', slack_channel_id: assistant.slack_channel_name %>
+            <div class="m-2">
+              <%= render 'shared/slack_link', slack_channel_id: assistant.slack_channel_name %>
+            </div>
           <% end %>
         </li>
       <% end %>

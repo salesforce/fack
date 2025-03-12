@@ -9,6 +9,15 @@ class GenerateMessageResponseJob < ApplicationJob
 
   queue_as :default
 
+  def extract_keywords(text)
+    prompt = "Extract keywords from the following text, return only the keywords, comma separated:\n\n#{text}\n\nKeywords:"
+    keywords_string = get_generation(prompt)
+
+    return nil unless keywords_string
+
+    keywords_string.split(',').map(&:strip).reject(&:empty?)
+  end
+
   def perform(_message_id)
     message = Message.find(_message_id)
 
@@ -127,7 +136,9 @@ class GenerateMessageResponseJob < ApplicationJob
         prompt += "<CONFLUENCE_DOCUMENTS>\n\n"
         confluence_query = Confluence::Query.new
         spaces = assistant.confluence_spaces
-        confluence_query_string = message.content
+
+        confluence_query_string = extract_keywords(message.content).join(',')
+        puts confluence_query_string
 
         confluence_results = confluence_query.query_confluence(spaces, confluence_query_string)
         prompt += confluence_results.to_json.truncate(70_000)

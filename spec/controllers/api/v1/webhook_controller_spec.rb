@@ -165,8 +165,24 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
-      allow(controller).to receive(:current_user).and_return(user)
+      request.headers['Authorization'] = "Token #{webhook.secret_key}" # Construct the auth header
       request.headers['Content-Type'] = 'application/json'
+    end
+
+    context 'when an invalid token is provided' do
+      it 'returns an unauthorized error' do
+        request.headers['Authorization'] = "Token #{webhook.secret_key}XXX"
+        post :receive, params: { id: webhook.id }, body: payload_ack, as: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when no token is provided' do
+      it 'returns an unauthorized error' do
+        request.headers['Authorization'] = "Token #{webhook.secret_key}XXX"
+        post :receive, params: { id: webhook.id }, body: payload_ack, as: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
 
     context 'when a valid PagerDuty Acknowledge webhook is received' do

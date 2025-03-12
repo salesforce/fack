@@ -8,10 +8,15 @@ module Api
       skip_before_action :verify_authenticity_token, only: %i[create receive]
       before_action :set_webhook
 
+      # Overrides the base ApplicationController api auth method
+      # We allow the webhoook token to authenticate only on this controller
       def authenticate_api_with_token
         authenticate_with_http_token do |token, _options|
-          webhook_token = Webhook.find_by_secret_key(token)
-          return true if webhook_token
+          webhook = Webhook.find_by_secret_key(token)
+          if webhook
+            login_user(webhook.assistant.user) # May change this to another user later
+            return true
+          end
 
           return false
         end

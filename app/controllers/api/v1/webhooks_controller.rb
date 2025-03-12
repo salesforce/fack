@@ -8,11 +8,23 @@ module Api
       skip_before_action :verify_authenticity_token, only: %i[create receive]
       before_action :set_webhook
 
+      # Overrides the base ApplicationController api auth method
+      # We allow the webhoook token to authenticate only on this controller
+      def authenticate_api_with_token
+        authenticate_with_http_token do |token, _options|
+          webhook = Webhook.find_by_secret_key(token)
+          if webhook
+            login_user(webhook.assistant.user) # May change this to another user later
+            return true
+          end
+
+          return false
+        end
+      end
+
       # This can be configured to receive PD messages from https://salesforce.pagerduty.com/integrations/webhooks/add
       # We can then respond to PD alerts with GenAI responses
       def receive
-        # TODO: - add key verification from webhook
-
         # Add check if is PD webhook.  Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 

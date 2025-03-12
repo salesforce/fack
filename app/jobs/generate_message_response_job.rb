@@ -86,7 +86,7 @@ class GenerateMessageResponseJob < ApplicationJob
       description = assistant.description
       input = assistant.input
 
-      capabilities = description.present? && input.present? ? "I can #{assistant.description.downcase}.  Please give me #{assistant.input.downcase}" : nil
+      capabilities = description.present? && input.present? ? "I can #{assistant.description.downcase}.  Please give me #{assistant.input.downcase}." : nil
 
       prompt = ''
       prompt += <<~PROMPT

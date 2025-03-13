@@ -9,6 +9,7 @@
         <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
       </h2>
       <%= render partial: 'shared/meta_info', locals: { email: @assistant.user ? @assistant.user.email : "admin", created_at: @assistant.created_at, updated_at: @assistant.updated_at } %>
+      <%= render 'shared/slack_link', slack_channel_id: @assistant.slack_channel_name %>
     </div>
     <div class="flex justify-between items-center">
       <% if policy(@assistant).edit? %>
@@ -25,6 +26,9 @@
   <div>
     <h1 class="text-stone-700 font-light text-3xl mt-6">Recent Chats</h1>
     <%= render "shared/chat_list", chats: @assistant.chats.limit(10).order(created_at: :desc) %>
+  </div>
+  <div class="mt-4">
+    <%= link_to 'View all chats for ' + @assistant.name, assistant_chats_path(@assistant), class:"border border-stone-300 p-3 text-sm text-sky-500 rounded-md hover:bg-stone-100" %>
   </div>
 </div>
 <!-- Modal -->

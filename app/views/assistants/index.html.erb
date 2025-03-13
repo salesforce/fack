@@ -10,20 +10,29 @@
       <% end %>
     </div>
   </div>
+  <div class="flex-grow flex items-center mt-3">
+    <% action_path = assistants_path %>
+    <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
+      <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search assistants..." class="flex-grow rounded-lg p-2 border border-stone-300">
+      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+    <% end %>
+  </div>
   <ul id="assistants" class="mt-5 border border-gray-200 rounded-lg divide-y divide-gray-200 bg-white">
-    <% @assistants.each do |assistant| %>
-      <% cache(assistant) do %> <!-- Cache each assistant entry -->
-        <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg">
-          <%= link_to assistant_path(assistant), class: "flex justify-between items-center p-3 block" do %>
-            <div class="w-full">
-              <h2 class="text-lg flex items-center text-stone-700 font-bold">
-                <%= assistant.name %>
+    <% @assistants.order(name: :asc).each do |assistant| %>
+      <% cache(assistant) do %>
+        <li class="hover:bg-gray-100 last:rounded-b-lg first:rounded-t-lg w-full flex justify-between items-center">
+          <div class="flex-grow">
+            <%= link_to assistant_path(assistant), class: "block text-stone-700 p-3" do %>
+              <div class="text-lg flex items-center space-x-2 font-bold">
+                <span><%= assistant.name %></span>
                 <%= render partial: 'assistant_badge', locals: { assistant: assistant } %>
-              </h2>
-              <p class="text-stone-600 text-sm"><%= assistant.description %></p>
-              <% if assistant.slack_channel_name.present? %>
-                <div class="text-xs text-stone-400">Slack Channel: <%= assistant.slack_channel_name %></div>
-              <% end %>
+              </div>
+              <div class="text-sm text-stone-600"><%= assistant.description %></div>
+            <% end %>
+          </div>
+          <% if assistant.slack_channel_name.present? %>
+            <div class="m-2">
+              <%= render 'shared/slack_link', slack_channel_id: assistant.slack_channel_name %>
             </div>
           <% end %>
         </li>

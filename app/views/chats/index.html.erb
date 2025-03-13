@@ -1,7 +1,7 @@
 <div class="w-full">
   <% content_for :title, "Chats" %>
   <div class="flex justify-between items-center mb-2">
-    <%= render 'shared/page_header', title: 'Chats', subtitle: 'Discussion with assistants' %>
+    <%= render 'shared/page_header', title: 'Chats' + (@assistant.present? ? " for #{@assistant.name}" : "" ), subtitle: 'Discussion with assistants' %>
     <%= render partial: 'shared/button_group', locals: { buttons: { "New Chat" => assistants_path } } %>
   </div>
   <div class="flex justify-between items-center mb-2">

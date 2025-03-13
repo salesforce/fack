@@ -1,4 +1,6 @@
 class Assistant < ApplicationRecord
+  include PgSearch::Model
+
   has_many :chats, dependent: :destroy
   belongs_to :user
   belongs_to :library, optional: true
@@ -7,6 +9,13 @@ class Assistant < ApplicationRecord
   validates :slack_channel_name, uniqueness: true, allow_blank: true
 
   validate :libraries_must_be_csv_with_numbers
+
+  pg_search_scope :search_by_text,
+                  against: %i[name description instructions],
+                  using: {
+                    tsearch: { prefix: true, dictionary: 'english',
+                               tsvector_column: 'search_vector' } # This option allows partial matches
+                  }
 
   # Override as_json to exclude specific fields
   def as_json(options = {})

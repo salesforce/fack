@@ -4,6 +4,7 @@ class BaseAssistantsController < ApplicationController
   # GET /assistants or /assistants.json
   def index
     @assistants = Assistant.includes(:user).order(status: :desc)
+    @assistants = @assistants.search_by_text(params[:contains]) if params[:contains].present?
   end
 
   # POST /assistants or /assistants.json

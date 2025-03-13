@@ -50,11 +50,14 @@ class SlackController < ApplicationController
     text = event['text']
     channel = event['channel']
     parent_user_id = event['parent_user_id']
+    message_ts = event['ts']
     thread_ts = event['thread_ts'] || event['ts'] # Use `thread_ts` if it's part of a thread, else use `ts`
 
     # Get bot's user ID
     slack_service = SlackService.new
     bot_user_id = slack_service.bot_id
+
+    SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
 
     # Check if channel is blank
     if channel.blank?
@@ -89,12 +92,8 @@ class SlackController < ApplicationController
         slack_thread: thread_ts
       )
       chat.save!
-
-      # Post an emoji
-      SlackService.new.add_reaction(channel:, timestamp: thread_ts, emoji: 'star')
     end
 
-    # Step 3: Store the message in the chat
     chat.messages.create!(content: text, user_id: chat.user_id, from: 'user')
   end
 end

@@ -59,8 +59,16 @@ class GenerateMessageResponseJob < ApplicationJob
       SlackService.new.add_reaction(channel: assistant.slack_channel_name, timestamp: chat.slack_thread, emoji: 'check') if chat.slack_thread
     else
 
+      message_history_text = message_history.to_s
+
+      # We will use GenAI to pull out keywords for embedding if the message history is larger than 2.
+      keywords = extract_keywords(message_history_text).join(',') if message_history.size > 2
+
+      # The summarized keywords plus the latest message seems to give the best results.
+      embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords + ',' + message.content
+
       # Get embedding from GPT
-      embedding = get_embedding(message_history.to_s)
+      embedding = get_embedding(embedding_text)
 
       library_ids = message.chat.assistant.libraries.split(',')
       related_docs = related_documents_from_embedding(embedding).where(enabled: true, library_id: library_ids)
@@ -142,10 +150,10 @@ class GenerateMessageResponseJob < ApplicationJob
         confluence_query = Confluence::Query.new
         spaces = assistant.confluence_spaces
 
-        confluence_query_string = extract_keywords(message.content).join(',')
-        puts confluence_query_string
+        # Only extract keywords if it wasn't already extracted.
+        keywords = extract_keywords(message.content).join(',') if keywords.blank?
 
-        confluence_results = confluence_query.query_confluence(spaces, confluence_query_string)
+        confluence_results = confluence_query.query_confluence(spaces, keywords)
         prompt += confluence_results.to_json.truncate(70_000)
         prompt += '</CONFLUENCE_DOCUMENTS>'
       end
@@ -219,27 +227,6 @@ class GenerateMessageResponseJob < ApplicationJob
         Rails.logger.error("Error calling GPT to generate answer.#{e.inspect}")
       end
 
-      # update webhooks
-      if llm_message.chat.webhook.present?
-        webhook = llm_message.chat.webhook
-        nil unless webhook.hook_type == 'pagerduty'
-        begin
-          pagerduty = PagerDuty::Connection.new(ENV.fetch('PAGERDUTY_API_TOKEN'))
-          incident_id = llm_message.chat.webhook_external_id
-          response = pagerduty.post("incidents/#{incident_id}/notes", {
-                                      body: {
-                                        note: {
-                                          content: llm_message.content + ENV.fetch('WEBHOOK_TAGLINE', nil)
-                                        }
-                                      },
-                                      headers: {
-                                        'From' => ENV.fetch('PAGERDUTY_API_FROM')
-                                      }
-                                    })
-        rescue StandardError => e
-          Rails.logger.error("Error calling Pagerduty.#{e.inspect}")
-        end
-      end
     end
 
     return unless chat.slack_thread

@@ -7,13 +7,94 @@ class SlackController < ApplicationController
 
   before_action :verify_slack_signature
 
+  SAVE_DOCUMENT_ACTION_ID = 'save_document_action'
+
   def interactivity
-    request_body = request.body.read
-    action = extract_action_details(request_body)
+    # Read request body safely
+    request_body = begin
+      request.body.read
+    rescue IOError => e
+      Rails.logger.error("[Slack Interactivity] Failed to read request body: #{e.message}")
+      return head :bad_request
+    end
 
-    message = extract_message(request_body)
+    begin
+      # Parse and extract data with specific error handling
+      action = extract_action_details(request_body)
+      message = extract_message(request_body)
 
-    # Handle save action
+      # Validate thread_ts presence
+      thread_ts = message['thread_ts']
+      unless thread_ts
+        Rails.logger.error("[Slack Interactivity] Missing thread_ts in message: #{message.inspect}")
+        return head :unprocessable_entity
+      end
+
+      # Handle save document action
+      if action['action_id'] == SAVE_DOCUMENT_ACTION_ID
+        # Find chat with proper error handling
+        chat = Chat.find_by_slack_thread(thread_ts)
+        unless chat
+          Rails.logger.error("[Slack Interactivity] Chat not found for thread_ts: #{thread_ts}")
+          return head :not_found
+        end
+
+        # Get last assistant message with validation
+        doc_text = chat.messages.where(from: 'assistant').last&.content
+        unless doc_text
+          Rails.logger.error("[Slack Interactivity] No assistant message found for thread_ts: #{thread_ts}")
+          return head :unprocessable_entity
+        end
+
+        # Prepare document attributes
+        title = chat.first_message&.truncate(100)
+        unless title
+          Rails.logger.warn("[Slack Interactivity] No first message found, using default title for thread_ts: #{thread_ts}")
+          title = "Untitled Document (#{thread_ts})"
+        end
+
+        # Create and save new document
+        new_doc = Document.new(
+          document: doc_text,
+          title:,
+          user_id: chat.user_id,
+          library_id: chat.assistant.library_id
+        )
+
+        # Attempt to save document and handle response
+        if new_doc.save
+          document_url = "#{ENV.fetch('ROOT_URL', 'http://localhost')}/#{document_path(new_doc)}"
+          begin
+            SlackService.new.post_message(
+              chat.assistant.slack_channel_name,
+              "✨ Saved document! #{document_url}",
+              chat.slack_thread
+            )
+          rescue SlackService::Error => e
+            Rails.logger.error("[Slack Interactivity] Failed to post Slack message: #{e.message}")
+            # Don't fail the whole operation if Slack message fails
+          end
+        else
+          Rails.logger.error("[Slack Interactivity] Failed to save document: #{new_doc.errors.full_messages.join(', ')}")
+          return head :unprocessable_entity
+        end
+      else
+        Rails.logger.warn("[Slack Interactivity] Unhandled action_id: #{action['action_id']}")
+        return head :unprocessable_entity
+      end
+    rescue JSON::ParserError => e
+      Rails.logger.error("[Slack Interactivity] Failed to parse request body: #{e.message}\n#{e.backtrace.join("\n")}")
+      return head :bad_request
+    rescue NoMethodError => e
+      Rails.logger.error("[Slack Interactivity] Unexpected data structure: #{e.message}\n#{e.backtrace.join("\n")}")
+      return head :unprocessable_entity
+    rescue ActiveRecord::RecordNotFound => e
+      Rails.logger.error("[Slack Interactivity] Record not found: #{e.message}")
+      return head :not_found
+    rescue StandardError => e
+      Rails.logger.error("[Slack Interactivity] Unexpected error: #{e.message}\n#{e.backtrace.join("\n")}")
+      return head :internal_server_error
+    end
 
     head :ok
   end
@@ -42,7 +123,7 @@ class SlackController < ApplicationController
     parsed_payload = JSON.parse(decoded_payload)
 
     # Extract the message text
-    parsed_payload.dig('message', 'text')
+    parsed_payload.dig('message')
   end
 
   def extract_action_details(payload)
@@ -59,12 +140,7 @@ class SlackController < ApplicationController
     return nil if actions.nil? || actions.empty?
 
     # Extract first action (assuming only one action is clicked at a time)
-    action = actions.first
-
-    {
-      action_id: action['action_id'],
-      value: action['value']
-    }
+    actions.first
   end
 
   # Verifies that the request is really from Slack using the Signing Secret

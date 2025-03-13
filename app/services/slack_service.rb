@@ -32,14 +32,14 @@ class SlackService
     Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
   end
 
-  # Max length constant.  Need to leave extra room for tag lines, warnings, etc.
+  # Slack has a limit of 3000 characters per message, so we have to chunk
+  # Max length constant. Need to leave extra room for tag lines, warnings, etc.
   TEXT_LIMIT = 2500
-  def post_message(channel, text, thread_ts = nil)
+
+  def post_message(channel, text, thread_ts = nil, include_button = false)
     return if text.to_s.strip.empty?
 
     # Function to split text into chunks under the TEXT_LIMIT, breaking at newlines when possible
-    # Slack has a limit of about 3000 characters per post section
-    # So we are breaking up long responses into chunks which fit into the slack limit.
     def split_text(text, limit)
       chunks = []
       while text.length > limit
@@ -60,7 +60,6 @@ class SlackService
         text: chunk
       }
 
-      # Only add blocks if there's a body
       next if chunk.empty?
 
       payload[:blocks] = [
@@ -72,14 +71,13 @@ class SlackService
           }
         }
       ]
+
       begin
         if index == 0 && thread_ts.nil?
-          # First message, and no existing thread_ts, so create a new thread
           response = @client.chat_postMessage(payload)
           thread_ts = response&.ts # Store the ts for threading
           Rails.logger.info("First message sent. New thread created with thread_ts: #{thread_ts}")
         else
-          # Use existing thread_ts for threading
           payload[:thread_ts] = thread_ts
           response = @client.chat_postMessage(payload)
           Rails.logger.info("Threaded message sent under thread_ts: #{thread_ts}")
@@ -89,38 +87,40 @@ class SlackService
       end
     end
 
-    payload_action = {
-      channel:,
-      as_user: true,
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: '*Will this answer help others in the future?*  Click save to improve future AI responses.'
-          }
-        },
-        {
-          type: 'actions',
-          elements: [
-            {
-              type: 'button',
-              style: 'primary',
-              text: {
-                type: 'plain_text',
-                text: 'Save for Future'
-              },
-              value: 'save_document',
-              action_id: 'save_document_action'
+    if include_button
+      payload_action = {
+        channel:,
+        as_user: true,
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: '*Will this answer help others in the future?* Remembering this :heart: will improve the AI responses in the future!'
             }
-          ]
-        }
-      ]
-    }
+          },
+          {
+            type: 'actions',
+            elements: [
+              {
+                type: 'button',
+                style: 'primary',
+                text: {
+                  type: 'plain_text',
+                  text: ':heart: Remember This'
+                },
+                value: 'save_document',
+                action_id: 'save_document_action'
+              }
+            ]
+          }
+        ]
+      }
 
-    payload_action[:thread_ts] = thread_ts
+      payload_action[:thread_ts] = thread_ts
 
-    response = @client.chat_postMessage(payload_action)
+      response = @client.chat_postMessage(payload_action)
+    end
 
     thread_ts
   end

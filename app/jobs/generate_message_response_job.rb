@@ -52,7 +52,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
       new_doc.save!
 
-      llm_message.content = "✨ Saved document! #{ENV.fetch('ROOT_URL', nil)}#{document_path(new_doc)}\n *Please edit the document as needed to ensure accuracy for future recommendations.* "
+      llm_message.content = "✨ Saved document! #{ENV.fetch('ROOT_URL', nil)}#{document_path(new_doc)}\n Please edit the document as needed to ensure accuracy for future recommendations."
       llm_message.save
       llm_message.ready!
 
@@ -231,7 +231,7 @@ class GenerateMessageResponseJob < ApplicationJob
 
     return unless chat.slack_thread
 
-    SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content + "\n\n*Please verify AI Answers before following any recommendations.* \n\n",
-                                  chat.slack_thread)
+    SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content + "\n\n*Please verify AI answers before following any recommendations.* \n\n",
+                                  chat.slack_thread, include_button: true)
   end
 end

@@ -88,6 +88,40 @@ class SlackService
         Rails.logger.error("[Slack Error] #{e.message}")
       end
     end
+
+    payload_action = {
+      channel:,
+      as_user: true,
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: '*Will this answer help others in the future?*  Click save to improve future AI responses.'
+          }
+        },
+        {
+          type: 'actions',
+          elements: [
+            {
+              type: 'button',
+              style: 'primary',
+              text: {
+                type: 'plain_text',
+                text: 'Save for Future'
+              },
+              value: 'save_document',
+              action_id: 'save_document_action'
+            }
+          ]
+        }
+      ]
+    }
+
+    payload_action[:thread_ts] = thread_ts
+
+    response = @client.chat_postMessage(payload_action)
+
     thread_ts
   end
 

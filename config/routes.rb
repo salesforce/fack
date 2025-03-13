@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   root 'questions#new' # Setting the questions new page as the root page
 
   post '/slack/events', to: 'slack#events'
+  post '/slack/interactivity', to: 'slack#interactivity'
 
   get '/auth/:provider/callback', to: 'sessions#google_oauth2'
   get '/auth/failure', to: redirect('/') # Handle authentication failures

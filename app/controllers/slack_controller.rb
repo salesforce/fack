@@ -7,6 +7,17 @@ class SlackController < ApplicationController
 
   before_action :verify_slack_signature
 
+  def interactivity
+    request_body = request.body.read
+    action = extract_action_details(request_body)
+
+    message = extract_message(request_body)
+
+    # Handle save action
+
+    head :ok
+  end
+
   def events
     payload = JSON.parse(request.body.read)
 
@@ -22,6 +33,39 @@ class SlackController < ApplicationController
   end
 
   private
+
+  def extract_message(payload)
+    # Decode the URL-encoded payload
+    decoded_payload = URI.decode_www_form(payload).to_h['payload']
+
+    # Parse the JSON payload
+    parsed_payload = JSON.parse(decoded_payload)
+
+    # Extract the message text
+    parsed_payload.dig('message', 'text')
+  end
+
+  def extract_action_details(payload)
+    # Parse the JSON payload (assuming it's a JSON string)
+    decoded_payload = URI.decode_www_form(payload).to_h['payload']
+
+    # Parse the JSON payload
+    parsed_payload = JSON.parse(decoded_payload)
+
+    # Extract actions array
+    actions = parsed_payload.dig('actions')
+
+    # Return nil if no actions found
+    return nil if actions.nil? || actions.empty?
+
+    # Extract first action (assuming only one action is clicked at a time)
+    action = actions.first
+
+    {
+      action_id: action['action_id'],
+      value: action['value']
+    }
+  end
 
   # Verifies that the request is really from Slack using the Signing Secret
   def verify_slack_signature

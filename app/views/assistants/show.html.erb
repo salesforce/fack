@@ -27,6 +27,9 @@
     <h1 class="text-stone-700 font-light text-3xl mt-6">Recent Chats</h1>
     <%= render "shared/chat_list", chats: @assistant.chats.limit(10).order(created_at: :desc) %>
   </div>
+  <div class="mt-4">
+    <%= link_to 'View all chats for ' + @assistant.name, assistant_chats_path(@assistant), class:"border border-stone-300 p-3 text-sm text-sky-500 rounded-md hover:bg-stone-100" %>
+  </div>
 </div>
 <!-- Modal -->
 <div id="details-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">

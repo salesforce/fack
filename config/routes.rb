@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :messages
   end
   resources :assistants do
-    resources :chats, only: %i[create new]
+    resources :chats, only: %i[create new index]
 
     # Adding the import route for all assistants
     collection do

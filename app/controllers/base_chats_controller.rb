@@ -8,6 +8,11 @@ class BaseChatsController < ApplicationController
              else
                Chat.includes(:assistant, :user).where(user_id: current_user.id).order(created_at: :desc).page(params[:page])
              end
+
+    return unless params[:assistant_id]
+
+    @chats = @chats.where(assistant_id: params[:assistant_id])
+    @assistant = Assistant.find(params[:assistant_id])
   end
 
   # POST /chats or /chats.json

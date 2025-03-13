@@ -1,6 +1,8 @@
 require 'slack-ruby-client'
 
 class SlackService
+  class Error < StandardError; end
+
   def initialize
     Slack.configure do |config|
       config.token = ENV.fetch('SLACK_BOT_TOKEN', nil)
@@ -30,6 +32,19 @@ class SlackService
     )
   rescue Slack::Web::Api::Errors::SlackError => e
     Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
+  end
+
+  def delete_message(channel, timestamp)
+    response = @client.chat_delete(
+      channel:,
+      ts: timestamp
+    )
+
+    raise Error, "Failed to delete message: #{response['error']}" unless response['ok']
+
+    response
+  rescue Slack::Web::Api::Errors::SlackError => e
+    raise Error, "Slack API error: #{e.message}"
   end
 
   # Slack has a limit of 3000 characters per message, so we have to chunk

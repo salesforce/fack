@@ -8,9 +8,7 @@ class SlackController < ApplicationController
   before_action :verify_slack_signature
 
   SAVE_DOCUMENT_ACTION_ID = 'save_document_action'
-
   def interactivity
-    # Read request body safely
     request_body = begin
       request.body.read
     rescue IOError => e
@@ -19,41 +17,31 @@ class SlackController < ApplicationController
     end
 
     begin
-      # Parse and extract data with specific error handling
       action = extract_action_details(request_body)
       message = extract_message(request_body)
 
-      # Validate thread_ts presence
       thread_ts = message['thread_ts']
+      message_ts = message['ts']
       unless thread_ts
         Rails.logger.error("[Slack Interactivity] Missing thread_ts in message: #{message.inspect}")
         return head :unprocessable_entity
       end
 
-      # Handle save document action
       if action['action_id'] == SAVE_DOCUMENT_ACTION_ID
-        # Find chat with proper error handling
         chat = Chat.find_by_slack_thread(thread_ts)
         unless chat
           Rails.logger.error("[Slack Interactivity] Chat not found for thread_ts: #{thread_ts}")
           return head :not_found
         end
 
-        # Get last assistant message with validation
         doc_text = chat.messages.where(from: 'assistant').last&.content
         unless doc_text
           Rails.logger.error("[Slack Interactivity] No assistant message found for thread_ts: #{thread_ts}")
           return head :unprocessable_entity
         end
 
-        # Prepare document attributes
-        title = chat.first_message&.truncate(100)
-        unless title
-          Rails.logger.warn("[Slack Interactivity] No first message found, using default title for thread_ts: #{thread_ts}")
-          title = "Untitled Document (#{thread_ts})"
-        end
+        title = chat.first_message&.truncate(100) || "Untitled Document (#{thread_ts})"
 
-        # Create and save new document
         new_doc = Document.new(
           document: doc_text,
           title:,
@@ -61,21 +49,46 @@ class SlackController < ApplicationController
           library_id: chat.assistant.library_id
         )
 
-        # Attempt to save document and handle response
+        slack_service = SlackService.new
+        channel = chat.assistant.slack_channel_name
+
         if new_doc.save
           document_url = "#{ENV.fetch('ROOT_URL', 'http://localhost')}/#{document_path(new_doc)}"
+
+          # Post confirmation message
+          confirmation_ts = nil
           begin
-            SlackService.new.post_message(
-              chat.assistant.slack_channel_name,
+            response = slack_service.post_message(
+              channel,
               "✨ Saved document! #{document_url}",
               chat.slack_thread
             )
+            confirmation_ts = response['ts'] if response['ok']
           rescue SlackService::Error => e
-            Rails.logger.error("[Slack Interactivity] Failed to post Slack message: #{e.message}")
-            # Don't fail the whole operation if Slack message fails
+            Rails.logger.error("[Slack Interactivity] Failed to post confirmation: #{e.message}")
+          end
+
+          # Delete the original message
+          begin
+            slack_service.delete_message(channel, message_ts)
+          rescue SlackService::Error => e
+            Rails.logger.error("[Slack Interactivity] Failed to delete original message: #{e.message}")
+            # Optionally post an error message if deletion fails
+            if confirmation_ts.nil?
+              slack_service.post_message(
+                channel,
+                "Document saved but couldn't clean up original message: #{e.message}",
+                chat.slack_thread
+              )
+            end
           end
         else
           Rails.logger.error("[Slack Interactivity] Failed to save document: #{new_doc.errors.full_messages.join(', ')}")
+          slack_service.post_message(
+            channel,
+            "❌ Failed to save document: #{new_doc.errors.full_messages.join(', ')}",
+            chat.slack_thread
+          )
           return head :unprocessable_entity
         end
       else

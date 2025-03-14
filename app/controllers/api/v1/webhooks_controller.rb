@@ -25,7 +25,7 @@ module Api
       # This can be configured to receive PD messages from https://salesforce.pagerduty.com/integrations/webhooks/add
       # We can then respond to PD alerts with GenAI responses
       def receive
-        # Add check if is PD webhook.  Other Types will be handled later.
+        # Add check if is PD webhook. Other Types will be handled later.
         return unless @webhook.hook_type == 'pagerduty'
 
         payload = request.body.read
@@ -36,43 +36,36 @@ module Api
         resource_type = event['event']['resource_type']
         return unless resource_type == 'incident'
 
-        # Get the incident ID from the event data.  It varies in the payload
+        # Get the incident ID from the event data. It varies in the payload
         event_type = event['event']['event_type']
-        event_text = ''
-        incident_id = ''
-        if event_type == 'incident.annotated'
-          incident_id = event['event']['data']['incident']['id']
-          incident_url = event['event']['data']['incident']['html_url']
-          incident_summary_text = event['event']['data']['incident']['summary']
+        incident_id = event['event']['data']['id']
+        incident_url = event['event']['data']['html_url']
+        incident_start_time = event['event']['data']['created_at']
+        incident_end_time = event['event']['occurred_at']
 
-          event_text += 'content: ' + event['event']['data']['content']
-
-          # if text contains "Resolution Note:" Then created a doc
-          # Get the webhook library and create a doc
-          if event_text.include?('Resolution Note:')
-            # Create a doc
-            doc_title = 'PD Incident: ' + incident_summary_text
-            doc_text = event['event']['data']['content'] + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
-            doc = Document.create(document: doc_text, user_id: current_user.id, library_id: @webhook.library.id, title: doc_title)
-          end
-
-        else
-          incident_id = event['event']['data']['id']
-          incident_start_time = event['event']['data']['created_at']
-          incident_end_time = event['event']['occurred_at']
-          event_text += if event_type == 'incident.resolved'
-                          "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time}"
-                        else
-                          'Incident: ' + event['event']['data']['title']
-                        end
+        unless %w[incident.resolved incident.acknowledged].include?(event_type)
+          logger.warn "Unknown event type received: #{event_type}"
+          return
         end
 
-        # We want to respond to annotations, but not our own.  Otherwise, it will get in an endless loop
+        event_text = if event_type == 'incident.resolved'
+                       "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
+                         "<#{incident_url}|View Incident>"
+                     else
+                       "Incident: #{event['event']['data']['title']} \n" \
+                         "<#{incident_url}|View Incident>"
+                     end
+
+        # We want to respond to annotations, but not our own. Otherwise, it will get in an endless loop
         # So we add a tagline to detect when our agent is posting vs. a normal user
         tagline = ENV.fetch('WEBHOOK_TAGLINE', '')
         return if event_type == 'incident.annotated' && tagline && payload.include?(tagline)
 
         @chat = Chat.find_by(webhook_external_id: incident_id)
+
+        # If it's a resolved event and there's no existing chat, exit early
+        return if event_type == 'incident.resolved' && @chat.nil?
+
         if @chat.nil?
           @chat = Chat.new
           @chat.user_id = current_user.id

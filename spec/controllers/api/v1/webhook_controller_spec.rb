@@ -50,6 +50,23 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       }.to_json
     end
 
+    let(:payload_resolved) do
+      {
+        event: {
+          id: '01FEW8TGIDWE21FOHP5WGIHUSX',
+          event_type: 'incident.resolved',
+          resource_type: 'incident',
+          occurred_at: '2025-01-30T21:00:00Z',
+          data: {
+            id: 'Q1VVXNR9VO48ZJ',
+            html_url: 'https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ',
+            created_at: '2025-01-30T20:46:49Z',
+            title: 'SCRT is having problems'
+          }
+        }
+      }.to_json
+    end
+
     let(:payload_without_tagline) do
       {
         event: {
@@ -197,31 +214,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        message_text = 'Incident: ' + parsed_payload_ack['event']['data']['title']
-        expect(chat.first_message).to eq(message_text)
-        expect(chat.webhook_id).to eq(webhook.id)
-
-        message = chat.messages.first
-        expect(message.content).to eq(message_text)
-        expect(message.user_id).to eq(user.id)
-        expect(message.from.to_sym).to eq(:user)
-      end
-    end
-
-    context 'when a valid PagerDuty Annotate webhook is received' do
-      it 'creates a new Chat and Message' do
-        post :receive, params: { id: webhook.id }, body: payload_annotate, as: :json
-
-        expect(response).to have_http_status(:created)
-
-        parsed_payload_annotate = JSON.parse(payload_annotate)
-
-        chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
-        expect(chat).not_to be_nil
-        expect(chat.user_id).to eq(user.id)
-        expect(chat.assistant).to eq(webhook.assistant)
-
-        message_text = 'content: ' + parsed_payload_annotate['event']['data']['content']
+        message_text = 'Incident: ' + parsed_payload_ack['event']['data']['title'] + " \n<https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ|View Incident>"
         expect(chat.first_message).to eq(message_text)
         expect(chat.webhook_id).to eq(webhook.id)
 
@@ -247,25 +240,6 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       end
     end
 
-    context 'when the tagline is not present in the payload' do
-      it 'creates a new Chat and Message' do
-        post :receive, params: { id: webhook.id }, body: payload_without_tagline, as: :json
-
-        expect(response).to have_http_status(:created)
-
-        parsed_payload_annotate = JSON.parse(payload_without_tagline)
-
-        chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
-        expect(chat).not_to be_nil
-
-        message_text = 'content: ' + parsed_payload_annotate['event']['data']['content']
-        expect(chat.first_message).to eq(message_text)
-
-        message = chat.messages.first
-        expect(message.content).to eq(message_text)
-      end
-    end
-
     # This prevents loops in the annotation/webhook flow
     context 'when the tagline is present in the payload' do
       it 'does not create a new Chat or Message' do
@@ -276,26 +250,36 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       end
     end
 
-    it 'creates a new Document with the correct content and library association' do
-      post :receive, params: { id: webhook.id }, body: payload_with_resolution_note, as: :json
+    context 'when an incident is resolved and a chat exists' do
+      it 'adds a message to the existing chat' do
+        chat = Chat.create!(
+          user:,
+          assistant: webhook.assistant,
+          webhook_id: webhook.id,
+          webhook_external_id: 'Q1VVXNR9VO48ZJ',
+          first_message: 'Incident: SCRT is having problems'
+        )
 
-      expect(response).to have_http_status(:created)
+        post :receive, params: { id: webhook.id }, body: payload_resolved, as: :json
 
-      parsed_payload = JSON.parse(payload_with_resolution_note)
-      resolution_note_text = parsed_payload['event']['data']['content']
-      incident_url = parsed_payload['event']['data']['incident']['html_url']
-      incident_summary_text = parsed_payload['event']['data']['incident']['summary']
+        expect(response).to have_http_status(:created)
+        chat.reload
 
-      doc_text = resolution_note_text + ' PD URL: ' + incident_url + ' Summary: ' + incident_summary_text
+        message_text = "Incident resolved. Start: 2025-01-30T20:46:49Z, End: 2025-01-30T21:00:00Z \n" \
+                       '<https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ|View Incident>'
 
-      # Fetch the created document (since we are now using the real creation process)
-      created_doc = Document.last
-      expect(created_doc).not_to be_nil
-      expect(created_doc.document).to eq(doc_text)
-      expect(created_doc.user_id).to eq(user.id)
-      expect(created_doc.library_id).to eq(library.id)
-      # Check validation by ensuring that title presence is required (should fail without it)
-      expect(created_doc.valid?).to eq(false) if created_doc.title.blank?
+        expect(chat.messages.last.content).to eq(message_text)
+      end
+    end
+
+    context 'when an incident is resolved and no chat exists' do
+      it 'does not create a new chat' do
+        expect do
+          post :receive, params: { id: webhook.id }, body: payload_resolved, as: :json
+        end.not_to change(Chat, :count)
+
+        expect(response).to have_http_status(:no_content)
+      end
     end
   end
 end

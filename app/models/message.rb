@@ -23,27 +23,22 @@ class Message < ApplicationRecord
     # If the assistant is generating, then it isn't ready and we don't post to slack
     return unless ready?
 
+    # skip if this message already has a slack ts
+    return if slack_ts
+
     slack_service = SlackService.new
 
-    puts 'Chat' + chat.slack_thread
-
     # if the chat.slack_thread is missing, we create a new thread
-    ts = if chat.slack_thread.present?
-           slack_service.post_message(chat.assistant.slack_channel_name, content, thread_ts: chat.slack_thread)
-         else
-           slack_service.post_message(chat.assistant.slack_channel_name, content)
-         end
+    self.slack_ts = slack_service.post_message(chat.assistant.slack_channel_name, content, chat.slack_thread, assistant?)
 
-    puts 'TS' + ts.to_s
+    # if the chat didn't have a thread, save it.
+    if chat.slack_thread.nil?
+      chat.slack_thread = slack_ts
+      chat.save
+    end
 
-    # SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content + "\n\n*Please verify AI answers before following any recommendations.* \n\n",
-    #                              chat.slack_thread, include_button: true)
-
-    if ts
-      chat.update(slack_thread: ts) # One-liner update instead of separate assignment + save
-      puts chat.inspect
-      # TODO: - allow webhook to dynamically choose emoji
-      slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
+    if slack_ts
+      slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: slack_ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
     else
       Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
     end

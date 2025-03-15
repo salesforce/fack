@@ -16,7 +16,7 @@
     <% @messages.each do |message| %>
       <%= render partial: 'messages/message', locals: { message: message } %>
     <% end %>
-    <% if @messages.last.from == 'user' %>
+    <% if @messages.last && @messages.last.from == 'user' %>
       <script>
         reloadTurboFrameWithDelay(3000, "messages-<%=@chat.id%>");
       </script>

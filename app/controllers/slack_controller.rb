@@ -183,7 +183,7 @@ class SlackController < ApplicationController
     text = event['text']
     channel = event['channel']
     parent_user_id = event['parent_user_id']
-    message_ts = event['ts']
+    message_ts = event['ts'] || event['thread_ts']
     thread_ts = event['thread_ts'] || event['ts'] # Use `thread_ts` if it's part of a thread, else use `ts`
 
     # Get bot's user ID
@@ -219,7 +219,7 @@ class SlackController < ApplicationController
 
     if chat.nil?
       chat = Chat.new(
-        user_id: User.first.id,
+        user_id: assistant.user_id,
         assistant:,
         first_message: text,
         slack_thread: thread_ts
@@ -227,6 +227,6 @@ class SlackController < ApplicationController
       chat.save!
     end
 
-    chat.messages.create!(content: text, user_id: chat.user_id, from: 'user')
+    chat.messages.create!(content: text, user_id: chat.user_id, from: 'user', slack_ts: thread_ts)
   end
 end

@@ -111,7 +111,7 @@ class SlackService
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: '*Will this answer help others in the future?* Remembering this :heart: will improve the AI responses in the future!'
+              text: '*Will this :point_up: answer help others in the future?* Remembering the answer will improve the AI responses in the future!'
             }
           },
           {

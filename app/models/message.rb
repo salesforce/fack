@@ -2,7 +2,7 @@ class Message < ApplicationRecord
   belongs_to :chat
   belongs_to :user
   after_create :enqueue_generate_message_response_job
-  after_create :create_slack_thread
+  after_save :create_slack_post
   validates :from, presence: true
   validates :content, presence: true
 
@@ -13,19 +13,36 @@ class Message < ApplicationRecord
 
   private
 
-  def create_slack_thread
+  def create_slack_post
     # Skip if there is already a thread linked or the assistant doesn't have a slack channel
-    return if chat.slack_thread.present? || chat.assistant.slack_channel_name.blank?
+    return if chat.assistant.slack_channel_name.blank?
 
     # Only respond to @mentions in slack, but don't post chats intiated from elsewhere like webhooks, ui, etc.
     return if chat.assistant.slack_reply_only
 
+    # If the assistant is generating, then it isn't ready and we don't post to slack
+    return unless ready?
+
     slack_service = SlackService.new
-    ts = slack_service.post_message(chat.assistant.slack_channel_name, content)
+
+    puts 'Chat' + chat.slack_thread
+
+    # if the chat.slack_thread is missing, we create a new thread
+    ts = if chat.slack_thread.present?
+           slack_service.post_message(chat.assistant.slack_channel_name, content, thread_ts: chat.slack_thread)
+         else
+           slack_service.post_message(chat.assistant.slack_channel_name, content)
+         end
+
+    puts 'TS' + ts.to_s
+
+    # SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content + "\n\n*Please verify AI answers before following any recommendations.* \n\n",
+    #                              chat.slack_thread, include_button: true)
 
     if ts
       chat.update(slack_thread: ts) # One-liner update instead of separate assignment + save
-      # TODO - allow webhook to dynamically choose emoji
+      puts chat.inspect
+      # TODO: - allow webhook to dynamically choose emoji
       slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
     else
       Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")

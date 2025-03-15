@@ -218,8 +218,11 @@ class SlackController < ApplicationController
     text = text&.gsub(/<@U[A-Z0-9]+>/, '')&.strip # Removes Slack mentions safely
 
     if chat.nil?
+      puts 'Thread ' + thread_ts
+      puts 'Message ' + message_ts
+
       chat = Chat.new(
-        user_id: User.first.id,
+        user_id: assistant.user_id,
         assistant:,
         first_message: text,
         slack_thread: thread_ts

@@ -89,10 +89,13 @@ class SlackService
 
       begin
         if index == 0 && thread_ts.nil?
+          puts 'Posting new thread'
+          puts payload
           response = @client.chat_postMessage(payload)
           thread_ts = response&.ts # Store the ts for threading
           Rails.logger.info("First message sent. New thread created with thread_ts: #{thread_ts}")
         else
+          puts 'Posting existing thread'
           payload[:thread_ts] = thread_ts
           response = @client.chat_postMessage(payload)
           Rails.logger.info("Threaded message sent under thread_ts: #{thread_ts}")

@@ -228,10 +228,5 @@ class GenerateMessageResponseJob < ApplicationJob
       end
 
     end
-
-    return unless chat.slack_thread
-
-    SlackService.new.post_message(chat.assistant.slack_channel_name, llm_message.content + "\n\n*Please verify AI answers before following any recommendations.* \n\n",
-                                  chat.slack_thread, include_button: true)
   end
 end

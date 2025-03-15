@@ -52,7 +52,7 @@ module Api
                        "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
                          "<#{incident_url}|View Incident>"
                      else
-                       "Incident: #{event['event']['data']['title']} \n" \
+                       "Incident acknowledged: #{event['event']['data']['title']} \n" \
                          "<#{incident_url}|View Incident>"
                      end
 

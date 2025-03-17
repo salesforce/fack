@@ -1,18 +1,18 @@
 class BaseChatsController < ApplicationController
   before_action :set_chat, only: %i[show edit update destroy]
 
-  # GET /chats or /chats.json
   def index
-    @chats = if params[:all].present?
-               Chat.includes(:assistant, :user).order(created_at: :desc).page(params[:page])
-             else
-               Chat.includes(:assistant, :user).where(user_id: current_user.id).order(created_at: :desc).page(params[:page])
-             end
+    @chats = Chat.includes(:assistant, :user).order(created_at: :desc)
 
-    return unless params[:assistant_id]
+    # Show all if all selected or on the assistant page
+    @chats = @chats.where(user_id: current_user.id) unless params[:all].present? || params[:assistant_id].present?
 
-    @chats = @chats.where(assistant_id: params[:assistant_id])
-    @assistant = Assistant.find(params[:assistant_id])
+    if params[:assistant_id].present?
+      @chats = @chats.where(assistant_id: params[:assistant_id])
+      @assistant = Assistant.find(params[:assistant_id])
+    end
+
+    @chats = @chats.page(params[:page])
   end
 
   # POST /chats or /chats.json

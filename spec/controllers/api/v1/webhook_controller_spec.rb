@@ -182,6 +182,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
 
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
+      allow(ENV).to receive(:fetch).with('PAGERDUTY_API_TOKEN').and_return('XXX')
       request.headers['Authorization'] = "Token #{webhook.secret_key}" # Construct the auth header
       request.headers['Content-Type'] = 'application/json'
     end
@@ -214,7 +215,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(chat).not_to be_nil
         expect(chat.user_id).to eq(user.id)
         expect(chat.assistant).to eq(webhook.assistant)
-        message_text = 'Incident acknowledged: ' + parsed_payload_ack['event']['data']['title'] + " \n<https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ|View Incident>"
+        message_text = 'Incident Q1VVXNR9VO48ZJ acknowledged: ' + parsed_payload_ack['event']['data']['title'] + " \n<https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ|View Incident>"
         expect(chat.first_message).to eq(message_text)
         expect(chat.webhook_id).to eq(webhook.id)
 
@@ -265,7 +266,7 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(response).to have_http_status(:created)
         chat.reload
 
-        message_text = "Incident resolved. Start: 2025-01-30T20:46:49Z, End: 2025-01-30T21:00:00Z \n" \
+        message_text = "Incident Q1VVXNR9VO48ZJ resolved. Start: 2025-01-30T20:46:49Z, End: 2025-01-30T21:00:00Z \n" \
                        '<https://salesforce.pagerduty.com/incidents/Q1VVXNR9VO48ZJ|View Incident>'
 
         expect(chat.messages.last.content).to eq(message_text)

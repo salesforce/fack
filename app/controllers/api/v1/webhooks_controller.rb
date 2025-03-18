@@ -49,10 +49,10 @@ module Api
         end
 
         event_text = if event_type == 'incident.resolved'
-                       "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
+                       "Incident #{incident_id} resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
                          "<#{incident_url}|View Incident>"
                      else
-                       "Incident acknowledged: #{event['event']['data']['title']} \n" \
+                       "Incident #{incident_id} acknowledged: #{event['event']['data']['title']} \n" \
                          "<#{incident_url}|View Incident>"
                      end
 
@@ -66,18 +66,50 @@ module Api
         # If it's a resolved event and there's no existing chat, exit early
         return if event_type == 'incident.resolved' && @chat.nil?
 
+        uri = URI("https://api.pagerduty.com/incidents/#{incident_id}/alerts")
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+
+        request = Net::HTTP::Get.new(uri)
+        request['Authorization'] = "Token token=#{ENV.fetch('PAGERDUTY_API_TOKEN')}"
+        request['Accept'] = 'application/vnd.pagerduty+json;version=2'
+
+        response = http.request(request)
+
+        incident_details = nil
+        if response.code == '200'
+          incident_data = JSON.parse(response.body)
+          alerts = incident_data['alerts']
+
+          if alerts.any?
+            first_alert = alerts.first
+            if first_alert['body'] && first_alert['body']['details']
+              incident_details = first_alert['body']['details']
+            else
+              Rails.logger.info 'No custom details available'
+            end
+          else
+            Rails.logger.info 'No alerts found for this incident'
+          end
+        else
+          Rails.logger.error "Failed: #{response.code} - #{response.body}"
+        end
+
+        message_text = event_text.dup # Avoid modifying event_text directly
+        message_text << "\n\n*Details*\n" << incident_details.to_s if incident_details&.present?
+
         if @chat.nil?
           @chat = Chat.new
           @chat.user_id = current_user.id
           @chat.assistant = @webhook.assistant
-          @chat.first_message = event_text
+          @chat.first_message = message_text
           @chat.webhook_id = @webhook.id
           @chat.webhook_external_id = incident_id
         end
 
         respond_to do |format|
           if @chat.save
-            @chat.messages.create(content: event_text, user_id: @chat.user_id, from: :user)
+            @chat.messages.create(content: message_text, user_id: @chat.user_id, from: :user)
             format.json { render json: { id: @chat.id }, status: :created }
           else
             format.json { render json: @chat.errors, status: :unprocessable_content }

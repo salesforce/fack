@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "json"
+require 'json'
 
 module Api
   module V1
@@ -26,79 +26,77 @@ module Api
       # We can then respond to PD alerts with GenAI responses
       def receive
         # Add check if is PD webhook. Other Types will be handled later.
-        return unless @webhook.hook_type == "pagerduty"
+        return unless @webhook.hook_type == 'pagerduty'
 
         payload = request.body.read
         logger.info "Webhook received for Webhook ID: #{params[:id]}"
 
         event = JSON.parse(payload)
 
-        resource_type = event["event"]["resource_type"]
-        return unless resource_type == "incident"
+        resource_type = event['event']['resource_type']
+        return unless resource_type == 'incident'
 
         # Get the incident ID from the event data. It varies in the payload
-        event_type = event["event"]["event_type"]
-        incident_id = event["event"]["data"]["id"]
-        incident_url = event["event"]["data"]["html_url"]
-        incident_start_time = event["event"]["data"]["created_at"]
-        incident_end_time = event["event"]["occurred_at"]
+        event_type = event['event']['event_type']
+        incident_id = event['event']['data']['id']
+        incident_url = event['event']['data']['html_url']
+        incident_start_time = event['event']['data']['created_at']
+        incident_end_time = event['event']['occurred_at']
 
         unless %w[incident.resolved incident.acknowledged].include?(event_type)
           logger.warn "Unknown event type received: #{event_type}"
           return
         end
 
-        event_text = if event_type == "incident.resolved"
-            "Incident #{incident_id} resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
-            "<#{incident_url}|View Incident>"
-          else
-            "Incident #{incident_id} acknowledged: #{event["event"]["data"]["title"]} \n" \
-            "<#{incident_url}|View Incident>"
-          end
+        event_text = if event_type == 'incident.resolved'
+                       "Incident #{incident_id} resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
+                         "<#{incident_url}|View Incident>"
+                     else
+                       "Incident #{incident_id} acknowledged: #{event['event']['data']['title']} \n" \
+                         "<#{incident_url}|View Incident>"
+                     end
 
         # We want to respond to annotations, but not our own. Otherwise, it will get in an endless loop
         # So we add a tagline to detect when our agent is posting vs. a normal user
-        tagline = ENV.fetch("WEBHOOK_TAGLINE", "")
-        return if event_type == "incident.annotated" && tagline && payload.include?(tagline)
+        tagline = ENV.fetch('WEBHOOK_TAGLINE', '')
+        return if event_type == 'incident.annotated' && tagline && payload.include?(tagline)
 
         @chat = Chat.find_by(webhook_external_id: incident_id)
 
         # If it's a resolved event and there's no existing chat, exit early
-        return if event_type == "incident.resolved" && @chat.nil?
+        return if event_type == 'incident.resolved' && @chat.nil?
 
         uri = URI("https://api.pagerduty.com/incidents/#{incident_id}/alerts")
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
 
         request = Net::HTTP::Get.new(uri)
-        request["Authorization"] = "Token token=#{ENV.fetch("PAGERDUTY_API_TOKEN")}"
-        request["Accept"] = "application/vnd.pagerduty+json;version=2"
+        request['Authorization'] = "Token token=#{ENV.fetch('PAGERDUTY_API_TOKEN')}"
+        request['Accept'] = 'application/vnd.pagerduty+json;version=2'
 
         response = http.request(request)
 
         incident_details = nil
-        if response.code == "200"
+        if response.code == '200'
           incident_data = JSON.parse(response.body)
-          alerts = incident_data["alerts"]
+          alerts = incident_data['alerts']
 
           if alerts.any?
             first_alert = alerts.first
-            if first_alert["body"] && first_alert["body"]["details"]
-              incident_details = first_alert["body"]["details"]
+            if first_alert['body'] && first_alert['body']['details']
+              incident_details = first_alert['body']['details']
             else
-              Rails.logger.info "No custom details available"
+              Rails.logger.info 'No custom details available'
             end
           else
-            Rails.logger.info "No alerts found for this incident"
+            Rails.logger.info 'No alerts found for this incident'
           end
         else
           Rails.logger.error "Failed: #{response.code} - #{response.body}"
         end
 
         message_text = event_text.dup # Avoid modifying event_text directly
-        if incident_details&.present?
-          message_text << "\n\n*Details*\n" << incident_details.to_s
-        end
+        message_text << "\n\n*Details*\n" << incident_details.to_s if incident_details&.present?
 
         if @chat.nil?
           @chat = Chat.new

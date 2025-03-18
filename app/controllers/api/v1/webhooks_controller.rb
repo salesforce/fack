@@ -96,7 +96,6 @@ module Api
         end
 
         message_text = event_text.dup # Avoid modifying event_text directly
-        message_text << "\n\n*Details*\n" << incident_details.to_s if incident_details&.present?
 
         if @chat.nil?
           @chat = Chat.new
@@ -109,7 +108,7 @@ module Api
 
         respond_to do |format|
           if @chat.save
-            @chat.messages.create(content: message_text, user_id: @chat.user_id, from: :user)
+            @chat.messages.create(content: message_text, user_id: @chat.user_id, from: :user, hidden_text: incident_details)
             format.json { render json: { id: @chat.id }, status: :created }
           else
             format.json { render json: @chat.errors, status: :unprocessable_content }

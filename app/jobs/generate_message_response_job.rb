@@ -24,7 +24,7 @@ class GenerateMessageResponseJob < ApplicationJob
     chat = message.chat
 
     # get the previous message history to send to prompt
-    message_history = chat.messages.where(from: 'user').pluck(:content, :created_at)
+    message_history = chat.messages.where(from: 'user').pluck(:content, :hidden_text, :created_at)
     assistant_messages = chat.messages.where(from: 'assistant').pluck(:content)
     doc_text = assistant_messages.last
 
@@ -65,7 +65,7 @@ class GenerateMessageResponseJob < ApplicationJob
       keywords = extract_keywords(message_history_text).join(',') if message_history.size > 2
 
       # The summarized keywords plus the latest message seems to give the best results.
-      embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords + ',' + message.content
+      embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords + ',' + message.content + ',' + message.hidden_text
 
       # Get embedding from GPT
       embedding = get_embedding(embedding_text)
@@ -191,6 +191,7 @@ class GenerateMessageResponseJob < ApplicationJob
         prompt += "\nDate: #{Time.at(message['created_at'].to_f).utc}" # Converts timestamp to readable format
         prompt += "\nUser: #{message['from']}"
         prompt += "\nMessage: #{message['content']}"
+        prompt += "\nAdditional Text: #{message['hidden_text']}"
         prompt += "\n-----------------------"
       end.empty?
         prompt += "No messages available\n"
@@ -200,6 +201,8 @@ class GenerateMessageResponseJob < ApplicationJob
       prompt += <<~END_PROMPT
         <{{DATA_TAG}}>
           #{message.content}
+          
+          #{message.hidden_text}
         </{{DATA_TAG}}>
       END_PROMPT
 

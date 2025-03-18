@@ -172,7 +172,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_191030) do
     t.text "prompt"
     t.integer "status", default: 0
     t.string "slack_ts"
-    t.string "hidden_text"
+    t.text "hidden_text"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["created_at"], name: "index_messages_on_created_at"
     t.index ["user_id"], name: "index_messages_on_user_id"

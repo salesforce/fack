@@ -49,10 +49,10 @@ module Api
         end
 
         event_text = if event_type == "incident.resolved"
-            "Incident resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
+            "Incident #{incident_id} resolved. Start: #{incident_start_time}, End: #{incident_end_time} \n" \
             "<#{incident_url}|View Incident>"
           else
-            "Incident acknowledged: #{event["event"]["data"]["title"]} \n" \
+            "Incident #{incident_id} acknowledged: #{event["event"]["data"]["title"]} \n" \
             "<#{incident_url}|View Incident>"
           end
 

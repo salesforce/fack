@@ -65,6 +65,7 @@ group :development, :test do
   gem 'webdrivers'
 
   gem 'rails-controller-testing'
+  gem 'simplecov', require: false
 end
 
 group :development do

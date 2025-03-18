@@ -65,7 +65,7 @@ class GenerateMessageResponseJob < ApplicationJob
       keywords = extract_keywords(message_history_text).join(',') if message_history.size > 2
 
       # The summarized keywords plus the latest message seems to give the best results.
-      embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords + ',' + message.content + ',' + message.hidden_text
+      embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords.to_s + ',' + message.content.to_s + ',' + message.hidden_text.to_s
 
       # Get embedding from GPT
       embedding = get_embedding(embedding_text)
@@ -201,7 +201,7 @@ class GenerateMessageResponseJob < ApplicationJob
       prompt += <<~END_PROMPT
         <{{DATA_TAG}}>
           #{message.content}
-          
+        #{'  '}
           #{message.hidden_text}
         </{{DATA_TAG}}>
       END_PROMPT

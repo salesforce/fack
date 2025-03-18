@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_14_213949) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_18_191030) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -172,6 +172,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_14_213949) do
     t.text "prompt"
     t.integer "status", default: 0
     t.string "slack_ts"
+    t.string "hidden_text"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["created_at"], name: "index_messages_on_created_at"
     t.index ["user_id"], name: "index_messages_on_user_id"

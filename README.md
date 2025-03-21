@@ -61,6 +61,7 @@ The [OpenAI doc](https://cookbook.openai.com/examples/question_answering_using_e
 - Rails 7
 - Ruby 3+
 - Postgres with pg_vector support
+- Redis (optional for chat streaming)
 
 ## Running Locally
 1. Clone the repo

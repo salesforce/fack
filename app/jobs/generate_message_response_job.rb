@@ -170,7 +170,7 @@ class GenerateMessageResponseJob < ApplicationJob
       prompt += "\n\n<DOCUMENTS>\n\n"
       if related_docs.each_with_index do |doc, index|
         # Make sure we don't exceed the max document tokens limit
-        max_doc_tokens = ENV['MAX_PROMPT_DOC_TOKENS'].to_i || 10_000
+        max_doc_tokens = ENV.fetch('MAX_DOC_TOKENS', '10_000').to_i
         next unless (token_count + doc.token_count.to_i) < max_doc_tokens
         next unless index < max_docs
 

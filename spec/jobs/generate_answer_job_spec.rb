@@ -17,7 +17,7 @@ RSpec.describe GenerateAnswerJob, type: :job do
     allow(ENV).to receive(:fetch).with('ROOT_URL', nil).and_return('http://example.com')
     allow(ENV).to receive(:[]).with('ALLOWED_ADDITIONAL_TOPICS').and_return('philosophy')
     allow(ENV).to receive(:[]).with('MAX_DOCS').and_return('7')
-    allow(ENV).to receive(:[]).with('MAX_PROMPT_DOC_TOKENS').and_return('1000')
+    allow(ENV).to receive(:fetch).with('MAX_PROMPT_DOC_TOKENS', '10_000').and_return('1000')
     allow(ENV).to receive(:[]).with('MT_DEBUG').and_return(nil)
     # Stub GptConcern methods
     allow_any_instance_of(GenerateAnswerJob).to receive(:get_embedding).and_return(Array.new(1536, 0.1))
@@ -46,7 +46,7 @@ RSpec.describe GenerateAnswerJob, type: :job do
 
       it 'limits documents to MAX_DOCS and MAX_PROMPT_DOC_TOKENS' do
         allow(ENV).to receive(:[]).with('MAX_DOCS').and_return('1')
-        allow(ENV).to receive(:[]).with('MAX_PROMPT_DOC_TOKENS').and_return('20')
+        allow(ENV).to receive(:fetch).with('MAX_PROMPT_DOC_TOKENS', '10_000').and_return('20')
 
         perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
 

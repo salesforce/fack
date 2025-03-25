@@ -14,7 +14,7 @@ We are experiementing with other use cases like:
 Almost any RAG-based solution can be quickly implmented in fack.
 
 ## Why is it Called Fack?
-The term FAQ, or Frequently Asked Questions, is often pronounced [fack](https://english.stackexchange.com/questions/4165/what-is-the-commonly-accepted-pronunciation-of-faq).
+The term FAQ, or Frequently Asked Questions, is often pronounced [fack](https://english.stackexchange.com/questions/4165/what-is-the-commonly-accepted-pronunciation-of-faq). 
 
 ## Inspiration
 Fack is built on the principles outlined by OpenAI for question/answer applications in documents like:

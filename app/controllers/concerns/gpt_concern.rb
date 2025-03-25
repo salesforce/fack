@@ -87,7 +87,8 @@ module GptConcern
     request_body = {
       prompts: { wrappedListString: [input] },
       additionalConfig: {
-        applicationName: 'fack'
+        applicationName: 'fack',
+        model: ENV.fetch('EMBEDDING_MODEL','llmgateway__AzureOpenAITextEmbeddingAda_002')
       }
     }
 

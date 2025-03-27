@@ -1,6 +1,5 @@
 <div class="w-full">
   <% content_for :title, @assistant.name %>
-  <!-- Breadcrumbs -->
   <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], ['Assistants', assistants_path], [@assistant.name, assistant_path(@assistant)]] } %>
   <div class="flex justify-between items-center">
     <div>
@@ -13,7 +12,7 @@
     </div>
     <div class="flex justify-between items-center">
       <% if policy(@assistant).edit? %>
-        <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_assistant_path(@assistant)} } %>
+        <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_assistant_path(@assistant), "Clone" => clone_assistant_path(@assistant) }} %>
       <% end %>
       <button id="details-button" class="border text-stone border-stone-500 hover:bg-stone-200 py-3 px-5 bg-slate-100 text-gray-800 font-medium border rounded-lg ml-2">Details</button>
     </div>
@@ -31,14 +30,11 @@
     <%= link_to 'View all chats for ' + @assistant.name, assistant_chats_path(@assistant), class:"border border-stone-300 p-3 text-sm text-sky-500 rounded-md hover:bg-stone-100" %>
   </div>
 </div>
-<!-- Modal -->
 <div id="details-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
   <div class="bg-white rounded-lg shadow-lg w-2/3 max-h-[90vh] flex flex-col relative">
-    <!-- Fixed Close Button at the Top -->
     <div class="absolute top-0 right-0 p-4">
       <button id="close-modal" class="text-gray-700 text-3xl">&times;</button>
     </div>
-    <!-- Scrollable Content -->
     <div class="px-6 py-10 overflow-y-auto max-h-[85vh]">
       <%= render @assistant %>
     </div>

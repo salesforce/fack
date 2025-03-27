@@ -15,4 +15,15 @@ class AssistantsController < BaseAssistantsController
 
   # GET /assistants/1/edit
   def edit; end
+
+  # GET /assistants/1/clone
+  def clone
+    original_assistant = Assistant.find(params[:id])
+    @assistant = original_assistant.dup # Duplicate the original assistant
+
+    @assistant.name = "Clone of #{original_assistant.name}"
+
+    # Render the 'new' view, which will now be used for cloning/editing
+    render :new
+  end
 end

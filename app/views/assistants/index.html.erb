@@ -10,13 +10,27 @@
       <% end %>
     </div>
   </div>
+  <div class="flex justify-start items-center mt-3">
+    <div class="flex items-center">
+      <% filter = params[:filter] %>
+      <%= link_to 'All', assistants_path(contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2  hover:border-sky-500 #{'border-sky-500' if filter.blank?}" %>
+      <%= link_to 'My', assistants_path(filter: 'my', contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2 hover:border-sky-500 #{'border-sky-500' if filter == 'my'}" %>
+    </div>
+  </div>
   <div class="flex-grow flex items-center mt-3">
     <% action_path = assistants_path %>
     <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
       <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search assistants..." class="flex-grow rounded-lg p-2 border border-stone-300">
-      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-gray-300 border hover:bg-sky-100">Search</button>
+      <% if params[:contains].present? %>
+        <%= link_to "Clear", assistants_path(filter: params[:filter]), class: "ml-2 rounded-lg p-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-100" %>
+      <% end %>
+      <% if params[:filter].present? %>
+        <%= hidden_field_tag :filter, params[:filter] %>
+      <% end %>
     <% end %>
   </div>
+  <%= paginate @assistants, params: { contains: params[:contains], filter: params[:filter] } %>
   <ul id="assistants" class="mt-5 border border-gray-200 rounded-lg divide-y divide-gray-200 bg-white">
     <% @assistants.order(name: :asc).each do |assistant| %>
       <% cache(assistant) do %>

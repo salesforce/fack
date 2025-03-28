@@ -11,15 +11,15 @@
       <% filter = params[:filter] %>
       <%= link_to 'All', libraries_path(contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2 #{'border-sky-500' if filter.blank?}" %>
       <%= link_to 'My', libraries_path(filter: 'my', contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2 #{'border-sky-500' if filter == 'my'}" %>
-    </div>
+   </div>
   </div>
   <div class="flex-grow flex items-center mt-3">
     <% action_path = libraries_path %>
     <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
       <input type="text" name="contains" id="contains" placeholder="Search libraries..." class="flex-grow rounded-lg p-2 border border-stone-300" value="<%= params[:contains] %>">
-      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+      <button type="submit" class="ml-2 rounded-lg p-2 border border-sky-500 text-sky-500 bg-white hover:bg-sky-100">Search</button>
       <% if params[:contains].present? %>
-        <%= link_to "Clear", libraries_path(filter: params[:filter]), class: "ml-2 rounded-lg p-2 bg-gray-200 text-gray-700" %>
+        <%= link_to "Clear", libraries_path(filter: params[:filter]), class: "ml-2 rounded-lg p-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-100" %>
       <% end %>
       <% if params[:filter].present? %>
         <%= hidden_field_tag :filter, params[:filter] %>

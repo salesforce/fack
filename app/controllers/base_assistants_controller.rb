@@ -3,7 +3,12 @@ class BaseAssistantsController < ApplicationController
 
   # GET /assistants or /assistants.json
   def index
-    @assistants = Assistant.includes(:user).order(status: :desc)
+    puts current_user.id
+    @assistants = if params[:filter] == 'my'
+                    Assistant.where(user_id: current_user.id).order(status: :desc).page(params[:page])
+                  else
+                    Assistant.all.order(status: :desc).page(params[:page])
+                  end
     @assistants = @assistants.search_by_text(params[:contains]) if params[:contains].present?
   end
 

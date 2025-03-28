@@ -6,14 +6,27 @@
       <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_library_path } } %>
     <% end %>
   </div>
+  <div class="flex justify-start items-center mt-3">
+    <div class="flex items-center">
+      <% filter = params[:filter] %>
+      <%= link_to 'All', libraries_path(contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2 #{'border-sky-500' if filter.blank?}" %>
+      <%= link_to 'My', libraries_path(filter: 'my', contains: params[:contains]), class: "p-3 mr-4 pb-1 border-b-2 #{'border-sky-500' if filter == 'my'}" %>
+    </div>
+  </div>
   <div class="flex-grow flex items-center mt-3">
     <% action_path = libraries_path %>
     <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
-      <input type="text" name="contains" id="contains" placeholder="Search libraries..." class="flex-grow rounded-lg p-2 border border-stone-300">
+      <input type="text" name="contains" id="contains" placeholder="Search libraries..." class="flex-grow rounded-lg p-2 border border-stone-300" value="<%= params[:contains] %>">
       <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+      <% if params[:contains].present? %>
+        <%= link_to "Clear", libraries_path(filter: params[:filter]), class: "ml-2 rounded-lg p-2 bg-gray-200 text-gray-700" %>
+      <% end %>
+      <% if params[:filter].present? %>
+        <%= hidden_field_tag :filter, params[:filter] %>
+      <% end %>
     <% end %>
   </div>
-  <%= paginate @libraries %>
+  <%= paginate @libraries, params: { contains: params[:contains], filter: params[:filter] } %>
   <ul class="border mt-2 rounded-xl">
     <% @libraries.each do |library| %>
       <% cache([library, library.documents_count]) do %>

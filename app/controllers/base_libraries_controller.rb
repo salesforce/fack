@@ -5,7 +5,12 @@ class BaseLibrariesController < ApplicationController
 
   # GET /libraries or /libraries.json
   def index
-    @libraries = Library.all.order(name: :asc).page(params[:page])
+    puts current_user.id
+    @libraries = if params[:filter] == 'my'
+                   Library.where(user_id: current_user.id).order(name: :asc).page(params[:page])
+                 else
+                   Library.all.order(name: :asc).page(params[:page])
+                 end
     @libraries = @libraries.search_by_name(params[:contains]) if params[:contains].present?
   end
 

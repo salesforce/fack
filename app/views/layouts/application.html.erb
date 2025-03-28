@@ -11,105 +11,123 @@
     <%= favicon_link_tag 'favicon.ico' %>
   </head>
   <body class="bg-slate-50">
-    <header class="p-4 bg-white shadow">
+    <header class="p-4 bg-stone-800 shadow">
       <div class="flex container mx-auto justify-between items-center">
         <div class="flex font-mono">
-          <a href="/questions/new" class="flex items-center text-2xl font-light text-stone-800 hover:text-sky-800">
+          <a href="/questions/new" class="flex items-center text-2xl font-light text-stone-100 hover:text-sky-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 text-sky-500 ">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
             </svg>
             Fack</a>
         </div>
         <% if current_user %>
-          <div class="relative inline-block text-left z-50">
-            <button class="text-black py-2 rounded-lg focus:outline-none <%= current_user_is_admin? ? "text-red-500" : "text-stone-500" %> " id="menu-button" aria-expanded="true" aria-haspopup="true">
+          <div class="flex items-center">
+            <button class="text-black py-2 rounded-lg focus:outline-none text-stone-500 mr-4" id="left-menu-button" aria-expanded="false" aria-haspopup="true">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
               </svg>
             </button>
-            <div class="hidden origin-top-right absolute right-0 mt-0 w-64 rounded-md shadow-lg bg-white border-2 border-sky-200" >
-              <div class="block px-4 py-2 text-black text-sm text-stone-500"> <%= current_user.email %><%= " (Admin)" if current_user_is_admin?%></div>
-              <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
-              </a>
-              <% if session[:debug] == "true" %>
-                <%= link_to "Disable Debug Mode", sessions_set_debug_path(debug: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
-              <% else %>
-                <%= link_to "Enable Debug Mode", sessions_set_debug_path(debug: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
-              <% end %>
-              <% if session[:beta] == "true" %>
-                <%= link_to "Disable Beta Mode", sessions_set_beta_path(beta: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
-              <% else %>
-                <%= link_to "Enable Beta Mode", sessions_set_beta_path(beta: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
-              <% end %>
-              <a href="/delayed_jobs" class="block px-4 py-2 text-black hover:bg-gray-100">Job Queue</a>
-              <% if current_user_is_admin? %>
-                <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens</a>
-                <a href="/webhooks" class="block px-4 py-2 text-black hover:bg-gray-100">Webhooks</a>
-                <a href="/admin/dashboard" class="block px-4 py-2 text-black hover:bg-gray-100">Admin</a>
-              <% end %>
-              <a href="/sessions/logout" class="block px-4 py-2 text-black hover:bg-gray-100">Logout</a>
+            <div class="relative inline-block text-left z-50">
+              <button class="text-black py-2 rounded-lg focus:outline-none <%= current_user_is_admin? ? "text-red-500" : "text-stone-500" %> " id="menu-button" aria-expanded="true" aria-haspopup="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+              <div class="hidden origin-top-right absolute right-0 mt-0 w-64 rounded-md shadow-lg bg-white border-2 border-sky-200" >
+                <div class="block px-4 py-2 text-black text-sm text-stone-500"> <%= current_user.email %><%= " (Admin)" if current_user_is_admin?%></div>
+                <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="menu-button">
+                </a>
+                <% if session[:debug] == "true" %>
+                  <%= link_to "Disable Debug Mode", sessions_set_debug_path(debug: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+                <% else %>
+                  <%= link_to "Enable Debug Mode", sessions_set_debug_path(debug: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+                <% end %>
+                <% if session[:beta] == "true" %>
+                  <%= link_to "Disable Beta Mode", sessions_set_beta_path(beta: false), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+                <% else %>
+                  <%= link_to "Enable Beta Mode", sessions_set_beta_path(beta: true), class: "block px-4 py-2 text-black hover:bg-gray-100" %>
+                <% end %>
+                <a href="/delayed_jobs" class="block px-4 py-2 text-black hover:bg-gray-100">Job Queue</a>
+                <% if current_user_is_admin? %>
+                  <a href="/api_tokens" class="block px-4 py-2 text-black hover:bg-gray-100">API Tokens</a>
+                  <a href="/webhooks" class="block px-4 py-2 text-black hover:bg-gray-100">Webhooks</a>
+                  <a href="/admin/dashboard" class="block px-4 py-2 text-black hover:bg-gray-100">Admin</a>
+                <% end %>
+                <a href="/sessions/logout" class="block px-4 py-2 text-black hover:bg-gray-100">Logout</a>
+              </div>
             </div>
           </div>
-        </div>
-        <script>
-          document.getElementById('menu-button').addEventListener('click', function() {
-          const menu = this.nextElementSibling;
-          menu.classList.toggle('hidden');
-          });
-        </script>
-      <% else %>
-      <% end %>
-    </header>
-    <div class="p-1 bg-slate-800">
-      <div class="container mx-auto flex justify-between items-center text-sky-300">
-        <% if current_user %>
-          <nav>
-            <ul class="flex space-x-4 text-md font-light">
-              <li>
-                <a href="/questions" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'questions' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-                  </svg>
-                  Questions
-                </a>
-              </li>
-              <li>
-                <a href="/libraries" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'libraries' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
-                  </svg>
-                  Libraries
-                </a>
-              </li>
-              <li>
-                <a href="/documents" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'documents' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                  Documents
-                </a>
-              </li>
-              <li>
-                <a href="/chats" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'chats' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-                  </svg>
-                  Chats
-                </a>
-              </li>
-              <li>
-                <a href="/assistants" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'assistants' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-                  </svg>
-                  Assistants
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <div id="left-menu" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
+            <div class="p-4">
+              <nav>
+                <ul class="space-y-2">
+                  <li>
+                    <a href="/questions" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'questions' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                      </svg>
+                      Questions
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/libraries" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'libraries' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+                      </svg>
+                      Libraries
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/documents" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'documents' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                      </svg>
+                      Documents
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/chats" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'chats' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+                      </svg>
+                      Chats
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/assistants" class="flex items-center px-3 py-2 rounded-md transition-colors duration-200 <%= controller_name == 'assistants' ? 'bg-sky-600 text-sky-50' : 'hover:bg-sky-800 hover:text-sky-100' %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                      </svg>
+                      Assistants
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+          <div id="left-menu-overlay" class="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-40 hidden"></div>
+          <script>
+            document.getElementById('menu-button').addEventListener('click', function() {
+            const menu = this.nextElementSibling;
+            menu.classList.toggle('hidden');
+            });
+            document.getElementById('left-menu-button').addEventListener('click', function() {
+              const leftMenu = document.getElementById('left-menu');
+              const overlay = document.getElementById('left-menu-overlay');
+              leftMenu.classList.toggle('-translate-x-full');
+              overlay.classList.toggle('hidden');
+            });
+            document.getElementById('left-menu-overlay').addEventListener('click', function() {
+              const leftMenu = document.getElementById('left-menu');
+              const overlay = document.getElementById('left-menu-overlay');
+              leftMenu.classList.add('-translate-x-full');
+              overlay.classList.add('hidden');
+            });
+          </script>
+        <% else %>
         <% end %>
       </div>
-    </div>
+    </header>
     <main class="p-4">
       <div id="flash_messages">
         <% flash.each do |type, message| %>

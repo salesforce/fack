@@ -3,7 +3,6 @@ class BaseAssistantsController < ApplicationController
 
   # GET /assistants or /assistants.json
   def index
-    puts current_user.id
     @assistants = if params[:filter] == 'my'
                     Assistant.where(user_id: current_user.id).order(status: :desc).page(params[:page])
                   else

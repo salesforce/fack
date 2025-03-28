@@ -21,7 +21,7 @@
     <% action_path = assistants_path %>
     <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
       <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search assistants..." class="flex-grow rounded-lg p-2 border border-stone-300">
-      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border hover:bg-sky-100">Search</button>
+      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-gray-300 border hover:bg-sky-100">Search</button>
       <% if params[:contains].present? %>
         <%= link_to "Clear", assistants_path(filter: params[:filter]), class: "ml-2 rounded-lg p-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-100" %>
       <% end %>

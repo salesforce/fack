@@ -1,5 +1,6 @@
 <% content_for :title, @library.name %>
 <div class="mx-auto">
+  <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], ['Libraries',libraries_path],[@library.name, library_path(@library)]] } %>
   <div class="flex justify-between items-center">
     <h1 class="text-3xl font-semibold text-stone-900"><%= @library.name %></h1>
     <div class="flex space-x-2">

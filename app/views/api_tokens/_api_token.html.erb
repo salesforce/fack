@@ -1,5 +1,11 @@
 <div id="<%= dom_id(api_token) %>">
   <h1 class="text-2xl font-light my-3"><%= api_token.name %></h1>
+  <% if policy(api_token).destroy? %>
+    <%= button_to "Delete", api_token_path(api_token), method: :delete, data: { confirm: 'Are you sure?' }, class: "rounded-lg py-1 px-3 bg-gray-200 hover:bg-gray-300 text-red-500 font-medium" %>
+  <% end %>
+  <% if policy(api_token).edit? %>
+    <%= link_to "Edit", edit_api_token_path(api_token), class: "rounded-lg ml-2 py-1 px-3 bg-gray-200 hover:bg-gray-300 font-medium" %>
+  <% end %>
   <%= render 'shared/labelled_field', label: "Created " do %>
     <%= api_token.created_at %>
   <% end %>

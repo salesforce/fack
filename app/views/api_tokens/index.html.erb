@@ -1,5 +1,4 @@
 <div class="w-full">
-
   <div class="flex justify-between items-center mb-4">
     <h1 class="font-bold text-3xl text-sky-800">API Tokens</h1>
     <% if policy(ApiToken.new).create? %>
@@ -7,7 +6,7 @@
     <% end %>
   </div>
   <ul id="api_tokens" class="min-w-full list-none p-0">
-    <li class="font-bold grid grid-cols-1 sm:grid-cols-5 text-xs text-stone-800 bg-stone-200 py-2 rounded-t-lg">
+    <li class="font-bold grid grid-cols-1 sm:grid-cols-4 text-xs text-stone-800 bg-stone-200 py-2 rounded-t-lg">
       <!-- Use grid-cols-1 for mobile and sm:grid-cols-5 for small screens and up -->
       <div class="p-2">
         NAME
@@ -21,15 +20,12 @@
       <div class="p-2">
         TOKEN
       </div>
-      <div class="p-2">
-        ACTIONS
-      </div>
     </li>
     <% @api_tokens.each_with_index do |api_token, index| %>
-      <li class="<%= 'border-t border-stone-300' unless index == 0 %> font-light grid grid-cols-1 sm:grid-cols-5 justify-between py-2 text-sm bg-white hover:bg-stone-100 <%= 'rounded-b-lg' if index == @api_tokens.length - 1 %>">
+      <li class="<%= 'border-t border-stone-300' unless index == 0 %> font-light grid grid-cols-1 sm:grid-cols-4 justify-between py-2 text-sm bg-white hover:bg-stone-100 <%= 'rounded-b-lg' if index == @api_tokens.length - 1 %>">
         <!-- Adjustments here similar to the header row -->
         <div class="p-2">
-          <%= api_token.name %>
+          <%= link_to api_token.name, api_token_path(api_token), class: "text-sky-500 font-light" %>
         </div>
         <div class="p-2">
           <span class="text-stone-500 text-sm"><%= api_token.user.email %></span>
@@ -44,14 +40,7 @@
         <div class="p-2 font-mono">
           ...<%= api_token.token.last(4) %>
         </div>
-        <div class="px-2 flex items-center justify-self-center sm:justify-self-auto">
-          <% if policy(api_token).destroy? %>
-            <%= button_to "Delete", api_token_path(api_token), method: :delete, data: { confirm: 'Are you sure?' }, class: "rounded-lg py-1 px-3 bg-gray-200 hover:bg-gray-300 text-red-500 font-medium" %>
-          <% end %>
-          <% if policy(api_token).edit? %>
-            <%= link_to "Edit", edit_api_token_path(api_token), class: "rounded-lg ml-2 py-1 px-3 bg-gray-200 hover:bg-gray-300 font-medium" %>
-          <% end %>
-        </div>
+
       </li>
     <% end %>
   </ul>

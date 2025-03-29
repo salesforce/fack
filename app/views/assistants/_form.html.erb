@@ -29,69 +29,58 @@
   <% end %>
   <%= render "shared/form_section", title: "Data Sources" do %>
     <div class="my-5">
-      <%= form.label :quip_url %>
+      <%= form.label "A quip document url to retrieve and put in context" %>
       <%= form.text_field :quip_url, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label "Confluence Spaces (comma separated)" %>
+      <%= form.label "Confluence Spaces Names (comma separated)" %>
+      <p id="" class="text-gray-500 text-xs">Keywords will be extracted from the user request and used to search confluence.</p>
       <%= form.text_field :confluence_spaces, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label "Libraries (comma separated)" %>
+      <%= form.label "Library Ids (comma separated)" %>
       <%= form.text_field :libraries, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label "Library Search Text" %>
+      <%= form.label "Text to filter the list of documents before embedding search" %>
       <%= form.text_field :library_search_text, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
       <%= form.label "Salesforce SOQL" %>
+      <p id="" class="text-gray-500 text-xs">A SOQL statement to run on the connected Salesforce Org.  Check with admin to make sure your object is accessible.</p>
       <%= form.text_area :soql, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
   <% end %>
   <%= render "shared/form_section", title: "Prompts and Settings" do %>
     <div class="my-5">
       <%= form.label :input %>
+      <p id="" class="text-gray-500 text-xs">Instructions to users on what type of questions this assistant can answer.</p>
       <%= form.text_area :input, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label :instructions %>
+      <%= form.label "Instructions to LLM on how to understand the documents and respond" %>
       <%= form.text_area :instructions, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label :output %>
+      <%= form.label :output, "How you want to format the output" %>
       <%= form.text_area :output, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
     <div class="my-5">
-      <%= form.label :context %>
+      <%= form.label :context, "Additional information which should be provided to LLM on every request from this assistant" %>
       <%= form.text_area :context, rows: 4, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
   <% end %>
   <%= render "shared/form_section", title: "Slack" do %>
     <div class="my-5">
-      <%= form.label "Slack Channel" %>
-      <%= form.text_field :slack_channel_name, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
-    <div class="my-5">
-      <%= form.label :slack_reply_only %>
-      <%= form.check_box :slack_reply_only, class: "block shadow rounded" %>
-    </div>
-    <div class="my-5">
-      <%= form.label :disable_nonbot_chat %>
-      <%= form.check_box :disable_nonbot_chat, class: "block shadow rounded" %>
+      <%= form.label "Slack Channel Id" %>
+      <p id="" class="text-gray-500 text-xs">All chats will be sent to this slack channel.  @mentions in the slack channel will come to this assistant.  Must be unique globally in fack.</p>
+      <%= form.text_field :slack_channel_name, hint: "Slack Channel id", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
   <% end %>
   <%= render "shared/form_section", title: "Document Creation (Optional)" do %>
     <div class="my-5">
-      <%= form.label :create_doc_on_approval %>
-      <%= form.check_box :create_doc_on_approval, class: "block shadow rounded" %>
-    </div>
-    <div class="my-5">
-      <%= form.label "Approval Keywords" %>
-      <%= form.text_field :approval_keywords, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
-    </div>
-    <div class="my-5">
       <%= form.label :library_id, 'Library' %>
+      <p id="" class="text-gray-500 text-xs">Documents created from "Remember This" will go to this library</p>
       <%= form.collection_select :library_id, Library.all.order(name: :asc), :id, :name, {include_blank: 'Select a Library'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
     </div>
   <% end %>

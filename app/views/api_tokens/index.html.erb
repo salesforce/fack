@@ -1,8 +1,9 @@
 <div class="w-full">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="font-bold text-3xl text-sky-800">API Tokens</h1>
+  <% content_for :title, "API Tokens" %>
+  <div class="flex justify-between items-center mb-2">
+    <%= render 'shared/page_header', title: 'API Tokens', subtitle: 'Connect other apps with the API' %>
     <% if policy(ApiToken.new).create? %>
-      <%= link_to "New", new_api_token_path, class: "rounded-lg p-2 bg-sky-600 text-white block font-light" %>
+      <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_api_token_path } } %>
     <% end %>
   </div>
   <ul id="api_tokens" class="min-w-full list-none p-0">
@@ -25,7 +26,7 @@
       <li class="<%= 'border-t border-stone-300' unless index == 0 %> font-light grid grid-cols-1 sm:grid-cols-4 justify-between py-2 text-sm bg-white hover:bg-stone-100 <%= 'rounded-b-lg' if index == @api_tokens.length - 1 %>">
         <!-- Adjustments here similar to the header row -->
         <div class="p-2">
-          <%= link_to api_token.name, api_token_path(api_token), class: "text-sky-500 font-light" %>
+          <%= link_to api_token.name, api_token_path(api_token), class: "text-sky-600 font-light" %>
         </div>
         <div class="p-2">
           <span class="text-stone-500 text-sm"><%= api_token.user.email %></span>
@@ -40,7 +41,6 @@
         <div class="p-2 font-mono">
           ...<%= api_token.token.last(4) %>
         </div>
-
       </li>
     <% end %>
   </ul>

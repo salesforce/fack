@@ -17,9 +17,6 @@ class Message < ApplicationRecord
     # Skip if there is already a thread linked or the assistant doesn't have a slack channel
     return if chat.assistant.slack_channel_name.blank?
 
-    # Only respond to @mentions in slack, but don't post chats intiated from elsewhere like webhooks, ui, etc.
-    return if chat.assistant.slack_reply_only
-
     # If the assistant is generating, then it isn't ready and we don't post to slack
     return unless ready?
 

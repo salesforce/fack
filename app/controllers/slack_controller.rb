@@ -222,7 +222,8 @@ class SlackController < ApplicationController
         user_id: assistant.user_id,
         assistant:,
         first_message: text,
-        slack_thread: thread_ts
+        slack_thread: thread_ts,
+        slack_channel_id: channel
       )
       chat.save!
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_18_191030) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_03_232253) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_191030) do
     t.bigint "webhook_id"
     t.string "webhook_external_id"
     t.string "slack_thread"
+    t.string "slack_channel_id"
     t.index ["assistant_id"], name: "index_chats_on_assistant_id"
     t.index ["created_at"], name: "index_chats_on_created_at"
     t.index ["slack_thread"], name: "index_chats_on_slack_thread"

@@ -121,7 +121,7 @@ class SlackController < ApplicationController
       return
     end
 
-    handle_message_event(payload['event']) if payload['event'] && payload['event']['type'] == 'app_mention'
+    handle_message_event(payload['event']) if payload['event'] && (payload['event']['type'] == 'app_mention' || payload['event']['type'] == 'member_joined_channel')
 
     head :ok
   end
@@ -178,8 +178,21 @@ class SlackController < ApplicationController
     render json: { error: 'Invalid signature' }, status: :unauthorized
   end
 
+  # Example member_joined_channel
+  # "event": {
+  #  "type": "member_joined_channel",
+  #  "user": "U08C1FK0BML",
+  #  "channel": "C08M923HVTP",
+  #  "channel_type": "C",
+  #  "team": "T04SR5XV56X",
+  #  "inviter": "U05LRAGN1PG",
+  #  "enterprise": "E04SQG1CF60",
+  #  "event_ts": "1744138889.000200"
+  # },
+
   def handle_message_event(event)
     user = event['user']
+    type = event['type']
     text = event['text']
     channel = event['channel']
     parent_user_id = event['parent_user_id']
@@ -190,44 +203,61 @@ class SlackController < ApplicationController
     slack_service = SlackService.new
     bot_user_id = slack_service.bot_id
 
-    SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
-
     # Check if channel is blank
     if channel.blank?
       Rails.logger.error 'Received event with blank channel'
       return
     end
 
-    # Ignore messages from the bot itself
-    return if user == bot_user_id || event['bot_id'] # Skip bot messages
-
-    # Step 1: Find the assistant based on the channel name
+    # Find the assistant based on the channel name
     assistant = Assistant.find_by(slack_channel_name: channel)
 
+    # If there is no matching assistant, we stop
     unless assistant
       Rails.logger.error "No assistant found for channel: #{channel}"
       return
     end
 
-    # Disable reply to non-bot created threads. Eventually we should enable @fack for other threads
-    return if parent_user_id != bot_user_id && assistant.disable_nonbot_chat
+    if type == 'member_joined_channel'
+      # Get channel topic
+      channel_info = slack_service.get_channel_info(channel)
+      topic = channel_info['topic']['value']
 
-    # Step 2: Find an existing chat by thread_ts, or create a new one
-    chat = Chat.find_by(slack_thread: thread_ts)
-
-    text = text&.gsub(/<@U[A-Z0-9]+>/, '')&.strip # Removes Slack mentions safely
-
-    if chat.nil?
       chat = Chat.new(
         user_id: assistant.user_id,
         assistant:,
-        first_message: text,
-        slack_thread: thread_ts,
+        first_message: topic,
         slack_channel_id: channel
       )
       chat.save!
-    end
 
-    chat.messages.create!(content: text, user_id: chat.user_id, from: 'user', slack_ts: thread_ts)
+      chat.messages.create!(content: 'The topic is: ' + topic, user_id: chat.user_id, from: 'user')
+    else
+      SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
+
+      # Ignore messages from the bot itself
+      return if user == bot_user_id || event['bot_id'] # Skip bot messages
+
+      # Disable reply to non-bot created threads. Eventually we should enable @fack for other threads
+      return if parent_user_id != bot_user_id && assistant.disable_nonbot_chat
+
+      # Step 2: Find an existing chat by thread_ts, or create a new one
+      chat = Chat.find_by(slack_thread: thread_ts)
+
+      text = text&.gsub(/<@U[A-Z0-9]+>/, '')&.strip # Removes Slack mentions safely
+
+      if chat.nil?
+        chat = Chat.new(
+          user_id: assistant.user_id,
+          assistant:,
+          first_message: text,
+          slack_thread: thread_ts,
+          slack_channel_id: channel
+        )
+        chat.save!
+      end
+
+      chat.messages.create!(content: text, user_id: chat.user_id, from: 'user', slack_ts: thread_ts)
+    end
   end
 end

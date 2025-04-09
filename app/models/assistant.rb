@@ -28,18 +28,25 @@ class Assistant < ApplicationRecord
   def slack_channel_name_starts_with_unique
     return if slack_channel_name_starts_with.blank?
 
-    conflict_exists = Assistant
-                      .where.not(id:) # Exclude self if updating
-                      .where(
-                        "slack_channel_name_starts_with LIKE ? OR ? LIKE slack_channel_name_starts_with || '%'",
-                        "#{slack_channel_name_starts_with}%",
-                        slack_channel_name_starts_with
-                      )
-                      .exists?
+    starts_with = slack_channel_name_starts_with.strip
+    return if starts_with.empty?
 
-    return unless conflict_exists
+    conflicting_record = Assistant
+                         .where.not(id:)
+                         .where.not(slack_channel_name_starts_with: ['', nil])
+                         .where(
+                           "LOWER(slack_channel_name_starts_with) LIKE LOWER(?) OR LOWER(?) LIKE LOWER(slack_channel_name_starts_with) || '%'",
+                           "#{starts_with}%",
+                           starts_with
+                         )
+                         .first # Use .first to get the conflicting record
 
-    errors.add(:slack_channel_name_starts_with, 'conflicts with existing entries')
+    return unless conflicting_record
+
+    error_message = 'conflicts with existing entry: '
+    error_message += "#{conflicting_record.name} (#{conflicting_record.id}) "
+
+    errors.add(:slack_channel_name_starts_with, error_message)
   end
 
   def libraries_must_be_csv_with_numbers

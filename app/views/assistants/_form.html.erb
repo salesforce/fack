@@ -76,6 +76,11 @@
       <p id="" class="text-gray-500 text-xs">All chats will be sent to this slack channel.  @mentions in the slack channel will come to this assistant.  Must be unique globally in fack.</p>
       <%= form.text_field :slack_channel_name, hint: "Slack Channel id", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
+    <div class="my-5">
+      <%= form.label "Slack Channel Name Starts With" %>
+      <p id="" class="text-gray-500 text-xs">If an id is not provided, match a slack channel name which starts with this text.</p>
+      <%= form.text_field :slack_channel_name_starts_with, hint: "Slack Channel id", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
+    </div>
   <% end %>
   <%= render "shared/form_section", title: "Document Creation (Optional)" do %>
     <div class="my-5">

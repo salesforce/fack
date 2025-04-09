@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_03_232253) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_08_222212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -53,8 +53,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_03_232253) do
     t.text "soql"
     t.boolean "slack_reply_only"
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, (((((COALESCE(name, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || COALESCE(instructions, ''::text)))", stored: true
+    t.string "slack_channel_name_starts_with"
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["search_vector"], name: "index_assistants_on_search_vector", using: :gin
+    t.index ["slack_channel_name_starts_with"], name: "index_assistants_on_slack_channel_name_starts_with"
     t.index ["status"], name: "index_assistants_on_status"
     t.index ["user_id"], name: "index_assistants_on_user_id"
   end

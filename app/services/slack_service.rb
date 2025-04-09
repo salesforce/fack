@@ -34,6 +34,20 @@ class SlackService
     Rails.logger.error("[Slack Error] Failed to add reaction: #{e.message}")
   end
 
+  # Fetch the channel details
+  def get_channel_info(channel_id)
+    response = @client.conversations_info(channel: channel_id)
+    if response['ok']
+      response['channel']
+    else
+      Rails.logger.error("[Slack Error] Failed to fetch channel info for #{channel_id}: #{response['error']}")
+      nil
+    end
+  rescue Slack::Web::Api::Errors::SlackError => e
+    Rails.logger.error("[Slack Error] Failed to fetch channel info for #{channel_id}: #{e.message}")
+    nil
+  end
+
   def delete_message(channel, timestamp)
     response = @client.chat_delete(
       channel:,

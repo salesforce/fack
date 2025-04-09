@@ -223,9 +223,9 @@ class SlackController < ApplicationController
 
       if assistant
         # Found an assistant whose prefix matches
-        puts "Found matching assistant: #{assistant.inspect}"
+        Rails.logger.info "Found matching assistant: #{assistant.inspect}"
       else
-        puts 'No matching assistant found.'
+        Rails.logger.info 'No matching assistant found.'
       end
     end
 
@@ -236,7 +236,7 @@ class SlackController < ApplicationController
     end
 
     if type == 'member_joined_channel'
-      puts 'joined'
+      Rails.logger.info('Joined Channel: ' + channel)
       @channel_info ||= slack_service.get_channel_info(channel)
 
       topic = @channel_info['topic']['value']
@@ -251,8 +251,6 @@ class SlackController < ApplicationController
 
       chat.messages.create!(content: 'The topic is: ' + topic, user_id: chat.user_id, from: 'user')
     else
-      SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
-
       # Ignore messages from the bot itself
       return if user == bot_user_id || event['bot_id'] # Skip bot messages
 
@@ -276,6 +274,8 @@ class SlackController < ApplicationController
       end
 
       chat.messages.create!(content: text, user_id: chat.user_id, from: 'user', slack_ts: thread_ts)
+
+      SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
     end
   end
 end

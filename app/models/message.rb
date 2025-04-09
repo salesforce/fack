@@ -14,8 +14,8 @@ class Message < ApplicationRecord
   private
 
   def create_slack_post
-    channel_id = chat.assistant.slack_channel_name || chat.slack_channel_id
-    puts channel_id
+    channel_id = chat.assistant.slack_channel_name.presence || chat.slack_channel_id
+
     # Skip if there is already a thread linked or the assistant doesn't have a slack channel
     return if channel_id.blank?
 
@@ -25,7 +25,6 @@ class Message < ApplicationRecord
     # skip if this message already has a slack ts
     return if slack_ts
 
-    puts 'ok'
     slack_service = SlackService.new
 
     # if the chat.slack_thread is missing, we create a new thread

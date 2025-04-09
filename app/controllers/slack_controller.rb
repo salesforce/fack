@@ -212,6 +212,23 @@ class SlackController < ApplicationController
     # Find the assistant based on the channel name
     assistant = Assistant.find_by(slack_channel_name: channel)
 
+    # if we don't find the assistant by id, we fall back to the name starts with
+    unless assistant
+      @channel_info = slack_service.get_channel_info(channel)
+      channel_name = @channel_info['name']
+
+      assistant = Assistant.where.not(slack_channel_name_starts_with: nil).find do |a|
+        channel_name.start_with?(a.slack_channel_name_starts_with)
+      end
+
+      if assistant
+        # Found an assistant whose prefix matches
+        Rails.logger.info "Found matching assistant: #{assistant.inspect}"
+      else
+        Rails.logger.info 'No matching assistant found.'
+      end
+    end
+
     # If there is no matching assistant, we stop
     unless assistant
       Rails.logger.error "No assistant found for channel: #{channel}"
@@ -219,9 +236,10 @@ class SlackController < ApplicationController
     end
 
     if type == 'member_joined_channel'
-      # Get channel topic
-      channel_info = slack_service.get_channel_info(channel)
-      topic = channel_info['topic']['value']
+      Rails.logger.info('Joined Channel: ' + channel)
+      @channel_info ||= slack_service.get_channel_info(channel)
+
+      topic = @channel_info['topic']['value']
 
       chat = Chat.new(
         user_id: assistant.user_id,
@@ -233,8 +251,6 @@ class SlackController < ApplicationController
 
       chat.messages.create!(content: 'The topic is: ' + topic, user_id: chat.user_id, from: 'user')
     else
-      SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
-
       # Ignore messages from the bot itself
       return if user == bot_user_id || event['bot_id'] # Skip bot messages
 
@@ -258,6 +274,8 @@ class SlackController < ApplicationController
       end
 
       chat.messages.create!(content: text, user_id: chat.user_id, from: 'user', slack_ts: thread_ts)
+
+      SlackService.new.add_reaction(channel:, timestamp: message_ts, emoji: 'writing_hand')
     end
   end
 end

@@ -7,6 +7,7 @@ class Assistant < ApplicationRecord
   enum status: { development: 0, ready: 1 }
   validates :name, presence: true
   validates :slack_channel_name, uniqueness: true, allow_blank: true
+  validate :slack_channel_name_starts_with_unique
 
   validate :libraries_must_be_csv_with_numbers
 
@@ -23,6 +24,23 @@ class Assistant < ApplicationRecord
   end
 
   private
+
+  def slack_channel_name_starts_with_unique
+    return if slack_channel_name_starts_with.blank?
+
+    conflict_exists = Assistant
+                      .where.not(id:) # Exclude self if updating
+                      .where(
+                        "slack_channel_name_starts_with LIKE ? OR ? LIKE slack_channel_name_starts_with || '%'",
+                        "#{slack_channel_name_starts_with}%",
+                        slack_channel_name_starts_with
+                      )
+                      .exists?
+
+    return unless conflict_exists
+
+    errors.add(:slack_channel_name_starts_with, 'conflicts with existing entries')
+  end
 
   def libraries_must_be_csv_with_numbers
     return true if libraries.blank?

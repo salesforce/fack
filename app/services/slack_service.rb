@@ -168,8 +168,8 @@ class SlackService
       end
 
       slack_lines << case line
-                     when /^##\s+(.+)$/ # Section header
-                       "=*#{::Regexp.last_match(1).strip}*="
+                    when /^#+\s+(.+)$/ # Any number of hashes for header
+                      "=*#{::Regexp.last_match(1).strip}*="
                      when /^\d+\.\s\*\*(.+?)\*\*:(.*)$/ # Numbered item with bold title
                        "*•* *#{::Regexp.last_match(1).strip}*:#{::Regexp.last_match(2).strip}"
                      when /^\s+-\s(.+)$/ # Sub-bullet

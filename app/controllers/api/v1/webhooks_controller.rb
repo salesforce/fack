@@ -83,8 +83,13 @@ module Api
 
           if alerts.any?
             first_alert = alerts.first
-            if first_alert['body'] && first_alert['body']['details']
-              incident_details = first_alert['body']['details']
+            first_alert_body = first_alert.fetch('body', {})
+            # append alert details to incident_details if available
+            # prefer common event formatted details to unformatted details
+            if first_alert_body['cef_details'] && first_alert_body['cef_details']['details'] && !first_alert_body['cef_details']['details'].empty?
+              incident_details = first_alert_body['cef_details']['details']
+            elsif first_alert_body['details'] && !first_alert_body['details'].empty?
+              incident_details = first_alert_body['details']
             else
               Rails.logger.info 'No custom details available'
             end

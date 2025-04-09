@@ -180,6 +180,46 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
       }.to_json
     end
 
+    let(:alert_response_with_cef_details) do
+      double(
+        code: '200',
+        body: {
+          alerts: [
+            { alert_key: '78965264$$78965262$$537703825',
+              body: {
+                cef_details: {
+                  details: {
+                    'Cooldown till': '2025-04-08T20:04Z',
+                    'Customer Text': 'an alert is triggered',
+                    'Triggered on Metric': 'some alerting metric',
+                    'Triggering Event Value': '240.0'
+                  }
+                }
+              } }
+          ]
+        }.to_json
+      )
+    end
+
+    let(:alert_response_with_unformatted_details) do
+      double(
+        code: '200',
+        body: {
+          alerts: [
+            { alert_key: '78965264$$78965262$$537703825',
+              body: {
+                details: {
+                  'Cooldown till': '2025-04-08T20:04Z',
+                  'Customer Text': 'an alert is triggered',
+                  'Triggered on Metric': 'some alerting metric',
+                  'Triggering Event Value': '240.0'
+                }
+              } }
+          ]
+        }.to_json
+      )
+    end
+
     before do
       allow(ENV).to receive(:fetch).with('WEBHOOK_TAGLINE', '').and_return(tagline)
       allow(ENV).to receive(:fetch).with('PAGERDUTY_API_TOKEN').and_return('XXX')
@@ -282,5 +322,31 @@ RSpec.describe Api::V1::WebhooksController, type: :controller do
         expect(response).to have_http_status(:no_content)
       end
     end
+
+    context 'when a PagerDuty API call is made to fetch the alert details' do
+      it 'reads the cef details and passes to the chat' do
+        allow_any_instance_of(Net::HTTP).to receive(:request).and_return(alert_response_with_cef_details)
+
+        post :receive, params: { id: webhook.id }, body: payload_ack, as: :json
+
+        chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
+        message_hidden_text = chat.messages.last.hidden_text
+        alert_details = JSON.parse(alert_response_with_cef_details.body)['alerts'][0]['body']['cef_details']['details']
+        expect(message_hidden_text).to eq("#{alert_details}")
+      end
+
+      it 'reads the unformatted details when no cef details are available' do
+        allow_any_instance_of(Net::HTTP).to receive(:request).and_return(alert_response_with_unformatted_details)
+
+        post :receive, params: { id: webhook.id }, body: payload_ack, as: :json
+
+        chat = Chat.find_by(webhook_external_id: 'Q1VVXNR9VO48ZJ')
+        message_hidden_text = chat.messages.last.hidden_text
+        alert_details = JSON.parse(alert_response_with_unformatted_details.body)['alerts'][0]['body']['details']
+        expect(message_hidden_text).to eq("#{alert_details}")
+      end
+    end
+
+
   end
 end

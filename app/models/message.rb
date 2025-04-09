@@ -14,8 +14,10 @@ class Message < ApplicationRecord
   private
 
   def create_slack_post
+    channel_id = chat.assistant.slack_channel_name || chat.slack_channel_id
+    puts channel_id
     # Skip if there is already a thread linked or the assistant doesn't have a slack channel
-    return if chat.assistant.slack_channel_name.blank?
+    return if channel_id.blank?
 
     # If the assistant is generating, then it isn't ready and we don't post to slack
     return unless ready?
@@ -23,10 +25,11 @@ class Message < ApplicationRecord
     # skip if this message already has a slack ts
     return if slack_ts
 
+    puts 'ok'
     slack_service = SlackService.new
 
     # if the chat.slack_thread is missing, we create a new thread
-    self.slack_ts = slack_service.post_message(chat.assistant.slack_channel_name, content, chat.slack_thread, assistant?)
+    self.slack_ts = slack_service.post_message(channel_id, content, chat.slack_thread, assistant?)
 
     # if the chat didn't have a thread, save it.
     if chat.slack_thread.nil?

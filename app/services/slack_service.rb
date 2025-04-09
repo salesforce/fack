@@ -91,12 +91,14 @@ class SlackService
 
       next if chunk.empty?
 
+      # convert chunk to slack markdown
+
       payload[:blocks] = [
         {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: chunk
+            text: convert_to_slack_markdown(chunk)
           }
         }
       ]
@@ -152,5 +154,43 @@ class SlackService
     end
 
     thread_ts
+  end
+
+  def convert_to_slack_markdown(text)
+    slack_lines = []
+
+    text.each_line do |line|
+      line = line.chomp
+
+      # Convert [text](link) to Slack's <link|text> format
+      line = line.gsub(/\[([^\]]+)\]\(([^)]+)\)/) do
+        "<#{::Regexp.last_match(2)}|#{::Regexp.last_match(1)}>"
+      end
+
+      slack_lines << case line
+                     when /^##\s+(.+)$/ # Section header
+                       "=*#{::Regexp.last_match(1).strip}*="
+                     when /^\d+\.\s\*\*(.+?)\*\*:(.*)$/ # Numbered item with bold title
+                       "*•* *#{::Regexp.last_match(1).strip}*:#{::Regexp.last_match(2).strip}"
+                     when /^\s+-\s(.+)$/ # Sub-bullet
+                       "     • #{::Regexp.last_match(1).strip}"
+                     when /^\d+\.\s\[(.+?)\]\((.+?)\)/ # Numbered list of links (will now be processed by gsub)
+                       "*•* #{::Regexp.last_match(0)}" # Keep the line as is, gsub handles the link
+                     when /^\s+-\s\*\*(.+?)\*\*:(.*)$/ # Indented key-value with bold key
+                       "     *#{::Regexp.last_match(1).strip}*: #{::Regexp.last_match(2).strip}"
+                     when /^\s+-\s(.+?):\s(.+)$/ # Indented key-value
+                       "     *#{::Regexp.last_match(1).strip}*: #{::Regexp.last_match(2).strip}"
+                     when /^\*\*(.+?)\*\*$/ # Standalone bolded item
+                       "*#{::Regexp.last_match(1).strip}*"
+                     when /^-+\s*(.+)$/ # Generic dash list item
+                       "*•* #{::Regexp.last_match(1).strip}"
+                     when /^\d+\.\s(.+)$/ # Numbered item
+                       "*•* #{::Regexp.last_match(1).strip}"
+                     else
+                       line
+                     end
+    end
+
+    slack_lines.join("\n")
   end
 end

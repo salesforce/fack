@@ -217,8 +217,10 @@ class SlackController < ApplicationController
       @channel_info = slack_service.get_channel_info(channel)
       channel_name = @channel_info['name']
 
-      assistant = Assistant.where.not(slack_channel_name_starts_with: nil).find do |a|
-        channel_name.start_with?(a.slack_channel_name_starts_with)
+      assistant = Assistant.where.not(slack_channel_name_starts_with: [nil, '']).find do |a|
+        a.slack_channel_name_starts_with.present? &&
+          channel_name.present? &&
+          channel_name.start_with?(a.slack_channel_name_starts_with)
       end
 
       if assistant
@@ -241,15 +243,17 @@ class SlackController < ApplicationController
 
       topic = @channel_info['topic']['value']
 
+      message_text = 'Topic: ' + topic
+
       chat = Chat.new(
         user_id: assistant.user_id,
         assistant:,
-        first_message: topic,
+        first_message: message_text,
         slack_channel_id: channel
       )
       chat.save!
 
-      chat.messages.create!(content: 'The topic is: ' + topic, user_id: chat.user_id, from: 'user')
+      chat.messages.create!(content: message_text, user_id: chat.user_id, from: 'user')
     else
       # Ignore messages from the bot itself
       return if user == bot_user_id || event['bot_id'] # Skip bot messages
@@ -261,6 +265,11 @@ class SlackController < ApplicationController
       chat = Chat.find_by(slack_thread: thread_ts)
 
       text = text&.gsub(/<@U[A-Z0-9]+>/, '')&.strip # Removes Slack mentions safely
+
+      if text.blank?
+        Rails.logger.error('Text cannot be blank.')
+        return
+      end
 
       if chat.nil?
         chat = Chat.new(

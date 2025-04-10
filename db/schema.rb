@@ -73,6 +73,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_222212) do
     t.string "slack_channel_id"
     t.index ["assistant_id"], name: "index_chats_on_assistant_id"
     t.index ["created_at"], name: "index_chats_on_created_at"
+    t.index ["slack_channel_id"], name: "index_chats_on_slack_channel_id"
     t.index ["slack_thread"], name: "index_chats_on_slack_thread"
     t.index ["user_id"], name: "index_chats_on_user_id"
     t.index ["webhook_external_id"], name: "index_chats_on_webhook_external_id", unique: true

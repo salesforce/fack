@@ -238,6 +238,14 @@ class SlackController < ApplicationController
     end
 
     if type == 'member_joined_channel'
+      # Check if there are any existing chats with this channel ID
+      existing_chat = Chat.find_by(slack_channel_id: channel)
+      # Only create a new chat if there is no existing chat to prevent duplicates
+      if existing_chat
+        Rails.logger.info("Skipping join event - chat already exists for channel: #{channel}")
+        return
+      end
+
       Rails.logger.info('Joined Channel: ' + channel)
       @channel_info ||= slack_service.get_channel_info(channel)
 

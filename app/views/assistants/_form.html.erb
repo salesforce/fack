@@ -81,6 +81,11 @@
       <p id="" class="text-gray-500 text-xs">If an id is not provided, match a slack channel name which starts with this text.</p>
       <%= form.text_field :slack_channel_name_starts_with, hint: "Slack Channel id", class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
+    <div class="my-5">
+      <%= form.label "Enable Channel Join Message" %>
+      <p id="" class="text-gray-500 text-xs">Post an initial message when the bot is added to the channel.</p>
+      <%= form.check_box :enable_channel_join_message, class: "block shadow rounded-md border border-gray-400 outline-none mt-2" %>
+    </div>
   <% end %>
   <%= render "shared/form_section", title: "Document Creation (Optional)" do %>
     <div class="my-5">

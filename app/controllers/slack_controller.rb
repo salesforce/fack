@@ -237,7 +237,7 @@ class SlackController < ApplicationController
       return
     end
 
-    if type == 'member_joined_channel'
+    if type == 'member_joined_channel' && assistant.enable_channel_join_message
       # Check if there are any existing chats with this channel ID
       existing_chat = Chat.find_by(slack_channel_id: channel)
       # Only create a new chat if there is no existing chat to prevent duplicates

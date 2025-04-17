@@ -12,6 +12,22 @@ RSpec.describe GptConcern, type: :concern do
   let(:instance) { test_class.new }
   let(:sample_input) { 'Test input string' }
   let(:sample_prompt) { 'Test prompt' }
+  let(:encoded_client_id) { 'encoded_client_id' }
+  let(:encoded_client_secret) { 'encoded_client_secret' }
+  let(:encoded_username) { 'encoded_username' }
+  let(:encoded_password) { 'encoded_password' }
+  let(:org_url) { 'https://salesforce_org' }
+  let(:success_response) { { 'access_token' => 'test_token', 'instance_url' => 'https://salesforce_org' } }
+
+  before do
+    allow(ENV).to receive(:[]).with('EGPT_GEN_MODEL').and_return('')
+    allow(ENV).to receive(:[]).with('SALESFORCE_CONNECT_CLIENT_ID').and_return(encoded_client_id)
+    allow(ENV).to receive(:[]).with('SALESFORCE_CONNECT_CLIENT_SECRET').and_return(encoded_client_secret)
+    allow(ENV).to receive(:fetch).with('EMBEDDING_MODEL', 'llmgateway__AzureOpenAITextEmbeddingAda_002').and_return('')
+    allow(ENV).to receive(:fetch).with('SALESFORCE_CONNECT_USERNAME', nil).and_return(encoded_username)
+    allow(ENV).to receive(:fetch).with('SALESFORCE_CONNECT_PASSWORD', nil).and_return(encoded_password)
+    allow(ENV).to receive(:fetch).with('SALESFORCE_CONNECT_ORG_URL', nil).and_return(org_url)
+  end
 
   describe '#replace_tag_with_random' do
     it 'replaces specified tag with a random hex string' do
@@ -107,6 +123,68 @@ RSpec.describe GptConcern, type: :concern do
 
       expect(Net::HTTP).to receive(:new).and_return(http_double)
       expect(instance.call_salesforce_connect_gpt_embedding(sample_input)).to eq('test_embedding')
+    end
+  end
+
+  describe '#get_salesforce_connect_oauth_token' do
+    context 'when using credential flow' do
+      before do
+        allow(ENV).to receive(:fetch).with('USE_CREDENTIAL_FLOW_AUTHENTICATION', '').and_return('true')
+      end
+
+      it 'sends the request with client credentials' do
+        mock_http = instance_double(Net::HTTP)
+        mock_response = instance_double(Net::HTTPSuccess)
+
+        allow(Net::HTTP).to receive(:new).and_return(mock_http)
+        allow(mock_http).to receive(:use_ssl=)
+        allow(mock_http).to receive(:request).and_return(mock_response)
+        allow(mock_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+        allow(mock_response).to receive(:body).and_return(success_response.to_json)
+
+        result = instance.send(:get_salesforce_connect_oauth_token)
+        expect(result).to eq(success_response)
+        expect(mock_http).to have_received(:request) do |request|
+          expect(request).to be_a(Net::HTTP::Post)
+          expect(request.path).to eq('/services/oauth2/token')
+          body = URI.decode_www_form(request.body).to_h
+          expect(body['grant_type']).to eq('client_credentials')
+          expect(body['client_id']).to eq(encoded_client_id)
+          expect(body['client_secret']).to eq(encoded_client_secret)
+          expect(body).not_to have_key('username')
+          expect(body).not_to have_key('password')
+        end
+      end
+    end
+
+    context 'when not using credential flow' do
+      before do
+        allow(ENV).to receive(:fetch).with('USE_CREDENTIAL_FLOW_AUTHENTICATION', '').and_return('false')
+      end
+
+      it 'sends the request with password grant' do
+        mock_http = instance_double(Net::HTTP)
+        mock_response = instance_double(Net::HTTPSuccess)
+
+        allow(Net::HTTP).to receive(:new).and_return(mock_http)
+        allow(mock_http).to receive(:use_ssl=)
+        allow(mock_http).to receive(:request).and_return(mock_response)
+        allow(mock_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+        allow(mock_response).to receive(:body).and_return(success_response.to_json)
+
+        result = instance.send(:get_salesforce_connect_oauth_token)
+        expect(result).to eq(success_response)
+        expect(mock_http).to have_received(:request) do |request|
+          expect(request).to be_a(Net::HTTP::Post)
+          expect(request.path).to eq('/services/oauth2/token')
+          body = URI.decode_www_form(request.body).to_h
+          expect(body['grant_type']).to eq('password')
+          expect(body['client_id']).to eq(encoded_client_id)
+          expect(body['client_secret']).to eq(encoded_client_secret)
+          expect(body['username']).to eq(encoded_username)
+          expect(body['password']).to eq(encoded_password)
+        end
+      end
     end
   end
 end

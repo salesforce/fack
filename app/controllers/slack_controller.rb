@@ -61,7 +61,7 @@ class SlackController < ApplicationController
 
         # Initialize Slack service for posting messages
         slack_service = SlackService.new
-        channel = chat.assistant.slack_channel_name.presence || chat.slack_channel_id
+        channel = chat.slack_channel_id.presence || chat.assistant.slack_channel_name.presence
         unless channel
           Rails.logger.error("[Slack Interactivity] No channel found for chat. First 10 chars of content: '#{chat.first_message&.truncate(10)}'")
           return head :unprocessable_entity

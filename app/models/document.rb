@@ -28,7 +28,7 @@ class Document < ApplicationRecord
   validates :length, presence: true
 
   validates :document, presence: true,
-                       uniqueness: { scope: :check_hash, message: 'Document with same content already exists.' },
+                       uniqueness: { scope: :check_hash, message: ->(object, _data) { "Document with same content already exists. '#{object.document[0..9]}...'" } },
                        unless: -> { source_url.present? }
 
   before_validation :calculate_length, :calculate_tokens, :calculate_hash

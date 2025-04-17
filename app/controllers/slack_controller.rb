@@ -2,13 +2,16 @@ require 'json'
 require 'openssl'
 
 class SlackController < ApplicationController
-  skip_before_action :verify_authenticity_token # Slack requests don’t include CSRF tokens
+  skip_before_action :verify_authenticity_token # Slack requests don't include CSRF tokens
   skip_before_action :require_login
 
   before_action :verify_slack_signature
 
   SAVE_DOCUMENT_ACTION_ID = 'save_document_action'
+  # Handles Slack interactive components (buttons, menus, etc.)
+  # This endpoint processes actions triggered by users in Slack messages
   def interactivity
+    # Read the raw request body which contains the Slack payload
     request_body = begin
       request.body.read
     rescue IOError => e
@@ -17,9 +20,11 @@ class SlackController < ApplicationController
     end
 
     begin
+      # Extract action details (button clicks, menu selections) and message context
       action = extract_action_details(request_body)
       message = extract_message(request_body)
 
+      # Get thread and message timestamps for context
       thread_ts = message['thread_ts']
       message_ts = message['ts']
       unless thread_ts
@@ -27,21 +32,26 @@ class SlackController < ApplicationController
         return head :unprocessable_entity
       end
 
+      # Handle the "Save Document" action
       if action['action_id'] == SAVE_DOCUMENT_ACTION_ID
+        # Find the chat associated with this Slack thread
         chat = Chat.find_by_slack_thread(thread_ts)
         unless chat
           Rails.logger.error("[Slack Interactivity] Chat not found for thread_ts: #{thread_ts}")
           return head :not_found
         end
 
-        doc_text = chat.messages.where(from: 'assistant').last&.content
+        # Find the most recent assistant message before the current message timestamp
+        doc_text = chat.messages.where(from: 'assistant').where('EXTRACT(EPOCH FROM created_at) < ?', message_ts.split('.')[0]).order(created_at: :desc).first&.content
         unless doc_text
           Rails.logger.error("[Slack Interactivity] No assistant message found for thread_ts: #{thread_ts}")
           return head :unprocessable_entity
         end
 
-        title = chat.first_message&.truncate(100) || "Untitled Document (#{thread_ts})"
+        # Create a title from the document text or use a default
+        title = doc_text&.truncate(100) || "Untitled Document (#{thread_ts})"
 
+        # Create a new document with the extracted content
         new_doc = Document.new(
           document: doc_text,
           title:,
@@ -49,13 +59,19 @@ class SlackController < ApplicationController
           library_id: chat.assistant.library_id
         )
 
+        # Initialize Slack service for posting messages
         slack_service = SlackService.new
-        channel = chat.assistant.slack_channel_name
+        channel = chat.assistant.slack_channel_name.presence || chat.slack_channel_id
+        unless channel
+          Rails.logger.error("[Slack Interactivity] No channel found for chat. First 10 chars of content: '#{chat.first_message&.truncate(10)}'")
+          return head :unprocessable_entity
+        end
 
         if new_doc.save
+          # Generate the document URL for the confirmation message
           document_url = "#{ENV.fetch('ROOT_URL', 'http://localhost')}/#{document_path(new_doc)}"
 
-          # Post confirmation message
+          # Post a confirmation message in the Slack thread
           confirmation_ts = nil
           begin
             response = slack_service.post_message(
@@ -68,12 +84,12 @@ class SlackController < ApplicationController
             Rails.logger.error("[Slack Interactivity] Failed to post confirmation: #{e.message}")
           end
 
-          # Delete the original message
+          # Delete the original message that triggered the save action
           begin
             slack_service.delete_message(channel, message_ts)
           rescue SlackService::Error => e
             Rails.logger.error("[Slack Interactivity] Failed to delete original message: #{e.message}")
-            # Optionally post an error message if deletion fails
+            # If deletion fails and we haven't posted a confirmation, post an error message
             if confirmation_ts.nil?
               slack_service.post_message(
                 channel,
@@ -83,32 +99,41 @@ class SlackController < ApplicationController
             end
           end
         else
-          Rails.logger.error("[Slack Interactivity] Failed to save document: #{new_doc.errors.full_messages.join(', ')}")
+          # Handle document save failure
+          error_message = "❌ Failed to save document: #{new_doc.errors.full_messages.join(', ')}"
+          Rails.logger.error("[Slack Interactivity] #{error_message}")
+          Rails.logger.info(channel + ' ' + chat.slack_thread)
           slack_service.post_message(
             channel,
-            "❌ Failed to save document: #{new_doc.errors.full_messages.join(', ')}",
+            error_message,
             chat.slack_thread
           )
           return head :unprocessable_entity
         end
       else
+        # Log unhandled action types
         Rails.logger.warn("[Slack Interactivity] Unhandled action_id: #{action['action_id']}")
         return head :unprocessable_entity
       end
     rescue JSON::ParserError => e
+      # Handle JSON parsing errors
       Rails.logger.error("[Slack Interactivity] Failed to parse request body: #{e.message}\n#{e.backtrace.join("\n")}")
       return head :bad_request
     rescue NoMethodError => e
+      # Handle missing data structure errors
       Rails.logger.error("[Slack Interactivity] Unexpected data structure: #{e.message}\n#{e.backtrace.join("\n")}")
       return head :unprocessable_entity
     rescue ActiveRecord::RecordNotFound => e
+      # Handle missing record errors
       Rails.logger.error("[Slack Interactivity] Record not found: #{e.message}")
       return head :not_found
     rescue StandardError => e
+      # Handle any other unexpected errors
       Rails.logger.error("[Slack Interactivity] Unexpected error: #{e.message}\n#{e.backtrace.join("\n")}")
       return head :internal_server_error
     end
 
+    # Return success if everything completed without errors
     head :ok
   end
 

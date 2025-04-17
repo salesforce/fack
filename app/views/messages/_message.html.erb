@@ -10,6 +10,9 @@
           <span class="font-semibold"><%= message.from %></span>
         <% end %>
         | <%= message.created_at %>
+        <% if session[:debug] == "true" %>
+          | <%= message.slack_ts %>
+        <% end %>
       </p>
       <% if message.status === 'generating' %>
         <div class="flex justify-end text-2xl text-gray-400">

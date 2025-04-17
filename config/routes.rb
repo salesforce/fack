@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   end
   resources :assistants do
     resources :chats, only: %i[create new index]
+    resources :assistant_rest_api_actions
     get 'clone', on: :member
 
     # Adding the import route for all assistants

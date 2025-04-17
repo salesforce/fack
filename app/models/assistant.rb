@@ -2,6 +2,7 @@ class Assistant < ApplicationRecord
   include PgSearch::Model
 
   has_many :chats, dependent: :destroy
+  has_many :assistant_rest_api_actions, dependent: :destroy
   belongs_to :user
   belongs_to :library, optional: true
   enum status: { development: 0, ready: 1 }

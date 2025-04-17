@@ -29,6 +29,9 @@
   <div class="mt-4">
     <%= link_to 'View all chats for ' + @assistant.name, assistant_chats_path(@assistant), class:"border border-stone-300 p-3 text-sm text-sky-500 rounded-md hover:bg-stone-100" %>
   </div>
+  <div class="mt-4">
+    <%= link_to 'REST API Actions', assistant_assistant_rest_api_actions_path(@assistant), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
 </div>
 <div id="details-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
   <div class="bg-white rounded-lg shadow-lg w-2/3 max-h-[90vh] flex flex-col relative">

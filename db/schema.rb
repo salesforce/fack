@@ -28,6 +28,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_222212) do
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
+  create_table "assistant_rest_api_actions", force: :cascade do |t|
+    t.string "endpoint", null: false
+    t.text "authorization_header", null: false
+    t.bigint "assistant_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assistant_id"], name: "index_assistant_rest_api_actions_on_assistant_id"
+  end
+
   create_table "assistants", force: :cascade do |t|
     t.text "user_prompt"
     t.text "llm_prompt"
@@ -73,6 +82,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_222212) do
     t.string "slack_channel_id"
     t.index ["assistant_id"], name: "index_chats_on_assistant_id"
     t.index ["created_at"], name: "index_chats_on_created_at"
+    t.index ["slack_channel_id"], name: "index_chats_on_slack_channel_id"
     t.index ["slack_thread"], name: "index_chats_on_slack_thread"
     t.index ["user_id"], name: "index_chats_on_user_id"
     t.index ["webhook_external_id"], name: "index_chats_on_webhook_external_id", unique: true
@@ -245,6 +255,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_08_222212) do
   end
 
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "assistant_rest_api_actions", "assistants"
   add_foreign_key "assistants", "libraries"
   add_foreign_key "assistants", "users"
   add_foreign_key "chats", "assistants"

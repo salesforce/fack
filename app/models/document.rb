@@ -67,6 +67,7 @@ class Document < ApplicationRecord
   end
 
   DEFAULT_MODEL = 'gpt-3.5-turbo'
+  DEFAULT_EMBED_DELAY = 5 # seconds per job in queue
 
   def count_tokens(string, model: DEFAULT_MODEL)
     get_tokens(string, model:)
@@ -104,7 +105,8 @@ class Document < ApplicationRecord
     doc_priority = 5
 
     total_jobs = Delayed::Job.where(priority: doc_priority).count
-    delay_seconds = total_jobs * 3 # 3-second delay per job in the queue to avoid rate limits on LLM
+    embed_delay = ENV.fetch('EMBED_DELAY', DEFAULT_EMBED_DELAY).to_i
+    delay_seconds = total_jobs * embed_delay # Use configurable delay per job in the queue
 
     # Set the priority and delay, and queue the job if the check_hash has changed
     EmbedDocumentJob.set(priority: doc_priority, wait: delay_seconds.seconds).perform_later(id)

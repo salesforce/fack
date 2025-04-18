@@ -159,13 +159,23 @@ module GptConcern
     encoded_username = ENV.fetch('SALESFORCE_CONNECT_USERNAME', nil)
     encoded_password = ENV.fetch('SALESFORCE_CONNECT_PASSWORD', nil)
 
-    token_request_data = {
-      grant_type: 'password',
-      client_id: encoded_client_id,
-      client_secret: encoded_client_secret,
-      username: encoded_username,
-      password: encoded_password
-    }
+    use_credential_flow = ENV.fetch('USE_CREDENTIAL_FLOW_AUTHENTICATION', '').downcase == 'true'
+    token_request_data =
+      if use_credential_flow
+        {
+          grant_type: 'client_credentials',
+          client_id: encoded_client_id,
+          client_secret: encoded_client_secret
+        }
+     else
+        {
+          grant_type: 'password',
+          client_id: encoded_client_id,
+          client_secret: encoded_client_secret,
+          username: encoded_username,
+          password: encoded_password
+        }
+      end
 
     URI.encode_www_form(token_request_data)
     oauth_url = "#{ENV.fetch('SALESFORCE_CONNECT_ORG_URL', nil)}/services/oauth2/token"

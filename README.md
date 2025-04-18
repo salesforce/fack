@@ -109,6 +109,7 @@ EGPT_GEN_MODEL=
 
 ## Disable Password Login if you have SSO enabled.  (OPTIONAL)
 DISABLE_PASSWORD_LOGIN=<true/false>
+
 ```
 
 5. Open a new terminal and start the Background job for AI Calls

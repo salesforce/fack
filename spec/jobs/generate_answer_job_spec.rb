@@ -19,6 +19,7 @@ RSpec.describe GenerateAnswerJob, type: :job do
     allow(ENV).to receive(:[]).with('MAX_DOCS').and_return('7')
     allow(ENV).to receive(:fetch).with('MAX_PROMPT_DOC_TOKENS', '10_000').and_return('1000')
     allow(ENV).to receive(:[]).with('MT_DEBUG').and_return(nil)
+    allow(ENV).to receive(:fetch).with('EMBED_DELAY', Document::DEFAULT_EMBED_DELAY).and_return(5)
     # Stub GptConcern methods
     allow_any_instance_of(GenerateAnswerJob).to receive(:get_embedding).and_return(Array.new(1536, 0.1))
     allow_any_instance_of(GenerateAnswerJob).to receive(:get_generation).and_return(

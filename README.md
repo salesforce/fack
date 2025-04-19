@@ -62,6 +62,40 @@ The [OpenAI doc](https://cookbook.openai.com/examples/question_answering_using_e
 - Ruby 3+
 - Postgres with pg_vector support
 
+## Environment Variables
+
+### Required Variables
+| Variable | Description |
+|----------|-------------|
+| `SALESFORCE_CONNECT_ORG_URL` | Salesforce organization URL for Einstein integration |
+| `SALESFORCE_CONNECT_CLIENT_ID` | Salesforce connected app client ID |
+| `SALESFORCE_CONNECT_CLIENT_SECRET` | Salesforce connected app client secret |
+| `SALESFORCE_CONNECT_USERNAME` | Salesforce username for Einstein integration |
+| `SALESFORCE_CONNECT_PASSWORD` | Salesforce password for Einstein integration |
+| `CONFLUENCE_TOKEN` | Authentication token for Confluence API |
+| `CONFLUENCE_URL` | Base URL for Confluence API |
+| `QUIP_TOKEN` | Authentication token for Quip API |
+| `SLACK_BOT_TOKEN` | Bot token for Slack integration |
+| `SLACK_SIGNING_SECRET` | Secret for verifying Slack requests |
+| `SLACK_BASE_URL` | Base URL for Slack workspace |
+| `PAGERDUTY_API_TOKEN` | API token for PagerDuty integration |
+| `GOOGLE_CLIENT_ID` | OAuth client ID for Google authentication |
+| `GOOGLE_CLIENT_SECRET` | OAuth client secret for Google authentication |
+| `TEST_PASSWORD` | Password for test user (8+ chars, number, uppercase, special char) |
+
+### Optional Variables
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MAX_PROMPT_DOC_TOKENS` | Max number of document tokens to send to GPT prompt | 10000 |
+| `EGPT_MAX_TOKENS` | Max tokens to send in the prompt | 4000 |
+| `MAX_DOCS` | Maximum number of documents to process | 15 |
+| `EGPT_GEN_MODEL` | OpenAI model to use | llmgateway__OpenAIGPT4Omni |
+| `ROOT_URL` | Base URL for the application | http://localhost:3000 |
+| `SSO_METADATA_URL` | URL for SAML/SSO metadata | - |
+| `ALLOWED_ADDITIONAL_TOPICS` | Comma-separated list of additional allowed topics | - |
+| `REDIS_URL` | Redis connection URL | redis://localhost:6379/1 |
+
+
 ## Running Locally
 1. Clone the repo
 ```

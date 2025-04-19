@@ -8,9 +8,10 @@ class LibraryPolicy < ApplicationPolicy
     @library = library
   end
 
-  # Only global admins can create libraries
+  # Global admins can always create libraries
+  # Non-admins can create one library if they don't have any
   def create?
-    user.admin?
+    user.admin? || user.libraries.empty?
   end
 
   # Admins and library owners/editors can modify the library

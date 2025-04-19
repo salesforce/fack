@@ -1,7 +1,8 @@
-<div id="<%= dom_id(api_token) %>">
+<div id="<%= dom_id(api_token) %>" class="w-full">
   <%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], ['API Tokens', api_tokens_path], [@api_token.name, nil] ] } %>
-  <div class="flex justify-between items-center">
-    <h1 class="text-3xl font-semibold"><%= api_token.name %></h1>
+  
+  <div class="flex justify-between items-center mb-6">
+    <%= render 'shared/page_header', title: api_token.name, subtitle: 'API Token Details' %>
     <% if policy(api_token).destroy? %>
       <%= button_to @api_token, method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-500 hover:text-red-800 flex items-center' do %>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -10,35 +11,50 @@
       <% end %>
     <% end %>
   </div>
-  <div class="flex space-x-2">
-    <% if policy(@api_token).edit? %>
-      <div class="text-gray-700">
-        <div class="flex items-center">
-          <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_api_token_path } } %>
+
+  <div class="bg-white rounded-lg shadow-sm p-6">
+    <div class="space-y-4">
+      <%= render 'shared/labelled_field', label: "Created" do %>
+        <span class="text-stone-600"><%= api_token.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+      <% end %>
+
+      <%= render 'shared/labelled_field', label: "User" do %>
+        <span class="text-stone-600"><%= api_token.user.email %></span>
+      <% end %>
+
+      <%= render 'shared/labelled_field', label: "Last used" do %>
+        <span class="<%= 'font-bold text-green-500' if api_token.last_used && api_token.last_used > 7.days.ago %>">
+          <% if api_token.last_used %>
+            <%= time_ago_in_words(api_token.last_used) %> ago
+          <% else %>
+            Never used
+          <% end %>
+        </span>
+      <% end %>
+
+      <%= render 'shared/labelled_field', label: "Token" do %>
+        <div class="flex items-center space-x-2">
+          <div class="font-mono bg-stone-100 px-3 py-2 rounded">
+            <% if @show_token %>
+              <%= api_token.token %>
+            <% else %>
+              ...<%= api_token.token.last(4) %>
+            <% end %>
+          </div>
+          <% if @show_token %>
+            <button onclick="navigator.clipboard.writeText('<%= api_token.token %>')" class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-3 rounded text-sm">
+              Copy
+            </button>
+            <div class="text-xs text-stone-500">Copy this token. It is shown only once.</div>
+          <% end %>
         </div>
-      </div>
-    <% end %>
-  </div>
-  <%= render 'shared/labelled_field', label: "Created " do %>
-    <%= api_token.created_at %>
-  <% end %>
-  <%= render 'shared/labelled_field', label: "User " do %>
-    <%= api_token.user.email %>
-  <% end %>
-  <%= render 'shared/labelled_field', label: "Last used " do %>
-    <%= api_token.last_used %>
-  <% end %>
-  <%= render 'shared/labelled_field', label: "Token " do %>
-    <div class="font-mono">
-      <% if @show_token %>
-        <%= api_token.token + ""  %>
-        <button onclick="navigator.clipboard.writeText('<%= api_token.token %>')" class="bg-sky-500 hover:bg-sky-700 text-white font-bold py-1 px-2 rounded">
-          Copy
-        </button>
-        <div class="text-xs text-stone-500">Copy this token. It is shown only once.</div>
-      <% else %>
-        <%= "..." + api_token.token.last(4) %>
       <% end %>
     </div>
-  <% end %>
+
+    <div class="mt-6">
+      <% if policy(@api_token).edit? %>
+        <%= render partial: 'shared/button_group', locals: { buttons: { "Edit Token" => edit_api_token_path } } %>
+      <% end %>
+    </div>
+  </div>
 </div>

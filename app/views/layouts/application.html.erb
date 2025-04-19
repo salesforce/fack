@@ -14,8 +14,15 @@
   <body class="bg-stone-100">
     <header class="p-4 bg-stone-900 shadow">
       <div class="flex container mx-auto justify-between items-center">
-        <div class="flex font-mono ">
-          <a href="/questions/new" class="flex items-center text-2xl font-light text-sky-300 ">
+        <div class="flex items-center">
+          <% if current_user %>
+            <button class="text-black py-2 rounded-lg focus:outline-none text-stone-100 mr-4 hover:text-stone-500" id="nav-menu-button" aria-expanded="false" aria-haspopup="true">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              </svg>
+            </button>
+          <% end %>
+          <a href="/" class="flex items-center text-2xl font-light text-sky-300 ">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-1 text-sky-300 ">
               <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
             </svg>
@@ -37,14 +44,7 @@
           </div>
         <% end %>
         <% if current_user %>
-          <div class="flex items-center">
-            <button class="text-black py-2 rounded-lg focus:outline-none text-stone-100 mr-4 hover:text-stone-500" id="nav-menu-button" aria-expanded="false" aria-haspopup="true">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
-            </button>
-          </div>
-          <div id="nav-menu" class="fixed top-0 right-0 h-full w-96 bg-white shadow-lg z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+          <div id="nav-menu" class="fixed top-0 left-0 h-full w-96 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out">
             <div class="p-4">
               <div class="block text-black text-sm text-stone-500">Welcome,  <%= current_user.email %></div>
               <span class="text-xs text-red-500"><%= "Be careful, you are an admin!" if current_user.admin? %></span>
@@ -122,13 +122,13 @@
             document.getElementById('nav-menu-button').addEventListener('click', function() {
               const leftMenu = document.getElementById('nav-menu');
               const overlay = document.getElementById('nav-menu-overlay');
-              leftMenu.classList.toggle('translate-x-full');
+              leftMenu.classList.toggle('-translate-x-full');
               overlay.classList.toggle('hidden');
             });
             document.getElementById('nav-menu-overlay').addEventListener('click', function() {
               const leftMenu = document.getElementById('nav-menu');
               const overlay = document.getElementById('nav-menu-overlay');
-              leftMenu.classList.add('translate-x-full');
+              leftMenu.classList.add('-translate-x-full');
               overlay.classList.add('hidden');
             });
           </script>

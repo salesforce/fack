@@ -75,7 +75,7 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#index'
   end
 
-  root 'questions#new' # Setting the questions new page as the root page
+  root 'dashboard#index' # Setting the dashboard as the root page
 
   post '/slack/events', to: 'slack#events'
   post '/slack/interactivity', to: 'slack#interactivity'

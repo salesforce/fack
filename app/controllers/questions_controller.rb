@@ -20,4 +20,18 @@ class QuestionsController < BaseQuestionsController
   def new
     @question = Question.new
   end
+
+  # POST /questions
+  def create
+    @question = Question.new(question_params)
+    @question.user_id = current_user.id
+    @question.status = 'pending'
+
+    if @question.save
+      GenerateAnswerJob.set(priority: 1).perform_later(@question.id)
+      redirect_to question_path(@question), notice: 'Question was successfully created.'
+    else
+      render :new, status: :unprocessable_content
+    end
+  end
 end

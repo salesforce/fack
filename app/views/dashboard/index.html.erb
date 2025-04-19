@@ -36,7 +36,7 @@
               <% @recent_questions.each do |question| %>
                 <div class="border-b border-gray-200 pb-3 last:border-0">
                   <p class="text-gray-700">
-                    <%= link_to question.question, question_path(question), class: "text-sky-500" %>
+                    <%= link_to question.question, question_path(question), class: "text-sky-500 hover:text-sky-700" %>
                   </p>
                   <p class="text-xs text-gray-400 mt-1">Asked <%= time_ago_in_words(question.created_at) %> ago</p>
                 </div>
@@ -68,7 +68,7 @@
               <% @recent_chats.each do |chat| %>
                 <div class="border-b border-gray-200 pb-3 last:border-0">
                   <p class="text-gray-700">
-                    <%= link_to chat.first_message || "Chat ##{chat.id}", chat_path(chat), class: "text-sky-500" %>
+                    <%= link_to chat.first_message || "Chat ##{chat.id}", chat_path(chat), class: "text-sky-500 hover:text-sky-700" %>
                   </p>
                   <p class="text-xs text-gray-400 mt-1">Started <%= time_ago_in_words(chat.created_at) %> ago</p>
                 </div>
@@ -100,7 +100,7 @@
               <% @recent_assistants.each do |assistant| %>
                 <div class="border-b border-gray-200 pb-3 last:border-0">
                   <p class="text-gray-700">
-                    <%= link_to assistant.name, assistant_path(assistant), class: "text-sky-500" %>
+                    <%= link_to assistant.name, assistant_path(assistant), class: "text-sky-500 hover:text-sky-700" %>
                   </p>
                   <p class="text-xs text-gray-400 mt-1">Last active <%= time_ago_in_words(assistant.last_chat_time) %> ago</p>
                 </div>

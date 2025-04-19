@@ -7,7 +7,7 @@ RSpec.describe LibrariesController, type: :controller do
   let(:admin) { User.create!(email: 'admin@example.com', password: 'Password1!', admin: true) }
   let(:editor) { User.create!(email: 'editor@example.com', password: 'Password1!') }
   let(:library) { Library.create!(name: 'Library', user: admin) }
-  let!(:library_user) { LibraryUser.create!(user: editor, library: library, role: :editor) }
+  let!(:library_user) { LibraryUser.create!(user: editor, library:, role: :editor) }
   let(:valid_attributes) { { name: 'Library', user: admin } }
 
   context 'as an admin user' do
@@ -46,15 +46,34 @@ RSpec.describe LibrariesController, type: :controller do
     end
 
     describe 'POST #create' do
-      it 'does not create a new Library' do
-        expect do
+      context 'when user has no libraries' do
+        it 'creates a new Library' do
+          expect do
+            post :create, params: { library: valid_attributes }
+          end.to change(Library, :count).by(1)
+        end
+
+        it 'redirects to the library page' do
           post :create, params: { library: valid_attributes }
-        end.to_not change(Library, :count)
+          expect(response).to redirect_to(library_path(Library.last))
+        end
       end
 
-      it 'redirects to a certain page or renders an error' do
-        post :create, params: { library: valid_attributes }
-        expect(response).to redirect_to(root_path)
+      context 'when user already has a library' do
+        before do
+          Library.create!(name: 'First Library', user:)
+        end
+
+        it 'does not create a new Library' do
+          expect do
+            post :create, params: { library: valid_attributes }
+          end.to_not change(Library, :count)
+        end
+
+        it 'redirects to root path' do
+          post :create, params: { library: valid_attributes }
+          expect(response).to redirect_to(root_path)
+        end
       end
     end
   end
@@ -72,15 +91,34 @@ RSpec.describe LibrariesController, type: :controller do
     end
 
     describe 'POST #create' do
-      it 'does not create a new Library' do
-        expect do
+      context 'when user has no libraries' do
+        it 'creates a new Library' do
+          expect do
+            post :create, params: { library: valid_attributes }
+          end.to change(Library, :count).by(1)
+        end
+
+        it 'redirects to the library page' do
           post :create, params: { library: valid_attributes }
-        end.to_not change(Library, :count)
+          expect(response).to redirect_to(library_path(Library.last))
+        end
       end
 
-      it 'redirects to a certain page or renders an error' do
-        post :create, params: { library: valid_attributes }
-        expect(response).to redirect_to(root_path)
+      context 'when user already has a library' do
+        before do
+          Library.create!(name: 'First Library', user: editor)
+        end
+
+        it 'does not create a new Library' do
+          expect do
+            post :create, params: { library: valid_attributes }
+          end.to_not change(Library, :count)
+        end
+
+        it 'redirects to root path' do
+          post :create, params: { library: valid_attributes }
+          expect(response).to redirect_to(root_path)
+        end
       end
     end
 

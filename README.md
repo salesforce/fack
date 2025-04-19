@@ -62,6 +62,40 @@ The [OpenAI doc](https://cookbook.openai.com/examples/question_answering_using_e
 - Ruby 3+
 - Postgres with pg_vector support
 
+## Environment Variables
+
+### Required Variables
+| Variable | Description |
+|----------|-------------|
+| `SALESFORCE_CONNECT_ORG_URL` | Salesforce organization URL for Einstein integration |
+| `SALESFORCE_CONNECT_CLIENT_ID` | Salesforce connected app client ID |
+| `SALESFORCE_CONNECT_CLIENT_SECRET` | Salesforce connected app client secret |
+| `SALESFORCE_CONNECT_USERNAME` | Salesforce username for Einstein integration |
+| `SALESFORCE_CONNECT_PASSWORD` | Salesforce password for Einstein integration |
+| `CONFLUENCE_TOKEN` | Authentication token for Confluence API |
+| `CONFLUENCE_URL` | Base URL for Confluence API |
+| `QUIP_TOKEN` | Authentication token for Quip API |
+| `SLACK_BOT_TOKEN` | Bot token for Slack integration |
+| `SLACK_SIGNING_SECRET` | Secret for verifying Slack requests |
+| `SLACK_BASE_URL` | Base URL for Slack workspace |
+| `PAGERDUTY_API_TOKEN` | API token for PagerDuty integration |
+| `GOOGLE_CLIENT_ID` | OAuth client ID for Google authentication |
+| `GOOGLE_CLIENT_SECRET` | OAuth client secret for Google authentication |
+| `TEST_PASSWORD` | Password for test user (8+ chars, number, uppercase, special char) |
+
+### Optional Variables
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MAX_PROMPT_DOC_TOKENS` | Max number of document tokens to send to GPT prompt | 10000 |
+| `EGPT_MAX_TOKENS` | Max tokens to send in the prompt | 4000 |
+| `MAX_DOCS` | Maximum number of documents to process | 15 |
+| `EGPT_GEN_MODEL` | OpenAI model to use | llmgateway__OpenAIGPT4Omni |
+| `ROOT_URL` | Base URL for the application | http://localhost:3000 |
+| `SSO_METADATA_URL` | URL for SAML/SSO metadata | - |
+| `ALLOWED_ADDITIONAL_TOPICS` | Comma-separated list of additional allowed topics | - |
+| `REDIS_URL` | Redis connection URL | redis://localhost:6379/1 |
+
+
 ## Running Locally
 1. Clone the repo
 ```
@@ -138,7 +172,7 @@ The tests are located under the `spec` directory.
 # Usage
 
 ## Create or Edit a Library
-This page allows you to create or edit a library entry, providing key details like the name of the library, its source URL, and the owner of the library. Here’s how it works:
+This page allows you to create or edit a library entry, providing key details like the name of the library, its source URL, and the owner of the library. Here's how it works:
 
 1. **Library Name**:
    - Enter the name of the library in the provided text box. This could be the subject or title of the library, like "Data Science Resources."
@@ -151,7 +185,7 @@ This page allows you to create or edit a library entry, providing key details li
 
 ## Ask a Question
 
-This page allows you to ask a question and get an answer based on available libraries of knowledge. Here’s how it works:
+This page allows you to ask a question and get an answer based on available libraries of knowledge. Here's how it works:
 
 1. **Ask a Question**: 
    - There is a text box where you can type your question. The placeholder text will give you examples of some topics the system can answer, based on the most frequently used libraries, such as specific subjects or categories.
@@ -891,6 +925,120 @@ Each object in the `chats` array includes:
 >```
 </details>
 
+#### Messages
+     
+<details>
+ <summary><code>POST</code> <code><b>/api/v1/chats/:chat_id/messages</b></code> <code>Create a new Message</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | content  |  required | text                    | The content of the message   | 
+> | chat_id  |  required | integer                 | The ID of the chat this message belongs to   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `201`         | `application/json`                | JSON object containing the created message                          |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"message": {"content":"Hello, how can I help you?", "chat_id": 1}}' http://localhost:3000/api/v1/chats/1/messages
+> ```
+
+> ```javascript
+> {
+>   "id": 1,
+>   "content": "Hello, how can I help you?",
+>   "chat_id": 1,
+>   "user_id": 1,
+>   "from": "user",
+>   "created_at": "2023-11-15T20:17:25.665Z",
+>   "updated_at": "2023-12-01T19:59:44.618Z"
+> }
+> ```
+</details>
+    
+    
+<details>
+ <summary><code>GET</code> <code><b>/api/v1/chats/:chat_id/messages</b></code> <code>List Messages</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | chat_id  |  required | integer                 | The ID of the chat to list messages for   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `200`         | `application/json`                | JSON array of messages                                              |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X GET -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/1/messages
+> ```
+
+> ```javascript
+> {
+>   "messages": [
+>     {
+>       "id": 1,
+>       "content": "Hello, how can I help you?",
+>       "chat_id": 1,
+>       "user_id": 1,
+>       "from": "user",
+>       "created_at": "2023-11-15T20:17:25.665Z",
+>       "updated_at": "2023-12-01T19:59:44.618Z"
+>     },
+>     {
+>       "id": 2,
+>       "content": "I need help with setting up my environment",
+>       "chat_id": 1,
+>       "user_id": 1,
+>       "from": "user",
+>       "created_at": "2023-11-15T20:18:25.665Z",
+>       "updated_at": "2023-12-01T19:59:44.618Z"
+>     }
+>   ]
+> }
+> ```
+</details>
+
+<details>
+ <summary><code>DELETE</code> <code><b>/api/v1/chats/:chat_id/messages/:id</b></code> <code>Delete a Message</code></summary>
+
+##### Parameters
+
+> | name      |  type     | data type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | chat_id  |  required | integer                 | The ID of the chat the message belongs to   | 
+> | id       |  required | integer                 | The ID of the message to delete   | 
+
+
+##### Responses
+
+> | http code     | content-type                      | response                                                            |
+> |---------------|-----------------------------------|---------------------------------------------------------------------|
+> | `204`         | `application/json`                | No content                                                          |
+> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+
+##### Example cURL
+
+> ```javascript
+> curl -X DELETE -H "Authorization: Bearer <token>" http://localhost:3000/api/v1/chats/1/messages/1
+> ```
+</details>
+
 # WebSocket API
 The `MessagesChannel` WebSocket API allows authenticated users to subscribe to a real-time messaging stream. Users must provide an authentication token to connect and stream messages from the channel.
 
@@ -912,7 +1060,7 @@ To initiate a WebSocket connection, you must connect to the WebSocket endpoint a
 
 ### 2. Using Native WebSocket API in JavaScript
 
-If you want to use the native `WebSocket` API, here’s how you can establish a connection and subscribe to the `MessagesChannel`:
+If you want to use the native `WebSocket` API, here's how you can establish a connection and subscribe to the `MessagesChannel`:
 
 ```javascript
 const apiToken = 'your_api_token_here';

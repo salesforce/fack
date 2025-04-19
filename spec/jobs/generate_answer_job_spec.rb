@@ -14,11 +14,16 @@ RSpec.describe GenerateAnswerJob, type: :job do
 
   before do
     # Stub environment variables
-    allow(ENV).to receive(:fetch).with('ROOT_URL', nil).and_return('http://example.com')
+    allow(ENV).to receive(:[]).and_call_original
+    allow(ENV).to receive(:fetch).and_call_original
+
+    # Override specific environment variables
     allow(ENV).to receive(:[]).with('ALLOWED_ADDITIONAL_TOPICS').and_return('philosophy')
     allow(ENV).to receive(:[]).with('MAX_DOCS').and_return('7')
-    allow(ENV).to receive(:fetch).with('MAX_PROMPT_DOC_TOKENS', '10_000').and_return('1000')
     allow(ENV).to receive(:[]).with('MT_DEBUG').and_return(nil)
+    allow(ENV).to receive(:fetch).with('ROOT_URL', nil).and_return('http://example.com')
+    allow(ENV).to receive(:fetch).with('MAX_PROMPT_DOC_TOKENS', '10_000').and_return('1000')
+
     # Stub GptConcern methods
     allow_any_instance_of(GenerateAnswerJob).to receive(:get_embedding).and_return(Array.new(1536, 0.1))
     allow_any_instance_of(GenerateAnswerJob).to receive(:get_generation).and_return(

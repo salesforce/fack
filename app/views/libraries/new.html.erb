@@ -1,5 +1,9 @@
 <div class="mt-4 mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">New library</h1>
+  <h1 class="font-bold text-4xl">New Library</h1>
+  
+  <% unless current_user.admin? %>
+    <p class="text-gray-600 mt-2">Note: Non-admin users can create one library.</p>
+  <% end %>
 
   <%= render "form", library: @library %>
 

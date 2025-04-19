@@ -17,15 +17,19 @@
   </div>
 
   <div class="my-5">
-    <%= form.label :source_url %>
+    <%= form.label 'Help URL (A link to more details about the library documents)' %>
     <%= form.text_field :source_url, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
   </div>
 
-  <!-- User ID Select Field -->
-  <div class="my-5">
-    <%= form.label :user_id, 'Owner' %>
-    <%= form.collection_select :user_id, User.all.order(email: :asc), :id, :email, {include_blank: 'Select a User'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
-  </div>
+  <% if current_user.admin? %>
+    <!-- User ID Select Field - Only visible to admins -->
+    <div class="my-5">
+      <%= form.label :user_id, 'Owner' %>
+      <%= form.collection_select :user_id, User.all.order(email: :asc), :id, :email, {include_blank: 'Select a User'}, {class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"} %>
+    </div>
+  <% else %>
+    <%= form.hidden_field :user_id, value: current_user.id %>
+  <% end %>
 
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-sky-500 text-white inline-block font-medium cursor-pointer" %>

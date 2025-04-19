@@ -11,7 +11,7 @@ class LibraryPolicy < ApplicationPolicy
   # Global admins can always create libraries
   # Non-admins can create one library if they don't have any
   def create?
-    user.admin? || user.libraries.empty?
+    user.admin? || user.owned_libraries.empty?
   end
 
   # Admins and library owners/editors can modify the library

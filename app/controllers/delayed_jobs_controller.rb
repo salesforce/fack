@@ -16,13 +16,15 @@ class DelayedJobsController < ApplicationController
             end
 
     @jobs = @jobs.order(priority: :asc, run_at: :desc)
+    @total_jobs_count = @jobs.count
+    @jobs = @jobs.page(params[:page])
   end
 
   def run_now
     @job = Delayed::Job.find(params[:id])
 
     authorize @job, :update?
-    
+
     @job.update(run_at: Time.now)
     redirect_to delayed_jobs_path, notice: 'Job has been scheduled to run immediately.'
   end

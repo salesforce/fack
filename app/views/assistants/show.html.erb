@@ -8,13 +8,15 @@
         <span class="ml-2 inline-flex"> <%= render partial: 'assistant_badge', locals: { assistant: @assistant } %></span>
       </h2>
       <%= render partial: 'shared/meta_info', locals: { email: @assistant.user ? @assistant.user.email : "admin", created_at: @assistant.created_at, updated_at: @assistant.updated_at } %>
-      <%= render 'shared/slack_link', slack_channel_id: @assistant.slack_channel_name %>
     </div>
     <div class="flex justify-between items-center">
       <% if policy(@assistant).edit? %>
-        <%= render partial: 'shared/button_group', locals: { buttons: { "Edit" => edit_assistant_path(@assistant), "Clone" => clone_assistant_path(@assistant) }} %>
+        <% buttons = { "Edit" => edit_assistant_path(@assistant), "Clone" => clone_assistant_path(@assistant), "Details" => "#" } %>
+        <% if @assistant.slack_channel_name.present? %>
+          <% buttons["Slack"] = "#{ENV['SLACK_BASE_URL']}/archives/#{@assistant.slack_channel_name}" %>
+        <% end %>
+        <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
       <% end %>
-      <button id="details-button" class="border text-stone border-stone-500 hover:bg-stone-200 py-3 px-5 bg-slate-100 text-gray-800 font-medium border rounded-lg ml-2">Details</button>
     </div>
   </div>
   <div class="mx-auto w-full">
@@ -41,7 +43,8 @@
   </div>
 </div>
 <script>
-  document.getElementById("details-button").addEventListener("click", function() {
+  document.querySelector('a[href="#"]').addEventListener("click", function(e) {
+    e.preventDefault();
     document.getElementById("details-modal").classList.remove("hidden");
   });
   document.getElementById("close-modal").addEventListener("click", function() {

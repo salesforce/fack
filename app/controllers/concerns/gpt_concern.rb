@@ -50,7 +50,7 @@ module GptConcern
       response_data['data'][0]['embedding']
     else
       # Handle error
-      puts "Error calling OpenAI API for embeddings: #{response.code} - #{response.message}"
+      Rails.logger.error("Error calling OpenAI API for embeddings: #{response.code} - #{response.message}")
       nil
     end
   end
@@ -74,7 +74,7 @@ module GptConcern
     return JSON.parse(response.body)['choices'].first['message']['content'] if response.code == 200
 
     # Handle error
-    puts "Error calling OpenAI API for generation: #{response.code} - #{response.message}"
+    Rails.logger.error("Error calling OpenAI API for generation: #{response.code} - #{response.message}")
     ''
   end
 
@@ -107,10 +107,11 @@ module GptConcern
       response_data = JSON.parse(response.body)
       return response_data['embeddings'][0]['embedding']
     else
-      Rails.logger.error("Error calling Salesforce Connect GPT: #{response.body.message}")
+      error_data = JSON.parse(response.body)
+      Rails.logger.error("Error calling Salesforce Connect GPT: #{error_data['message']}")
     end
 
-    null
+    nil
   end
 
   def call_salesforce_connect_gpt_generation(prompt)
@@ -195,10 +196,10 @@ module GptConcern
         access_token = JSON.parse(response.body)
         return access_token
       else
-        puts "Error calling Salesforce Connect OAuth: #{response.code} - #{response.body}"
+        Rails.logger.error("Error calling Salesforce Connect OAuth: #{response.code} - #{response.body}")
       end
     rescue StandardError => e
-      puts "Error calling Salesforce Connect OAuth: #{e.message}"
+      Rails.logger.error("Error calling Salesforce Connect OAuth: #{e.message}")
     end
 
     nil

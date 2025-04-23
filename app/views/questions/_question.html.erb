@@ -11,7 +11,7 @@
       <% if @libraries.present? %>
         <p class="text-xs text-stone-500 px-4 py-2 ">Libraries Included:
           <% @libraries.each do |library| %>
-            <span class=""><%= link_to library.name, library , class: "text-xs text-sky-500 bg-white mx-1 p-1 border border-stone-400 rounded text-center hover:bg-stone-200", target: "_new" %>
+            <span class=""><%= link_to library.name, library , class: "text-xs text-white bg-sky-700 mx-1 p-1 border border-stone-400 rounded-lg text-center hover:bg-sky-900", target: "_new" %>
             </span>
           <% end %>
         </p>

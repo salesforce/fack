@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require 'pager_duty/connection'
+require 'net/http'
+require 'uri'
+require 'json'
+require 'date'
 
 class GenerateMessageResponseJob < ApplicationJob
   include GptConcern
@@ -156,6 +159,16 @@ class GenerateMessageResponseJob < ApplicationJob
         confluence_results = confluence_query.query_confluence(spaces, keywords)
         prompt += confluence_results.to_json.truncate(70_000)
         prompt += '</CONFLUENCE_DOCUMENTS>'
+      end
+
+      if assistant.pagerduty_recent_incidents?
+        prompt += "<PAGERDUTY_INCIDENTS>\n\n"
+        pagerduty_service = PagerdutyService.new
+
+        incidents = pagerduty_service.get_recent_incidents(hours: 1)
+
+        prompt += incidents.to_s
+        prompt += '</PAGERDUTY_INCIDENTS>'
       end
 
       if assistant.soql.present?

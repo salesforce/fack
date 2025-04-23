@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_23_070206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, (((((COALESCE(name, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || COALESCE(instructions, ''::text)))", stored: true
     t.string "slack_channel_name_starts_with"
     t.boolean "enable_channel_join_message", default: false
+    t.boolean "pagerduty_recent_incidents"
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["search_vector"], name: "index_assistants_on_search_vector", using: :gin
     t.index ["slack_channel_name_starts_with"], name: "index_assistants_on_slack_channel_name_starts_with"
@@ -130,6 +131,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
   create_table "documents_questions", id: false, force: :cascade do |t|
     t.bigint "document_id", null: false
     t.bigint "question_id", null: false
+  end
+
+  create_table "github_authorizations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_github_authorizations_on_user_id"
   end
 
   create_table "google_authorizations", force: :cascade do |t|
@@ -254,6 +263,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
   add_foreign_key "chats", "webhooks"
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
+  add_foreign_key "github_authorizations", "users"
   add_foreign_key "google_authorizations", "users"
   add_foreign_key "libraries", "users"
   add_foreign_key "library_users", "libraries"

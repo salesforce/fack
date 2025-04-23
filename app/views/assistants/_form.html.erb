@@ -50,6 +50,11 @@
       <p id="" class="text-gray-500 text-xs">A SOQL statement to run on the connected Salesforce Org.  Check with admin to make sure your object is accessible.</p>
       <%= form.text_area :soql, class: "block shadow rounded-md border border-gray-400 outline-none px-3 py-2 mt-2 w-full" %>
     </div>
+    <div class="my-5">
+      <%= form.label :pagerduty_recent_incidents, "Include Recent PagerDuty Incidents" %>
+      <p id="" class="text-gray-500 text-xs">Include recent PagerDuty incidents in the context for this assistant.</p>
+      <%= form.check_box :pagerduty_recent_incidents, class: "block shadow rounded-md border border-gray-400 outline-none mt-2" %>
+    </div>
   <% end %>
   <%= render "shared/form_section", title: "Prompts and Settings" do %>
     <div class="my-5">

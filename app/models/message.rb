@@ -25,21 +25,32 @@ class Message < ApplicationRecord
     # skip if this message already has a slack ts
     return if slack_ts
 
-    slack_service = SlackService.new
+    begin
+      slack_service = SlackService.new
 
-    # if the chat.slack_thread is missing, we create a new thread
-    self.slack_ts = slack_service.post_message(channel_id, content, chat.slack_thread, assistant?)
+      # if the chat.slack_thread is missing, we create a new thread
+      self.slack_ts = slack_service.post_message(channel_id, content, chat.slack_thread, assistant?)
 
-    # if the chat didn't have a thread, save it.
-    if chat.slack_thread.nil?
-      chat.slack_thread = slack_ts
-      chat.save
-    end
+      # if the chat didn't have a thread, save it.
+      if chat.slack_thread.nil?
+        chat.slack_thread = slack_ts
+        chat.save
+      end
 
-    if slack_ts
-      slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: slack_ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
-    else
-      Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
+      if slack_ts
+        slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: slack_ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
+      else
+        Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
+      end
+    rescue StandardError => e
+      Rails.logger.error("Error in create_slack_post for message #{id}: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      # Update the message content with the error information, bypassing callbacks
+      error_message = "⚠️ Slack Error: #{e.message}"
+
+      # There may be a better place to do this, but will look at that later
+      update_column(:content, "#{content}\n\n#{error_message}")
+      # Don't raise the error to prevent the message creation from failing
     end
   end
 

@@ -157,10 +157,12 @@ class SlackService
   end
 
   def convert_to_slack_markdown(text)
+    return '' if text.nil?
+
     slack_lines = []
 
-    text.each_line do |line|
-      line = line.chomp
+    text.to_s.each_line do |line|
+      line = line.to_s.chomp
 
       # Convert [text](link) to Slack's <link|text> format
       line = line.gsub(/\[([^\]]+)\]\(([^)]+)\)/) do
@@ -168,26 +170,39 @@ class SlackService
       end
 
       slack_lines << case line
-                    when /^#+\s+(.+)$/ # Any number of hashes for header
-                      "=*#{::Regexp.last_match(1).strip}*="
-                     when /^\d+\.\s\*\*(.+?)\*\*:(.*)$/ # Numbered item with bold title
-                       "*•* *#{::Regexp.last_match(1).strip}*:#{::Regexp.last_match(2).strip}"
+                     when /^#+\s+(.+)$/ # Any number of hashes for header
+                       match = ::Regexp.last_match(1)
+                       "=*#{match ? match.strip : ''}*="
+                     when /^(\d+\.)\s\*\*(.+?)\*\*:(.*)$/ # Numbered item with bold title
+                       num = ::Regexp.last_match(1)
+                       title = ::Regexp.last_match(2)&.strip || ''
+                       content = ::Regexp.last_match(3)&.strip || ''
+                       "#{num} *#{title}*:#{content}"
                      when /^\s+-\s(.+)$/ # Sub-bullet
-                       "     • #{::Regexp.last_match(1).strip}"
-                     when /^\d+\.\s\[(.+?)\]\((.+?)\)/ # Numbered list of links (will now be processed by gsub)
-                       "*•* #{::Regexp.last_match(0)}" # Keep the line as is, gsub handles the link
-                     when /^\s+-\s\*\*(.+?)\*\*:(.*)$/ # Indented key-value with bold key
-                       "     *#{::Regexp.last_match(1).strip}*: #{::Regexp.last_match(2).strip}"
-                     when /^\s+-\s(.+?):\s(.+)$/ # Indented key-value
-                       "     *#{::Regexp.last_match(1).strip}*: #{::Regexp.last_match(2).strip}"
-                     when /^\*\*(.+?)\*\*$/ # Standalone bolded item
-                       "*#{::Regexp.last_match(1).strip}*"
-                     when /^-+\s*(.+)$/ # Generic dash list item
-                       "*•* #{::Regexp.last_match(1).strip}"
-                     when /^\d+\.\s(.+)$/ # Numbered item
-                       "*•* #{::Regexp.last_match(1).strip}"
-                     else
+                       content = ::Regexp.last_match(1)&.strip || ''
+                       "     • #{content}"
+                     when /^(\d+\.)\s\[(.+?)\]\((.+?)\)/ # Numbered list of links
                        line
+                     when /^\s+-\s\*\*(.+?)\*\*:(.*)$/ # Indented key-value with bold key
+                       key = ::Regexp.last_match(1)&.strip || ''
+                       value = ::Regexp.last_match(2)&.strip || ''
+                       "     *#{key}*: #{value}"
+                     when /^\s+-\s(.+?):\s(.+)$/ # Indented key-value
+                       key = ::Regexp.last_match(1)&.strip || ''
+                       value = ::Regexp.last_match(2)&.strip || ''
+                       "     *#{key}*: #{value}"
+                     when /^\*\*(.+?)\*\*$/ # Standalone bolded item
+                       content = ::Regexp.last_match(1)&.strip || ''
+                       "*#{content}*"
+                     when /^-+\s*(.+)$/ # Generic dash list item
+                       content = ::Regexp.last_match(1)&.strip || ''
+                       "*•* #{content}"
+                     when /^(\d+\.)\s(.+)$/ # Numbered item
+                       num = ::Regexp.last_match(1)
+                       content = ::Regexp.last_match(2)&.strip || ''
+                       "#{num} #{content}"
+                     else
+                       line.to_s
                      end
     end
 

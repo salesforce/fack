@@ -28,15 +28,13 @@
             </svg>
           <% end %>
         </div>
-        <div class="space-y-4">
+        <div class="">
           <% if @recent_questions.any? %>
             <% @recent_questions.each do |question| %>
-              <div class="border-b border-gray-200 pb-3 last:border-0">
-                <p class="text-gray-700">
-                  <%= link_to question.question.truncate(50), question_path(question), class: "text-sky-500 hover:text-sky-700" %>
-                </p>
-                <p class="text-xs text-gray-400 mt-1">Asked <%= time_ago_in_words(question.created_at) %> ago</p>
-              </div>
+              <%= render "dashboard/list_item",
+                path: question_path(question),
+                title: question.question.truncate(50),
+                subtitle: "Asked #{time_ago_in_words(question.created_at)} ago" %>
             <% end %>
           <% else %>
             <p class="text-gray-400 italic">No recent questions</p>
@@ -59,15 +57,13 @@
             </svg>
           <% end %>
         </div>
-        <div class="space-y-4">
+        <div class="">
           <% if @recent_chats.any? %>
             <% @recent_chats.each do |chat| %>
-              <div class="border-b border-gray-200 pb-3 last:border-0">
-                <p class="text-gray-700">
-                  <%= link_to chat.first_message.truncate(50) || "Chat ##{chat.id}", chat_path(chat), class: "text-sky-500 hover:text-sky-700" %>
-                </p>
-                <p class="text-xs text-gray-400 mt-1">Started <%= time_ago_in_words(chat.created_at) %> ago</p>
-              </div>
+              <%= render "dashboard/list_item",
+                path: chat_path(chat),
+                title: chat.first_message.truncate(50) || "Chat ##{chat.id}",
+                subtitle: "Started #{time_ago_in_words(chat.created_at)} ago" %>
             <% end %>
           <% else %>
             <p class="text-gray-400 italic">No recent chats</p>
@@ -90,15 +86,13 @@
             </svg>
           <% end %>
         </div>
-        <div class="space-y-4">
+        <div class="">
           <% if @recent_assistants.any? %>
             <% @recent_assistants.each do |assistant| %>
-              <div class="border-b border-gray-200 pb-3 last:border-0">
-                <p class="text-gray-700">
-                  <%= link_to assistant.name, assistant_path(assistant), class: "text-sky-500 hover:text-sky-700" %>
-                </p>
-                <p class="text-xs text-gray-400 mt-1">Last active <%= time_ago_in_words(assistant.last_chat_time) %> ago</p>
-              </div>
+              <%= render "dashboard/list_item",
+                path: assistant_path(assistant),
+                title: assistant.name,
+                subtitle: "Last active #{time_ago_in_words(assistant.last_chat_time)} ago" %>
             <% end %>
           <% else %>
             <p class="text-gray-400 italic">No recent assistants</p>

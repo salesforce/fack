@@ -274,9 +274,15 @@ class SlackController < ApplicationController
       Rails.logger.info('Joined Channel: ' + channel)
       @channel_info ||= slack_service.get_channel_info(channel)
 
-      topic = @channel_info['topic']['value']
+      topic = @channel_info&.dig('topic', 'value')
+      description = @channel_info&.dig('purpose', 'value')
 
-      message_text = 'Topic: ' + topic
+      if topic.blank? || description.blank?
+        Rails.logger.warn("Missing topic or description for channel: #{@channel_info.inspect}")
+        return
+      end
+
+      message_text = 'Topic: ' + topic + "\n\n" + 'Description: ' + description
 
       chat = Chat.new(
         user_id: assistant.user_id,

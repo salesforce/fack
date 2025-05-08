@@ -21,11 +21,6 @@
       Webhook: <%= link_to @chat.webhook.name, @chat.webhook, class: 'hover:underline' %>
     </div>
   <% end %>
-  <% if @chat.slack_thread %>
-    <div class="mt-2 bg-yellow-500 text-white p-2 text-xs rounded inline-block max-w-max">
-      Slack: <%= link_to "Channel", "#{ENV['SLACK_BASE_URL']}/archives/#{@chat.slack_channel_id}", target: "_blank" if @chat.slack_channel_id %>
-    </div>
-  <% end %>
   <!-- Messages -->
   <turbo-frame id="messages-<%=@chat.id%>" src="<%= chat_messages_path(@chat) %>"></turbo-frame>
   <div class="text-center text-xs text-stone-400">
@@ -36,14 +31,22 @@
   </div>
   <!-- Input Form Fixed at Bottom -->
   <div class="w-full fixed bottom-0 left-0 bg-white p-4 border-t border-gray-300">
-    <%= form_with(model: [@chat, Message.new], remote: true, class: 'flex space-x-2') do |f| %>
+    <%= form_with(model: [@chat, Message.new], remote: true, class: 'flex space-x-2 items-center') do |f| %>
       <%= f.text_field :content, id: 'message_content', class: 'flex-grow p-2 border border-gray-300 rounded-lg', placeholder: "Message " + @chat.assistant.name %>
-      <button type="submit" id="send_button" class="flex items-center justify-center space-x-2 rounded-lg py-2 px-4 bg-sky-600 text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+      <button type="submit" id="send_button" class="flex items-center justify-center space-x-2 rounded-lg py-2 px-4 bg-sky-600 text-white font-medium disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-sky-700" disabled>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
         </svg>
         <span>Send</span>
       </button>
+      <% if @chat.slack_channel_id && @chat.slack_thread %>
+        <%= link_to "#{ENV['SLACK_BASE_URL']}/archives/#{@chat.slack_channel_id}/p#{@chat.slack_thread}", target: "_blank", class: "flex items-center border border-sky-500 justify-center space-x-2 rounded-lg py-2 px-4 bg-white text-sky-500 font-medium  disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-sky-600 hover:text-white", rel: "noopener noreferrer" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+          </svg>
+          <span>Slack</span>
+        <% end %>
+      <% end %>
     <% end %>
     <script>
       document.addEventListener('turbo:load', function() {

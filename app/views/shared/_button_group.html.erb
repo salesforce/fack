@@ -1,5 +1,5 @@
 <div class="inline-flex rounded-md shadow-sm" role="group">
   <% buttons.each_with_index do |(name, link), index| %>
-    <%= link_to name, link, class: "border text-white border-slate-800 py-3 px-5 bg-slate-600 text-sm border #{'border-r-0' if index < buttons.size - 1 && buttons.size > 1} #{'rounded-l-lg' if index == 0} #{'rounded-r-lg' if index == buttons.size - 1} hover:bg-stone-900 hover:text-sky-300" %>
+    <%= link_to name, link, class: "border text-sky-700 border-sky-500 py-3 px-5 bg-white text-sm border #{'border-r-0' if index < buttons.size - 1 && buttons.size > 1} #{'rounded-l-lg' if index == 0} #{'rounded-r-lg' if index == buttons.size - 1} hover:bg-sky-500 hover:text-sky-100" %>
   <% end %>
 </div>

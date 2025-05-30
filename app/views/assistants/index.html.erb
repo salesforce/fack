@@ -3,7 +3,7 @@
   <div class="flex justify-between items-center">
     <%= render 'shared/page_header', title: 'Assistants', subtitle: 'Assistants have special instructions and context to answer specific problems better than general Q/A. Click an assistant to begin!' %>
     <div>
-      <% if policy(Assistant.new).edit? %>
+      <% if policy(Assistant.new).create? %>
         <div class="inline-flex rounded-md shadow-sm" role="group">
           <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_assistant_path, "Import" => import_assistants_path } } %>
         </div>

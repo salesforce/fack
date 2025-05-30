@@ -9,7 +9,8 @@ class AssistantPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin? || user.editor?
+    # Users can create one assistant for themselves
+    user.admin? || user.editor?  || user.owned_assistants.empty?
   end
 
   def update?

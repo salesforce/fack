@@ -16,7 +16,8 @@ class BaseAssistantsController < ApplicationController
     json = JSON.parse(params[:json]) if params[:json].present?
     @assistant = Assistant.new(json || assistant_params)
 
-    @assistant.user_id = current_user.id if @assistant.user_id.nil?
+    # Only admins can set the user_id
+    @assistant.user_id = current_user.id if @assistant.user_id.nil? || !current_user.admin?
 
     authorize @assistant
 

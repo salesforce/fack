@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :library_users
   has_many :libraries, through: :library_users
   has_many :owned_libraries, class_name: 'Library', foreign_key: 'user_id'
+  has_many :owned_assistants, class_name: 'Assistant', foreign_key: 'user_id'
 
   private
 

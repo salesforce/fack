@@ -10,13 +10,16 @@
       <%= render partial: 'shared/meta_info', locals: { email: @assistant.user ? @assistant.user.email : "admin", created_at: @assistant.created_at, updated_at: @assistant.updated_at } %>
     </div>
     <div class="flex justify-between items-center">
+      <% buttons = {} %>
       <% if policy(@assistant).edit? %>
-        <% buttons = { "Edit" => edit_assistant_path(@assistant), "Clone" => clone_assistant_path(@assistant), "Details" => "#" } %>
-        <% if @assistant.slack_channel_name.present? %>
-          <% buttons["Slack"] = "#{ENV['SLACK_BASE_URL']}/archives/#{@assistant.slack_channel_name}" %>
-        <% end %>
-        <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
+        <% buttons["Edit"] = edit_assistant_path(@assistant) %>
+        <% buttons["Clone"] = clone_assistant_path(@assistant) %>
       <% end %>
+      <% buttons["Details"] = "#" %>
+      <% if @assistant.slack_channel_name.present? %>
+        <% buttons["Slack"] = "#{ENV['SLACK_BASE_URL']}/archives/#{@assistant.slack_channel_name}" %>
+      <% end %>
+      <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
     </div>
   </div>
   <div class="mx-auto w-full">

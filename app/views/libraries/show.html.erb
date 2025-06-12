@@ -11,6 +11,7 @@
         <% buttons['Edit'] = edit_library_path(@library) %>
         <% buttons['New Document'] = new_document_path(library_id: @library.id) %>
       <% end %>
+      <% buttons['Download'] = download_library_path(@library) %>
       <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
     </div>
   </div>

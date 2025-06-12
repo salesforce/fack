@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     resources :documents
     member do
       get 'users'
+      get 'download'
     end
   end
 

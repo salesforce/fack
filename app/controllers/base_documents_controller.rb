@@ -6,6 +6,7 @@ class BaseDocumentsController < ApplicationController
 
   include Hashable
   include GptConcern
+  include NeighborConcern
   # GET /documents or /documents.json
   def index
     @documents = Document.includes(:library, :user)

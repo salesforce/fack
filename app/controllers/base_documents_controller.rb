@@ -5,7 +5,6 @@ class BaseDocumentsController < ApplicationController
   before_action :set_document, only: %i[show edit update]
 
   include Hashable
-
   # GET /documents or /documents.json
   def index
     @documents = Document.includes(:library, :user)
@@ -18,13 +17,19 @@ class BaseDocumentsController < ApplicationController
                    @documents.order(created_at: :desc)
                  end
 
-    if params[:library_id].present?
+    library_id = params[:library_id]
+    if library_id.present?
       @library = Library.find(params[:library_id])
-      @documents = @documents.where(library_id: params[:library_id])
+      @documents = @documents.where(library_id: @library.id)
+    end
+
+    if params[:similar_to].present?
+      embedding = get_embedding(params[:similar_to])
+      @documents = related_documents_from_embedding_by_libraries(embedding, library_id)
     end
 
     @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
-    @documents = @documents.page(params[:page])
+    @documents = @documents.page(params[:page]).per(params[:per_page] || 10)
   end
 
   def update

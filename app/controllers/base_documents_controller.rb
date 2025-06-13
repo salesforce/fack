@@ -5,6 +5,7 @@ class BaseDocumentsController < ApplicationController
   before_action :set_document, only: %i[show edit update]
 
   include Hashable
+  include GptConcern
   # GET /documents or /documents.json
   def index
     @documents = Document.includes(:library, :user)

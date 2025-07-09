@@ -25,6 +25,20 @@ class BaseDocumentsController < ApplicationController
       @documents = @documents.where(library_id: @library.id)
     end
 
+    # Filter with param :since - validate format first
+    if params[:since].present?
+      begin
+        since_date = parse_since_parameter(params[:since])
+        @documents = @documents.where('updated_at > ?', since_date)
+      rescue ArgumentError => e
+        respond_to do |format|
+          format.html { redirect_to documents_path, alert: "Invalid date format for 'since' parameter: #{e.message}" }
+          format.json { render json: { error: "Invalid date format for 'since' parameter: #{e.message}" }, status: :bad_request }
+        end
+        return
+      end
+    end
+
     if params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
       @documents = related_documents_from_embedding_by_libraries(embedding, library_id)
@@ -121,5 +135,48 @@ class BaseDocumentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def document_params
     params.require(:document).permit(:document, :title, :enabled, :external_id, :url, :library_id, :source_url)
+  end
+
+  # Parse and validate the :since parameter
+  # Accepts ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ), RFC 3339, or simple date formats
+  def parse_since_parameter(since_param)
+    # URL decode the parameter first to handle encoded characters
+    decoded_param = URI.decode_www_form_component(since_param)
+
+    # Try ISO 8601 format first (most common for APIs)
+    begin
+      return DateTime.iso8601(decoded_param)
+    rescue ArgumentError
+      # Continue to other formats
+    end
+
+    # Try RFC 3339 format
+    begin
+      return DateTime.rfc3339(decoded_param)
+    rescue ArgumentError
+      # Continue to other formats
+    end
+
+    # Try common date formats
+    date_formats = [
+      '%Y-%m-%d %H:%M:%S',
+      '%Y-%m-%d %H:%M:%S %z',
+      '%Y-%m-%d %H:%M:%S %Z',
+      '%Y-%m-%dT%H:%M:%S',
+      '%Y-%m-%dT%H:%M:%S%z',
+      '%Y-%m-%dT%H:%M:%S %z',
+      '%Y-%m-%d',
+      '%m/%d/%Y',
+      '%m/%d/%Y %H:%M:%S'
+    ]
+
+    date_formats.each do |format|
+      return DateTime.strptime(decoded_param, format)
+    rescue ArgumentError
+      next
+    end
+
+    # If none of the formats work, raise an error with helpful message
+    raise ArgumentError, "Invalid date format. Please use ISO 8601 format (e.g., '2023-12-01T10:30:00Z') or common date formats. Received: #{since_param}"
   end
 end

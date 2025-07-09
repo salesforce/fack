@@ -39,6 +39,20 @@ class BaseDocumentsController < ApplicationController
       end
     end
 
+    # Filter with param :until - validate format first
+    if params[:until].present?
+      begin
+        until_date = parse_since_parameter(params[:until])
+        @documents = @documents.where('updated_at < ?', until_date)
+      rescue ArgumentError => e
+        respond_to do |format|
+          format.html { redirect_to documents_path, alert: "Invalid date format for 'until' parameter: #{e.message}" }
+          format.json { render json: { error: "Invalid date format for 'until' parameter: #{e.message}" }, status: :bad_request }
+        end
+        return
+      end
+    end
+
     if params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
       @documents = related_documents_from_embedding_by_libraries(embedding, library_id)

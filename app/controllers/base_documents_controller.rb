@@ -55,7 +55,11 @@ class BaseDocumentsController < ApplicationController
 
     if params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
-      @documents = related_documents_from_embedding_by_libraries(embedding, library_id)
+      # Get similar documents but preserve existing filters
+      similar_docs = related_documents_from_embedding_by_libraries(embedding, library_id)
+      # Apply the similarity search as an additional filter by getting the IDs
+      similar_doc_ids = similar_docs.pluck(:id)
+      @documents = @documents.where(id: similar_doc_ids)
     end
 
     @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?

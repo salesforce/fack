@@ -18,6 +18,6 @@ module NeighborConcern
     _limit ||= ENV.fetch('RELATED_DOCUMENTS_LIMIT', 25).to_i
     scope = related_documents_from_embedding(_embedding)
     scope = scope.where(library_id: _library_ids) if _library_ids.present?
-    scope.limit(_limit)
+    scope.order(updated_at: :desc).limit(_limit)
   end
 end

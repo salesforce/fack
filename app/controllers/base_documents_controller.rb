@@ -16,7 +16,7 @@ class BaseDocumentsController < ApplicationController
                  elsif params[:sort] == 'tokens'
                    @documents.order(token_count: :desc)
                  else
-                   @documents.order(created_at: :desc)
+                   @documents.order(updated_at: :desc)
                  end
 
     library_id = params[:library_id]

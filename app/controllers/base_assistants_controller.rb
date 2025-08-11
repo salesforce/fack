@@ -49,6 +49,8 @@ class BaseAssistantsController < ApplicationController
 
   # DELETE /assistants/1 or /assistants/1.json
   def destroy
+    authorize @assistant
+    
     @assistant.destroy!
 
     respond_to do |format|

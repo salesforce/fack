@@ -1,0 +1,26 @@
+<%= render partial: 'shared/breadcrumb', locals: { breadcrumbs: [['Home', root_path], [@assistant.name, assistant_path(@assistant)], ['Users', nil]] } %>
+
+<div class="flex justify-between items-center py-2">
+  <h1 class="font-bold text-3xl text-sky-800">Users</h1>
+  <% if policy(@assistant).update? %>
+    <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_assistant_assistant_user_path(@assistant) } } %>
+  <% end %>
+</div>
+<div class="bg-white shadow-md rounded-lg overflow-hidden">
+  <div class="grid grid-cols-3 gap-4 p-4 bg-gray-200 font-semibold">
+    <div>Email</div>
+    <div>Role</div>
+    <div>Actions</div>
+  </div>
+  <% @users.each do |user| %>
+    <div class="grid grid-cols-3 gap-4 p-4 border-b border-gray-200">
+      <div><%= user.email %></div>
+      <div><%= user.assistant_users.find_by(assistant: @assistant).role.capitalize %></div>
+      <div>
+        <% if policy(@assistant).update? %>
+          <%= button_to 'Delete', assistant_assistant_user_path(@assistant, user), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

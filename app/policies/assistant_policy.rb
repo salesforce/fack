@@ -14,7 +14,18 @@ class AssistantPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || user.editor? || assistant.user_id == user.id
+    user.admin? || user.editor? || assistant.user_id == user.id || user_is_assistant_editor?
+  end
+
+  def edit?
+    update?
+  end
+
+  private
+
+  def user_is_assistant_editor?
+    assistant_user = AssistantUser.find_by(user: user, assistant: assistant)
+    assistant_user&.editor? || assistant_user&.admin?
   end
 
   def destroy?

@@ -1,0 +1,22 @@
+<h1 class="font-bold text-3xl text-sky-800">New Assistant User</h1>
+<%= form_with(model: [@assistant, @assistant_user], class: "contents") do |form| %>
+  <% if @assistant_user.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(@assistant_user.errors.count, "error") %> prohibited this assistant_user from being saved:</h2>
+      <ul>
+        <% @assistant_user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <!-- User ID selection -->
+  <div class="my-5">
+    <%= form.label :user_id, "Grant access to user.", style: "display: block" %>
+    <%= form.collection_select :user_id, User.order(email: :asc), :id, :email, { prompt: 'Select User' }, { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
+  </div>
+  <div class="inline">
+    <%= form.submit "Save", class: "rounded-lg py-3 px-5 bg-sky-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
+<%= link_to 'Cancel', assistant_path(@assistant), class: 'rounded-lg py-3 px-5 inline-block font-medium cursor-pointer hover:bg-gray-200' %>

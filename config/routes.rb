@@ -5,8 +5,12 @@ Rails.application.routes.draw do
     resources :messages
   end
   resources :assistants do
+    resources :assistant_users
     resources :chats, only: %i[create new index]
     get 'clone', on: :member
+    member do
+      get 'users'
+    end
 
     # Adding the import route for all assistants
     collection do

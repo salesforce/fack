@@ -13,6 +13,9 @@ class User < ApplicationRecord
   has_many :owned_libraries, class_name: 'Library', foreign_key: 'user_id'
   has_many :owned_assistants, class_name: 'Assistant', foreign_key: 'user_id'
 
+  has_many :assistant_users
+  has_many :assistants, through: :assistant_users
+
   private
 
   def password_strength

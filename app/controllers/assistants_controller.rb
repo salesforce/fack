@@ -1,5 +1,5 @@
 class AssistantsController < BaseAssistantsController
-  before_action :set_assistant, only: %i[show edit update destroy]
+  before_action :set_assistant, only: %i[show edit update destroy users]
 
   # GET /assistants/1 or /assistants/1.json
   def show
@@ -25,5 +25,10 @@ class AssistantsController < BaseAssistantsController
 
     # Render the 'new' view, which will now be used for cloning/editing
     render :new
+  end
+
+  # GET /assistants/1/users
+  def users
+    redirect_to assistant_assistant_users_path(@assistant)
   end
 end

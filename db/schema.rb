@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_11_210127) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -26,6 +26,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
     t.boolean "shown_once"
     t.datetime "last_used"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
+  end
+
+  create_table "assistant_users", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "assistant_id", null: false
+    t.integer "role", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assistant_id"], name: "index_assistant_users_on_assistant_id"
+    t.index ["user_id", "assistant_id"], name: "index_assistant_users_on_user_id_and_assistant_id", unique: true
+    t.index ["user_id"], name: "index_assistant_users_on_user_id"
   end
 
   create_table "assistants", force: :cascade do |t|
@@ -247,6 +258,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_061747) do
   end
 
   add_foreign_key "api_tokens", "users"
+  add_foreign_key "assistant_users", "assistants"
+  add_foreign_key "assistant_users", "users"
   add_foreign_key "assistants", "libraries"
   add_foreign_key "assistants", "users"
   add_foreign_key "chats", "assistants"

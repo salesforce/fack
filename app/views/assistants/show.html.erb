@@ -14,6 +14,7 @@
       <% if policy(@assistant).edit? %>
         <% buttons["Edit"] = edit_assistant_path(@assistant) %>
         <% buttons["Clone"] = clone_assistant_path(@assistant) %>
+        <% buttons["Users"] = users_assistant_path(@assistant) %>
       <% end %>
       <% buttons["Details"] = "#" %>
       <% if @assistant.slack_channel_name.present? %>

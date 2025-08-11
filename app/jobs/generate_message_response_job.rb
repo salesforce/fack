@@ -114,6 +114,7 @@ class GenerateMessageResponseJob < ApplicationJob
         <{{PROGRAM_TAG}}>
         # Prompt:
         You are a helpful assistant that follows the instructions below to assist the user effectively.
+        Unless otherwise specified in the instructions, you should use the information in the CONTEXT section to respond to the question or topic in the <{{DATA_TAG}}> section.
 
         # Special Instructions:
         #{message.chat.assistant.instructions}

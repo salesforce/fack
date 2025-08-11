@@ -114,6 +114,7 @@ class GenerateMessageResponseJob < ApplicationJob
         <{{PROGRAM_TAG}}>
         # Prompt:
         You are a helpful assistant that follows the instructions below to assist the user effectively.
+        Unless otherwise specified in the instructions, you should use the information in the CONTEXT section to respond to the question or topic in the <{{DATA_TAG}}> section.
 
         # Special Instructions:
         #{message.chat.assistant.instructions}
@@ -216,12 +217,10 @@ class GenerateMessageResponseJob < ApplicationJob
       llm_message.from = :assistant
 
       begin
-        start_time = Time.now
+        Time.now
         llm_message.generating!
         llm_message.content = get_generation(llm_message.prompt)
-        end_time = Time.now
-
-        generation_time = end_time - start_time
+        Time.now
 
         llm_message.save
         llm_message.ready!

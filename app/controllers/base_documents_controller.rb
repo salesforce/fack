@@ -11,13 +11,16 @@ class BaseDocumentsController < ApplicationController
   def index
     @documents = Document.includes(:library, :user)
 
-    @documents = if params[:sort] == 'questions'
-                   @documents.order(questions_count: :desc)
-                 elsif params[:sort] == 'tokens'
-                   @documents.order(token_count: :desc)
-                 else
-                   @documents.order(updated_at: :desc)
-                 end
+    # Only apply default sorting if not doing similarity search
+    unless params[:similar_to].present?
+      @documents = if params[:sort] == 'questions'
+                     @documents.order(questions_count: :desc)
+                   elsif params[:sort] == 'tokens'
+                     @documents.order(token_count: :desc)
+                   else
+                     @documents.order(updated_at: :desc)
+                   end
+    end
 
     library_id = params[:library_id]
     if library_id.present?
@@ -57,9 +60,17 @@ class BaseDocumentsController < ApplicationController
       embedding = get_embedding(params[:similar_to])
       # Get similar documents but preserve existing filters
       similar_docs = related_documents_from_embedding_by_libraries(embedding, library_id)
-      # Apply the similarity search as an additional filter by getting the IDs
-      similar_doc_ids = similar_docs.pluck(:id)
+
+      # Sort by neighbor_distance (ascending - closest first)
+      similar_docs_sorted = similar_docs.sort_by(&:neighbor_distance)
+
+      # Apply the similarity search as an additional filter by getting the IDs in sorted order
+      similar_doc_ids = similar_docs_sorted.map(&:id)
       @documents = @documents.where(id: similar_doc_ids)
+
+      # Preserve the similarity order in the final results using Arel.sql for safety
+      case_statement = "CASE #{similar_doc_ids.map.with_index { |id, index| "WHEN id = #{id} THEN #{index}" }.join(' ')} END"
+      @documents = @documents.order(Arel.sql(case_statement))
     end
 
     @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?

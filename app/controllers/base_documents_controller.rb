@@ -61,16 +61,12 @@ class BaseDocumentsController < ApplicationController
       # Get similar documents but preserve existing filters
       similar_docs = related_documents_from_embedding_by_libraries(embedding, library_id)
 
-      # Sort by neighbor_distance (ascending - closest first)
-      similar_docs_sorted = similar_docs.sort_by(&:neighbor_distance)
+      # Sort by neighbor_distance (ascending - closest first) and convert to array
+      # This maintains the similarity order without needing raw SQL
+      @documents = similar_docs.sort_by(&:neighbor_distance)
 
-      # Apply the similarity search as an additional filter by getting the IDs in sorted order
-      similar_doc_ids = similar_docs_sorted.map(&:id)
-      @documents = @documents.where(id: similar_doc_ids)
-
-      # Preserve the similarity order in the final results using Arel.sql for safety
-      case_statement = "CASE #{similar_doc_ids.map.with_index { |id, index| "WHEN id = #{id} THEN #{index}" }.join(' ')} END"
-      @documents = @documents.order(Arel.sql(case_statement))
+      # Convert to Kaminari-compatible array for pagination
+      @documents = Kaminari.paginate_array(@documents)
     end
 
     @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?

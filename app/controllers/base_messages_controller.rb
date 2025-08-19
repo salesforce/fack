@@ -34,16 +34,6 @@ class BaseMessagesController < ApplicationController
     end
   end
 
-  # DELETE /messages/1 or /messages/1.json
-  def destroy
-    @message.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -52,7 +42,11 @@ class BaseMessagesController < ApplicationController
   end
 
   def set_chat
-    @chat = Chat.find(params[:chat_id])
+    if params[:chat_id].present?
+      @chat = Chat.find(params[:chat_id])
+    elsif @message&.chat
+      @chat = @message.chat
+    end
   end
 
   # Only allow a list of trusted parameters through.

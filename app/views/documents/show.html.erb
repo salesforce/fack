@@ -4,9 +4,9 @@
 
 <%= render @document %>
 
-<h2 class="text-2xl text-stone-500 mt-5">Related Questions (<%= @document.questions_count %>)
+<h2 class="text-2xl text-stone-500 mt-5">Related Questions (<%= [@related_questions.count, 5].min %> of <%= @document.questions_count %>)
 </h2>
-<%= render 'shared/question_list', questions: @document.questions %>
+<%= render 'shared/question_list', questions: @related_questions %>
 
 <h2 class="text-2xl text-stone-500 mt-5">Related Documents
 </h2>

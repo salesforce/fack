@@ -16,5 +16,6 @@ class DocumentsController < BaseDocumentsController
   # GET /documents/1 or /documents/1.json
   def show
     @related_docs = related_documents(@document).first(5)
+    @related_questions = @document.questions.limit(5)
   end
 end

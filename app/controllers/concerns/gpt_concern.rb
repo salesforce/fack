@@ -139,14 +139,32 @@ module GptConcern
                                  'Content-Type' => 'application/json'
                                })
 
-      response_data = JSON.parse(response.body)
+      # Check if the HTTP request was successful
+      unless response.success?
+        Rails.logger.error("Salesforce API HTTP error: #{response.code} - #{response.message}")
+        return response.body || ''
+      end
+
+      begin
+        response_data = JSON.parse(response.body)
+      rescue JSON::ParserError => e
+        Rails.logger.error("Failed to parse Salesforce API response as JSON: #{e.message}. Response body: #{response.body}")
+        return response.body || ''
+      end
+      
+      # Debug logging to understand the response structure
+      Rails.logger.debug("Salesforce API response: #{response_data.inspect}")
+      
+      # Check if the response has the expected structure
+      unless response_data.is_a?(Hash) && response_data['generations'].is_a?(Array) && response_data['generations'].any?
+        puts("Unexpected Salesforce API response structure: #{response_data.inspect}")
+        return response_data.to_s
+      end
 
       # Decode the HTML entities
       decoded_text = CGI.unescapeHTML(response_data['generations'][0]['text'])
 
       return decoded_text
-    rescue StandardError => e
-      Rails.logger.error("Error calling Salesforce Connect GPT: #{e.message}")
     end
 
     ''
@@ -168,7 +186,7 @@ module GptConcern
           client_id: encoded_client_id,
           client_secret: encoded_client_secret
         }
-     else
+      else
         {
           grant_type: 'password',
           client_id: encoded_client_id,

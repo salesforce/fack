@@ -184,7 +184,10 @@ RSpec.describe GptConcern do
 
     let(:success_response) do
       double('response',
-             body: '{"generations": [{"text": "&lt;generated&gt; text"}]}')
+             success?: true,
+             body: '{"generations": [{"text": "&lt;generated&gt; text"}]}',
+             code: 200,
+             message: 'OK')
     end
 
     before do
@@ -199,8 +202,9 @@ RSpec.describe GptConcern do
       expect(result).to eq('<generated> text')
     end
 
-    it 'returns empty string when an error occurs' do
-      allow(HTTParty).to receive(:post).and_raise(StandardError.new('API Error'))
+    it 'returns empty string when HTTP request fails' do
+      failed_response = double('response', success?: false, body: nil, code: 500, message: 'Internal Server Error')
+      allow(HTTParty).to receive(:post).and_return(failed_response)
       result = instance.call_salesforce_connect_gpt_generation('test prompt')
       expect(result).to eq('')
     end

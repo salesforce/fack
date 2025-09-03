@@ -226,14 +226,13 @@ class GenerateMessageResponseJob < ApplicationJob
 
         llm_message.save
         llm_message.ready!
-      rescue StandardError => e
+      rescue Exception => e
         error_message = "I'm sorry, I encountered an error while processing your request. Please try again later. Error: #{e.message}"
         llm_message.content = error_message
         llm_message.save
         llm_message.ready!
         Rails.logger.error("Error calling GPT to generate answer. Error: #{e.message}\nBacktrace: #{e.backtrace.join("\n")}")
       end
-
     end
   end
 end

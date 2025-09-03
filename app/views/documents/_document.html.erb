@@ -37,6 +37,20 @@
           </div>
         <% end %>
       </div>
+      
+      <!-- Flag Button on the right side -->
+      <div class="flex items-center mx-4">
+        <% flag_count = @document.votes_for.where(vote_scope: 'flag', vote_flag: false).count %>
+        <% if current_user.voted_down_on?(@document, vote_scope: 'flag') %>
+          <a href="<%= document_path(@document, unflag: 1) %>" class="flex items-center px-8 py-1 text-sm bg-red-100 text-red-800 border border-red-300 rounded hover:bg-red-200 transition-colors min-w-36 whitespace-nowrap">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" /></svg><%="Flagged (#{flag_count})" %>
+          </a>
+        <% else %>
+          <a href="<%= document_path(@document, flag: 1) %>" class="flex items-center px-8 py-1 text-sm bg-gray-100 text-gray-700 border border-gray-300 rounded hover:bg-gray-200 transition-colors min-w-36 whitespace-nowrap">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 mr-1"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" /></svg><%="Flag (#{flag_count})" %>
+          </a>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="px-4 py-6 text-gray-800 bg-white font-normal">

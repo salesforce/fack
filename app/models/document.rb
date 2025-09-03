@@ -1,6 +1,9 @@
 class Document < ApplicationRecord
   include PgSearch::Model
 
+  # Enable flagging functionality
+  acts_as_votable
+
   has_many :documents_questions
   has_many :questions, through: :documents_questions
 

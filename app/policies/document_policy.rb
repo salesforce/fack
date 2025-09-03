@@ -16,6 +16,14 @@ class DocumentPolicy < ApplicationPolicy
     user.admin? || document.library.user_id == user.id || user_is_editor?
   end
 
+  def flag?
+    !user.nil? # Any logged-in user can flag documents
+  end
+
+  def unflag?
+    !user.nil? # Any logged-in user can unflag their flags
+  end
+
   private
 
   def user_is_editor?

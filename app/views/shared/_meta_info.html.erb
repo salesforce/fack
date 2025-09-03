@@ -1,5 +1,9 @@
 <div class="py-1 text-xs ">
   Owner <span class="font-bold "><%= email %> </span> |
   Created <span class="font-bold  "><%= time_ago_in_words(created_at) %> ago</span> |
-  Updated <span class="font-bold  "><%= time_ago_in_words(updated_at) %> ago</span>
+  Updated <span class="font-bold  "><%= time_ago_in_words(updated_at) %> ago</span><%= 
+    if defined?(synced_at) && synced_at.present?
+      content_tag(:span, " | Synced #{time_ago_in_words(synced_at)} ago")
+    end
+  %>
 </div>

@@ -1,0 +1,11 @@
+<%= turbo_stream.prepend "comments-list" do %>
+  <%= render @comment %>
+<% end %>
+
+<%= turbo_stream.update "comment_form" do %>
+  <%= render 'comments/form' %>
+<% end %>
+
+<%= turbo_stream.update "comments-count" do %>
+  Comments (<%= @document.comments.count %>)
+<% end %>

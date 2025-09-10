@@ -32,7 +32,9 @@ Rails.application.routes.draw do
 
   # General Resources
   resources :questions
-  resources :documents
+  resources :documents do
+    resources :comments, only: %i[create update destroy]
+  end
   resources :api_tokens
 
   # Nested Resources

@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   has_many :assistant_users
   has_many :assistants, through: :assistant_users
+  has_many :comments, dependent: :destroy
 
   private
 

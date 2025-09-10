@@ -1,0 +1,31 @@
+<div class="comments-section p-3 mt-3 bg-white rounded-lg border border-gray-200">
+  <h2 id="comments-count" class="text-2xl font-semibold text-gray-900 mb-6">
+    Comments (<%= @document.comments.count %>)
+  </h2>
+  
+  <div id="comment_form">
+    <%= render 'comments/form' %>
+  </div>
+  
+  <div id="comments-list" class="comments-list">
+    <% if @document.comments.any? %>
+      <%= render @document.comments.ordered %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+function toggleEditComment(commentId) {
+  const comment = document.getElementById(commentId);
+  const content = comment.querySelector('.comment-content');
+  const editForm = comment.querySelector('.comment-edit-form');
+  
+  if (editForm.classList.contains('hidden')) {
+    content.classList.add('hidden');
+    editForm.classList.remove('hidden');
+  } else {
+    content.classList.remove('hidden');
+    editForm.classList.add('hidden');
+  }
+}
+</script>

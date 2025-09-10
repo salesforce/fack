@@ -56,20 +56,17 @@ class BaseDocumentsController < ApplicationController
       end
     end
 
+    # Apply text search before similarity search to maintain ActiveRecord relation
+    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
+
     if params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
       # Get similar documents but preserve existing filters
-      similar_docs = related_documents_from_embedding_by_libraries(embedding, library_id)
+      @documents = @documents.related_by_embedding(embedding)
 
-      # Sort by neighbor_distance (ascending - closest first) and convert to array
-      # This maintains the similarity order without needing raw SQL
-      @documents = similar_docs.sort_by(&:neighbor_distance)
-
-      # Convert to Kaminari-compatible array for pagination
-      @documents = Kaminari.paginate_array(@documents)
+      # Sort by neighbor_distance using SQL to maintain ActiveRecord relation
+      @documents = @documents.order('neighbor_distance ASC')
     end
-
-    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
     @documents = @documents.page(params[:page]).per(params[:per_page] || 10)
   end
 

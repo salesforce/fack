@@ -15,6 +15,15 @@ class Document < ApplicationRecord
                   }
 
   has_neighbors :embedding
+
+  # Scope to find related documents by embedding with optional library filtering
+  # _limit is the number of documents to return. Returning fewer is better since the most relevant documents are at the top.
+  # Because of the ordering, having too many documents may cause the most relevant documents to be lost.
+  scope :related_by_embedding, lambda { |embedding, limit = nil|
+    limit ||= ENV.fetch('RELATED_DOCUMENTS_LIMIT', 25).to_i
+    scope = nearest_neighbors(:embedding, embedding, distance: 'euclidean')
+    scope.order(updated_at: :desc).limit(limit)
+  }
   belongs_to :library, counter_cache: true
   belongs_to :user
 

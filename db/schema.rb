@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_11_210127) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_10_194512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -90,6 +90,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_11_210127) do
     t.index ["user_id"], name: "index_chats_on_user_id"
     t.index ["webhook_external_id"], name: "index_chats_on_webhook_external_id", unique: true
     t.index ["webhook_id"], name: "index_chats_on_webhook_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "document_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["document_id"], name: "index_comments_on_document_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -265,6 +275,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_11_210127) do
   add_foreign_key "chats", "assistants"
   add_foreign_key "chats", "users"
   add_foreign_key "chats", "webhooks"
+  add_foreign_key "comments", "documents"
+  add_foreign_key "comments", "users"
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
   add_foreign_key "google_authorizations", "users"

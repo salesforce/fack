@@ -24,6 +24,14 @@ class DocumentPolicy < ApplicationPolicy
     !user.nil? # Any logged-in user can unflag their flags
   end
 
+  def upvote?
+    !user.nil? # Any logged-in user can upvote documents
+  end
+
+  def downvote?
+    !user.nil? # Any logged-in user can downvote documents
+  end
+
   private
 
   def user_is_editor?

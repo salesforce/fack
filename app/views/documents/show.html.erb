@@ -21,10 +21,8 @@
 
 <%= render @document %>
 
-<h2 class="text-2xl text-stone-500 mt-5">Related Questions (<%= @document.questions_count %>)
-</h2>
-<%= render 'shared/question_list', questions: @document.questions %>
+<%= render 'comments/comments_section' %>
 
-<h2 class="text-2xl text-stone-500 mt-5">Related Documents
+<h2 class="text-2xl text-stone-500 mt-5">Similar Documents
 </h2>
 <%= render 'shared/doc_list', docs: @related_docs %>

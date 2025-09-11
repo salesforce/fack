@@ -6,6 +6,7 @@ class Document < ApplicationRecord
 
   has_many :documents_questions
   has_many :questions, through: :documents_questions
+  has_many :comments, dependent: :destroy
 
   pg_search_scope :search_by_title_and_document,
                   against: %i[title document],

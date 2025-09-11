@@ -22,8 +22,21 @@ class DocumentsController < BaseDocumentsController
       @document.undisliked_by current_user, vote_scope: 'flag'
     end
 
-    redirect_to action: :show if params[:flag] || params[:unflag]
+    # Handle upvote/downvote functionality (requires user to be logged in)
+    if params[:upvote] && current_user
+      authorize @document, :upvote?
+      @document.liked_by current_user, vote_scope: 'rating'
+    elsif params[:downvote] && current_user
+      authorize @document, :downvote?
+      @document.disliked_by current_user, vote_scope: 'rating'
+    elsif params[:unvote] && current_user
+      @document.unliked_by current_user, vote_scope: 'rating'
+      @document.undisliked_by current_user, vote_scope: 'rating'
+    end
+
+    redirect_to action: :show if params[:flag] || params[:unflag] || params[:upvote] || params[:downvote] || params[:unvote]
 
     @related_docs = related_documents(@document).first(5)
+    @comments = @document.comments.includes(:user).ordered
   end
 end

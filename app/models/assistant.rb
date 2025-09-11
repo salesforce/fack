@@ -7,7 +7,7 @@ class Assistant < ApplicationRecord
 
   has_many :assistant_users, dependent: :destroy
   has_many :users, through: :assistant_users
-  enum status: { development: 0, ready: 1 }
+  enum :status, { development: 0, ready: 1 }
   validates :name, presence: true
   validates :slack_channel_name, uniqueness: true, allow_blank: true
   validate :slack_channel_name_starts_with_unique

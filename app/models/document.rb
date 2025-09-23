@@ -12,7 +12,8 @@ class Document < ApplicationRecord
                   against: %i[title document],
                   using: {
                     tsearch: { prefix: true, dictionary: 'english',
-                               tsvector_column: 'search_vector' } # This option allows partial matches
+                               tsvector_column: 'search_vector',
+                               any_word: true } # This enables OR search - matches any word
                   }
 
   has_neighbors :embedding

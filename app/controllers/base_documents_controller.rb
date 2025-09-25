@@ -46,7 +46,7 @@ class BaseDocumentsController < ApplicationController
       end
     end
 
-    # Apply similarity search on already filtered dataset
+    # Contains should take priority and we shouldn't do similarity and contains
     if params[:contains].present?
       @documents = @documents.smart_search(params[:contains])
     elsif params[:similar_to].present?

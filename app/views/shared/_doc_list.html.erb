@@ -1,5 +1,5 @@
 <ul class="space-y-4">
-  <% docs.each do |document| %>
+  <% docs.each_with_index do |document, index| %>
     <li class="bg-white p-4 rounded-lg border border-stone-300 hover:shadow-lg group">
       <details class="text-base">
         <summary class="text-lg cursor-pointer flex justify-between items-center">
@@ -10,7 +10,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1 text-stone-700">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
-                <%= time_ago_in_words(document.created_at) %>
+                <%= time_ago_in_words(document.updated_at) %>
               </div>
               <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3 mr-1 text-stone-700">

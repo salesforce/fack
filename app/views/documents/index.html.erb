@@ -19,7 +19,6 @@
           <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
           <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
         </div>
-        
         <!-- Date Range Filters -->
         <div class="flex space-x-4">
           <div class="flex-1">
@@ -34,7 +33,6 @@
       </div>
     <% end %>
   </div>
-
   <div class="flex-grow flex items-center mt-3">
     <% if params[:sort].nil? %>
       <%= link_to 'Sort by Popularity', 
@@ -46,6 +44,8 @@
       <%= link_to 'Sort by Date', request.path, class: 'rounded-lg p-2 bg-white text-sky-500 border-sky-500 border hover:bg-sky-50' %>
     <% end %>
   </div>
+  <div class="my-2">
+    <%= render 'shared/doc_list', docs: @documents %>
+  </div>
   <%= paginate @documents %>
-  <%= render 'shared/doc_list', docs: @documents %>
 </div>

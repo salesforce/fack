@@ -11,17 +11,7 @@ class BaseDocumentsController < ApplicationController
   def index
     @documents = Document.includes(:library, :user)
 
-    # Only apply default sorting if not doing similarity search
-    unless params[:similar_to].present?
-      @documents = if params[:sort] == 'questions'
-                     @documents.order(questions_count: :desc)
-                   elsif params[:sort] == 'tokens'
-                     @documents.order(token_count: :desc)
-                   else
-                     @documents.order(updated_at: :desc)
-                   end
-    end
-
+    # Apply cheap filters first for better performance
     library_id = params[:library_id]
     if library_id.present?
       @library = Library.find(params[:library_id])
@@ -56,9 +46,10 @@ class BaseDocumentsController < ApplicationController
       end
     end
 
-    # Apply text search before similarity search to maintain ActiveRecord relation
-    @documents = @documents.search_by_title_and_document(params[:contains]) if params[:contains].present?
+    # Apply text search after basic filtering to work on smaller dataset
+    @documents = @documents.smart_search(params[:contains]) if params[:contains].present?
 
+    # Apply similarity search on already filtered dataset
     if params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
       # Get similar documents but preserve existing filters
@@ -66,7 +57,17 @@ class BaseDocumentsController < ApplicationController
 
       # Sort by neighbor_distance using SQL to maintain ActiveRecord relation
       @documents = @documents.order('neighbor_distance ASC')
+    else
+      # Only apply default sorting if not doing similarity search
+      @documents = if params[:sort] == 'questions'
+                     @documents.order(questions_count: :desc)
+                   elsif params[:sort] == 'tokens'
+                     @documents.order(token_count: :desc)
+                   else
+                     @documents.order(updated_at: :desc)
+                   end
     end
+
     @documents = @documents.page(params[:page]).per(params[:per_page] || 10)
   end
 

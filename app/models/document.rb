@@ -7,16 +7,52 @@ class Document < ApplicationRecord
   has_many :documents_questions
   has_many :questions, through: :documents_questions
   has_many :comments, dependent: :destroy
+  has_neighbors :embedding
 
+  # Primary search scope using PostgreSQL full-text search
+  # Searches across both title and document content with strict word matching
+  # - prefix: true allows partial word matching (e.g., "test" matches "testing")
+  # - any_word: false requires ALL search terms to be present (AND logic)
+  # - Uses precomputed search_vector for performance
   pg_search_scope :search_by_title_and_document,
                   against: %i[title document],
                   using: {
-                    tsearch: { prefix: true, dictionary: 'english',
-                               tsvector_column: 'search_vector',
-                               any_word: true } # This enables OR search - matches any word
+                    tsearch: {
+                      prefix: true,
+                      dictionary: 'english',
+                      tsvector_column: 'search_vector',
+                      any_word: true
+                    }
                   }
 
-  has_neighbors :embedding
+  # Strict search scope with enhanced exact matching
+  # Similar to search_by_title_and_document but with stricter ranking:
+  # - normalization: 0 disables document length normalization in ranking
+  # - This prioritizes exact word matches over document length considerations
+  # - Better for finding specific content regardless of document size
+  pg_search_scope :strict_search,
+                  against: %i[title document],
+                  using: {
+                    tsearch: {
+                      prefix: true,
+                      dictionary: 'english',
+                      tsvector_column: 'search_vector',
+                      any_word: false,
+                      normalization: 0 # No normalization - prioritizes exact word matches over document length
+                    }
+                  }
+
+  # Smart search scope that handles partial word matching like "test12" -> "test"
+  # This is chainable and preserves existing filters (library_id, date ranges, etc.)
+  scope :smart_search, lambda { |query|
+    return all if query.blank?
+
+    strict_results = strict_search(query)
+    return strict_results if strict_results.count >= 1
+
+    # Return empty relation if no results found
+    none
+  }
 
   # Scope to find related documents by embedding with optional library filtering
   # _limit is the number of documents to return. Returning fewer is better since the most relevant documents are at the top.

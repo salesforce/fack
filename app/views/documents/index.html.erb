@@ -10,11 +10,27 @@
     <% end %>
   </div>
   <!-- Search Form -->
-  <div class="flex-grow flex items-center mt-3">
+  <div class="mt-3">
     <% action_path = @library.present? ? library_documents_path(@library) : documents_path %>
-    <%= form_with(url: action_path, method: :get, local: true, class: "w-full flex") do %>
-      <input type="text" name="contains" id="contains" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
-      <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+    <%= form_with(url: action_path, method: :get, local: true, class: "w-full") do %>
+      <div class="flex flex-col space-y-3">
+        <!-- Text Search -->
+        <div class="flex">
+          <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
+          <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
+        </div>
+        <!-- Date Range Filters -->
+        <div class="flex space-x-4">
+          <div class="flex-1">
+            <label for="since" class="block text-sm font-medium text-stone-700 mb-1">Updated Since:</label>
+            <input type="datetime-local" name="since" id="since" value="<%= params[:since] %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
+          </div>
+          <div class="flex-1">
+            <label for="until" class="block text-sm font-medium text-stone-700 mb-1">Updated Until:</label>
+            <input type="datetime-local" name="until" id="until" value="<%= params[:until] %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
   <div class="flex-grow flex items-center mt-3">
@@ -28,6 +44,8 @@
       <%= link_to 'Sort by Date', request.path, class: 'rounded-lg p-2 bg-white text-sky-500 border-sky-500 border hover:bg-sky-50' %>
     <% end %>
   </div>
+  <div class="my-2">
+    <%= render 'shared/doc_list', docs: @documents %>
+  </div>
   <%= paginate @documents %>
-  <%= render 'shared/doc_list', docs: @documents %>
 </div>

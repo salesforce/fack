@@ -47,7 +47,6 @@ class BaseDocumentsController < ApplicationController
     end
 
     # Apply text search after basic filtering to work on smaller dataset
-    @documents = @documents.smart_search(params[:contains]) if params[:contains].present?
 
     # Apply similarity search on already filtered dataset
     if params[:similar_to].present?
@@ -57,6 +56,8 @@ class BaseDocumentsController < ApplicationController
 
       # Sort by neighbor_distance using SQL to maintain ActiveRecord relation
       @documents = @documents.order('neighbor_distance ASC')
+    elsif params[:contains].present?
+      @documents = @documents.smart_search(params[:contains])
     else
       # Only apply default sorting if not doing similarity search
       @documents = if params[:sort] == 'questions'

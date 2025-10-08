@@ -22,5 +22,34 @@ RSpec.describe Assistant, type: :model do
         expect(assistant.errors[:libraries]).to include('must be a valid CSV format with only numbers')
       end
     end
+
+    context 'quip_url validation' do
+      it 'is valid with a quip.com URL' do
+        assistant = Assistant.new(name: 'test', quip_url: 'https://example.quip.com/document/123', input: 'input', user:, instructions: 'instructions', output: 'output')
+        expect(assistant).to be_valid
+      end
+
+      it 'is valid with blank quip_url' do
+        assistant = Assistant.new(name: 'test', quip_url: '', input: 'input', user:, instructions: 'instructions', output: 'output')
+        expect(assistant).to be_valid
+      end
+
+      it 'is valid with nil quip_url' do
+        assistant = Assistant.new(name: 'test', quip_url: nil, input: 'input', user:, instructions: 'instructions', output: 'output')
+        expect(assistant).to be_valid
+      end
+
+      it 'is not valid with non-quip URL' do
+        assistant = Assistant.new(name: 'test', quip_url: 'https://google.com/document/123', input: 'input', user:, instructions: 'instructions', output: 'output')
+        expect(assistant).not_to be_valid
+        expect(assistant.errors[:quip_url]).to include('Only quip urls are supported.')
+      end
+
+      it 'is not valid with URL that does not contain quip.com' do
+        assistant = Assistant.new(name: 'test', quip_url: 'https://example.com/quip/document/123', input: 'input', user:, instructions: 'instructions', output: 'output')
+        expect(assistant).not_to be_valid
+        expect(assistant.errors[:quip_url]).to include('Only quip urls are supported.')
+      end
+    end
   end
 end

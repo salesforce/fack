@@ -167,7 +167,11 @@ class GenerateMessageResponseJob < ApplicationJob
         salesforce_client = Salesforce::Client.new
 
         salesforce_results = salesforce_client.query(assistant.soql)
-        prompt += JSON.pretty_generate(salesforce_results.map(&:to_h))
+        prompt += if salesforce_results&.any?
+                    JSON.pretty_generate(salesforce_results.map(&:to_h))
+                  else
+                    'No results from query.'
+                  end
         prompt += '</SOQL>'
       end
 

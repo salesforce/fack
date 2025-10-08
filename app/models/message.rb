@@ -6,8 +6,8 @@ class Message < ApplicationRecord
   validates :from, presence: true
   validates :content, presence: true
 
-  enum from: { user: 0, assistant: 1 }
-  enum status: { ready: 0, generating: 1 }
+  enum :from, { user: 0, assistant: 1 }
+  enum :status, { ready: 0, generating: 1 }
 
   after_commit :broadcast_message, on: %i[create update]
 

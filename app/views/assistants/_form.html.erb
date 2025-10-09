@@ -88,6 +88,11 @@
       <p id="" class="text-gray-500 text-xs">Post an initial message when the bot is added to the channel.</p>
       <%= form.check_box :enable_channel_join_message, class: "block shadow rounded-md border border-gray-400 outline-none mt-2" %>
     </div>
+    <div class="my-5">
+      <%= form.label "Slack Reply Only" %>
+      <p id="" class="text-gray-500 text-xs">When enabled, the assistant will only respond to direct mentions in Slack threads.  It will not post new threads in the channel.</p>
+      <%= form.check_box :slack_reply_only, class: "block shadow rounded-md border border-gray-400 outline-none mt-2" %>
+    </div>
   <% end %>
   <%= render "shared/form_section", title: "Document Creation (Optional)" do %>
     <div class="my-5">

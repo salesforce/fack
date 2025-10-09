@@ -1,7 +1,9 @@
 FactoryBot.define do
   factory :message do
-    chat { nil }
+    association :chat
+    association :user
     content { "MyText" }
-    from { 1 }
+    from { :user }
+    status { :ready }
   end
 end

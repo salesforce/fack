@@ -62,6 +62,14 @@ class Document < ApplicationRecord
     scope = nearest_neighbors(:embedding, embedding, distance: 'euclidean')
     scope.order(updated_at: :desc).limit(limit)
   }
+
+  # Default scope to only show non-deleted documents
+  default_scope { where(deleted_date: nil) }
+
+  # Soft delete scopes
+  scope :not_deleted, -> { where(deleted_date: nil) }
+  scope :deleted, -> { where.not(deleted_date: nil) }
+  scope :with_deleted, -> { unscoped }
   belongs_to :library, counter_cache: true
   belongs_to :user
 
@@ -173,5 +181,22 @@ class Document < ApplicationRecord
     self.search_vector = Document.connection.execute(
       "SELECT #{sanitized_sql} AS tsvector"
     ).first['tsvector']
+  end
+
+  # Soft delete methods
+  def soft_delete!
+    update!(deleted_date: Time.current)
+  end
+
+  def restore!
+    update!(deleted_date: nil)
+  end
+
+  def deleted?
+    deleted_date.present?
+  end
+
+  def active?
+    !deleted?
   end
 end

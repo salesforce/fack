@@ -34,13 +34,20 @@ Rails.application.routes.draw do
   resources :questions
   resources :documents do
     resources :comments, only: %i[create update destroy]
+    member do
+      patch :restore
+    end
   end
   resources :api_tokens
 
   # Nested Resources
   resources :libraries do
     resources :library_users
-    resources :documents
+    resources :documents do
+      member do
+        patch :restore
+      end
+    end
     member do
       get 'users'
       get 'download'

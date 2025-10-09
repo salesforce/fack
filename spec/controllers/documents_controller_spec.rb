@@ -35,9 +35,9 @@ RSpec.describe DocumentsController, type: :controller do
 
     context 'when the document saves successfully' do
       it 'enqueues an EmbedDocumentJob' do
-        expect {
+        expect do
           post :create, params: { document: valid_attributes }
-        }.to have_enqueued_job(EmbedDocumentJob).on_queue('default')
+        end.to have_enqueued_job(EmbedDocumentJob).on_queue('default')
       end
     end
 
@@ -63,6 +63,33 @@ RSpec.describe DocumentsController, type: :controller do
       Document.create!(valid_attributes.merge(title: 'Second Document', document: 'Content including special keyword'))
       get :index, params: { contains: 'including keyword' }
       expect(assigns(:documents)).to match_array([Document.find_by(title: 'Second Document')])
+    end
+
+    context 'with show_deleted parameter' do
+      let!(:active_document) { Document.create!(valid_attributes.merge(title: 'Active Document', document: 'Active document content')) }
+      let!(:deleted_document) { Document.create!(valid_attributes.merge(title: 'Deleted Document', document: 'Deleted document content')) }
+
+      before do
+        deleted_document.soft_delete!
+      end
+
+      it 'shows only active documents by default' do
+        get :index
+        expect(assigns(:documents)).to include(active_document)
+        expect(assigns(:documents)).not_to include(deleted_document)
+      end
+
+      it 'shows both active and deleted documents when show_deleted=true' do
+        get :index, params: { show_deleted: 'true' }
+        expect(assigns(:documents)).to include(active_document)
+        expect(assigns(:documents)).to include(deleted_document)
+      end
+
+      it 'shows only deleted documents when show_deleted=only' do
+        get :index, params: { show_deleted: 'only' }
+        expect(assigns(:documents)).not_to include(active_document)
+        expect(assigns(:documents)).to include(deleted_document)
+      end
     end
   end
 

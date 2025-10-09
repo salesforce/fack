@@ -2,14 +2,14 @@
 
 class BaseDocumentsController < ApplicationController
   helper_method :can_manage_documents?
-  before_action :set_document, only: %i[show edit update]
+  before_action :set_document, only: %i[show edit update destroy restore]
 
   include Hashable
   include GptConcern
   include NeighborConcern
   # GET /documents or /documents.json
   def index
-    @documents = Document.includes(:library, :user)
+    @documents = Document.includes(:library, :user).not_deleted
 
     # Apply cheap filters first for better performance
     library_id = params[:library_id]
@@ -136,6 +136,30 @@ class BaseDocumentsController < ApplicationController
     end
   end
 
+  # DELETE /documents/1 or /documents/1.json
+  def destroy
+    authorize @document
+
+    @document.soft_delete!
+
+    respond_to do |format|
+      format.html { redirect_to @document, notice: 'Document was successfully deleted.' }
+      format.json { head :no_content }
+    end
+  end
+
+  # PATCH /documents/1/restore or /documents/1/restore.json
+  def restore
+    authorize @document, :destroy? # Use same authorization as destroy
+
+    @document.restore!
+
+    respond_to do |format|
+      format.html { redirect_to @document, notice: 'Document was successfully restored.' }
+      format.json { render :show, status: :ok, location: @document }
+    end
+  end
+
   private
 
   def can_manage_documents?
@@ -151,7 +175,7 @@ class BaseDocumentsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_document
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

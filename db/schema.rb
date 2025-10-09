@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_10_194512) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_09_002318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -137,6 +137,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_10_194512) do
     t.datetime "synced_at"
     t.string "last_sync_result"
     t.tsvector "search_vector"
+    t.datetime "deleted_date"
     t.index ["check_hash"], name: "index_documents_on_check_hash"
     t.index ["created_at"], name: "index_documents_on_created_at"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw

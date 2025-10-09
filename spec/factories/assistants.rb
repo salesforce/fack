@@ -5,6 +5,9 @@ FactoryBot.define do
     libraries { '1' }
     input { 'some input' }
     name { 'Test Assistant' }
+    instructions { 'Sample instructions' }
+    output { 'Sample output' }
+    slack_reply_only { false }
     association :user
   end
 end

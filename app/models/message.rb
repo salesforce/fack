@@ -14,44 +14,73 @@ class Message < ApplicationRecord
   private
 
   def create_slack_post
-    channel_id = chat.assistant.slack_channel_name.presence || chat.slack_channel_id
-
-    # Skip if there is already a thread linked or the assistant doesn't have a slack channel
-    return if channel_id.blank?
-
-    # If the assistant is generating, then it isn't ready and we don't post to slack
-    return unless ready?
-
-    # skip if this message already has a slack ts
-    return if slack_ts
+    return unless should_post_to_slack?
 
     begin
-      slack_service = SlackService.new
-
-      # if the chat.slack_thread is missing, we create a new thread
-      self.slack_ts = slack_service.post_message(channel_id, content, chat.slack_thread, assistant?)
-
-      # if the chat didn't have a thread, save it.
-      if chat.slack_thread.nil?
-        chat.slack_thread = slack_ts
-        chat.save
-      end
-
-      if slack_ts
-        slack_service.add_reaction(channel: chat.assistant.slack_channel_name, timestamp: slack_ts, emoji: 'pagerduty') if chat.webhook && (chat.webhook.hook_type == 'pagerduty')
-      else
-        Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
-      end
+      post_message_to_slack
+      add_pagerduty_reaction_if_needed
     rescue StandardError => e
-      Rails.logger.error("Error in create_slack_post for message #{id}: #{e.message}")
-      Rails.logger.error(e.backtrace.join("\n"))
-      # Update the message content with the error information, bypassing callbacks
-      error_message = "⚠️ Slack Error: #{e.message}"
-
-      # There may be a better place to do this, but will look at that later
-      update_column(:content, "#{content}\n\n#{error_message}")
-      # Don't raise the error to prevent the message creation from failing
+      handle_slack_error(e)
     end
+  end
+
+  def should_post_to_slack?
+    return false if slack_channel_id.blank?
+    return false unless ready?
+    return false if slack_ts.present?
+    return false if assistant_reply_only_mode_violated?
+
+    true
+  end
+
+  def slack_channel_id
+    @slack_channel_id ||= chat.assistant.slack_channel_name.presence || chat.slack_channel_id
+  end
+
+  def assistant_reply_only_mode_violated?
+    # If assistant is set to reply only and this is an assistant message without an existing thread,
+    # it means we're trying to start a new conversation which violates reply-only mode
+    chat.assistant.slack_reply_only? && assistant? && chat.slack_thread.blank?
+  end
+
+  def post_message_to_slack
+    slack_service = SlackService.new
+    self.slack_ts = slack_service.post_message(slack_channel_id, content, chat.slack_thread, assistant?)
+
+    update_chat_thread_if_needed
+    log_error_if_post_failed
+  end
+
+  def update_chat_thread_if_needed
+    return unless chat.slack_thread.nil? && slack_ts.present?
+
+    chat.update!(slack_thread: slack_ts)
+  end
+
+  def log_error_if_post_failed
+    return if slack_ts.present?
+
+    Rails.logger.error("Failed to create Slack thread for chat ID: #{chat.id}")
+  end
+
+  def add_pagerduty_reaction_if_needed
+    return unless slack_ts.present?
+    return unless chat.webhook&.hook_type == 'pagerduty'
+
+    SlackService.new.add_reaction(
+      channel: chat.assistant.slack_channel_name,
+      timestamp: slack_ts,
+      emoji: 'pagerduty'
+    )
+  end
+
+  def handle_slack_error(error)
+    Rails.logger.error("Error in create_slack_post for message #{id}: #{error.message}")
+    Rails.logger.error(error.backtrace.join("\n"))
+
+    # Consider using a separate error tracking field instead of modifying content
+    error_message = "⚠️ Slack Error: #{error.message}"
+    update_column(:content, "#{content}\n\n#{error_message}")
   end
 
   def enqueue_generate_message_response_job

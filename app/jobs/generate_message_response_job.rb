@@ -133,17 +133,20 @@ class GenerateMessageResponseJob < ApplicationJob
 
       # QUIP Doc
       if assistant.quip_url.present?
-        quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
-
         uri = URI.parse(assistant.quip_url)
-        path = uri.path.sub(%r{^/}, '') # Removes the leading /
-        quip_thread = quip_client.get_thread(path)
+        # Some quip_urls have google and other things in the host.  skip this if it doesn't have quip.com in the host
+        if uri.host&.include?('quip.com')
+          quip_client = Quip::Client.new(access_token: ENV.fetch('QUIP_TOKEN'))
+          path = uri.path.sub(%r{^/}, '') # Removes the leading /
 
-        prompt += "# QUIP DOCUMENT\n\n"
-        # The quip api only returns html which has too much extra junk.
-        # Convert to md for smaller size
-        markdown_quip = ReverseMarkdown.convert quip_thread['html']
-        prompt += markdown_quip
+          quip_thread = quip_client.get_thread(path)
+
+          prompt += "# QUIP DOCUMENT\n\n"
+          # The quip api only returns html which has too much extra junk.
+          # Convert to md for smaller size
+          markdown_quip = ReverseMarkdown.convert quip_thread['html']
+          prompt += markdown_quip
+        end
       end
 
       if assistant.confluence_spaces.present?
@@ -164,7 +167,11 @@ class GenerateMessageResponseJob < ApplicationJob
         salesforce_client = Salesforce::Client.new
 
         salesforce_results = salesforce_client.query(assistant.soql)
-        prompt += JSON.pretty_generate(salesforce_results.map(&:to_h))
+        prompt += if salesforce_results&.any?
+                    JSON.pretty_generate(salesforce_results.map(&:to_h))
+                  else
+                    'No results from query.'
+                  end
         prompt += '</SOQL>'
       end
 
@@ -217,12 +224,8 @@ class GenerateMessageResponseJob < ApplicationJob
       llm_message.from = :assistant
 
       begin
-        start_time = Time.now
         llm_message.generating!
         llm_message.content = get_generation(llm_message.prompt)
-        end_time = Time.now
-
-        generation_time = end_time - start_time
 
         llm_message.save
         llm_message.ready!

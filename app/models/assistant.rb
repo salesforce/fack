@@ -7,10 +7,11 @@ class Assistant < ApplicationRecord
 
   has_many :assistant_users, dependent: :destroy
   has_many :users, through: :assistant_users
-  enum status: { development: 0, ready: 1 }
+  enum :status, { development: 0, ready: 1 }
   validates :name, presence: true
   validates :slack_channel_name, uniqueness: true, allow_blank: true
   validate :slack_channel_name_starts_with_unique
+  validate :quip_url_must_contain_quip_domain
 
   validate :libraries_must_be_csv_with_numbers
 
@@ -60,5 +61,13 @@ class Assistant < ApplicationRecord
     return unless csv_parts.any? { |part| part.blank? || !(part =~ /\A\d+(\.\d+)?\z/) }
 
     errors.add(:libraries, 'must be a valid CSV format with only numbers')
+  end
+
+  def quip_url_must_contain_quip_domain
+    return if quip_url.blank?
+
+    return if quip_url.include?('quip.com')
+
+    errors.add(:quip_url, 'Only quip urls are supported.')
   end
 end

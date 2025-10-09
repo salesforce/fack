@@ -135,4 +135,4 @@ gem 'omniauth-google-oauth2'
 gem 'google-api-client'
 gem 'googleauth'
 
-gem 'uri', '>= 1.0.3'
+gem 'uri', '>= 1.0.4'

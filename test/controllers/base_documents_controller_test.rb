@@ -3,11 +3,8 @@
 require 'test_helper'
 
 class BaseDocumentsControllerTest < ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
-
   setup do
     @user = users(:one)
-    sign_in @user
   end
 
   test 'should get index with valid ISO 8601 since parameter' do
@@ -60,5 +57,38 @@ class BaseDocumentsControllerTest < ActionDispatch::IntegrationTest
   test 'should get index with empty since parameter' do
     get documents_path, params: { since: '' }
     assert_response :success
+  end
+
+  test 'should show only active documents by default' do
+    active_doc = Document.create!(title: 'Active', document: 'active content', library: libraries(:one), user: @user)
+    deleted_doc = Document.create!(title: 'Deleted', document: 'deleted content', library: libraries(:one), user: @user)
+    deleted_doc.soft_delete!
+
+    get documents_path
+    assert_response :success
+    assert_includes assigns(:documents), active_doc
+    assert_not_includes assigns(:documents), deleted_doc
+  end
+
+  test 'should show both active and deleted documents when show_deleted=true' do
+    active_doc = Document.create!(title: 'Active 2', document: 'active content 2', library: libraries(:one), user: @user)
+    deleted_doc = Document.create!(title: 'Deleted 2', document: 'deleted content 2', library: libraries(:one), user: @user)
+    deleted_doc.soft_delete!
+
+    get documents_path, params: { show_deleted: 'true' }
+    assert_response :success
+    assert_includes assigns(:documents), active_doc
+    assert_includes assigns(:documents), deleted_doc
+  end
+
+  test 'should show only deleted documents when show_deleted=only' do
+    active_doc = Document.create!(title: 'Active 3', document: 'active content 3', library: libraries(:one), user: @user)
+    deleted_doc = Document.create!(title: 'Deleted 3', document: 'deleted content 3', library: libraries(:one), user: @user)
+    deleted_doc.soft_delete!
+
+    get documents_path, params: { show_deleted: 'only' }
+    assert_response :success
+    assert_not_includes assigns(:documents), active_doc
+    assert_includes assigns(:documents), deleted_doc
   end
 end

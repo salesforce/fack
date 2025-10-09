@@ -9,7 +9,14 @@ class BaseDocumentsController < ApplicationController
   include NeighborConcern
   # GET /documents or /documents.json
   def index
-    @documents = Document.includes(:library, :user).not_deleted
+    # Handle show_deleted parameter to include deleted documents
+    @documents = if params[:show_deleted] == 'true'
+                   Document.unscoped.includes(:library, :user)
+                 elsif params[:show_deleted] == 'only'
+                   Document.unscoped.includes(:library, :user).where.not(deleted_date: nil)
+                 else
+                   Document.includes(:library, :user).not_deleted
+                 end
 
     # Apply cheap filters first for better performance
     library_id = params[:library_id]

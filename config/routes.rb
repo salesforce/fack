@@ -31,6 +31,11 @@ Rails.application.routes.draw do
   get 'auth/saml/metadata', to: 'saml#metadata'
 
   # General Resources
+  resources :users, only: [:index] do
+    collection do
+      get :search
+    end
+  end
   resources :questions
   resources :documents do
     resources :comments, only: %i[create update destroy]

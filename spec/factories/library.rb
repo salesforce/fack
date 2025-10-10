@@ -5,6 +5,7 @@ FactoryBot.define do
     # Define attributes for Library model
     # For example:
     name { 'Main Library' }
+    description { 'A comprehensive collection of documents and resources' }
     association :user
   end
 end

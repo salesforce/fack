@@ -15,6 +15,11 @@
       <%= render partial: 'shared/button_group', locals: { buttons: buttons } %>
     </div>
   </div>
+  <% if @library.description.present? %>
+    <div class="mt-4 p-4 bg-stone-200 rounded-lg text-sm">
+      <p class="text-stone-600"><%= simple_format(@library.description) %></p>
+    </div>
+  <% end %>
   <div class="py-2 text-stone-500 text-xs ">
     Owner <span class="text-stone-500 font-bold "><%= (@library.user.email) %> </span> |
     Created <span class="text-stone-500 font-bold  "><%= time_ago_in_words(@library.created_at) %> ago</span> |

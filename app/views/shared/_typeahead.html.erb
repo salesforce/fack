@@ -16,6 +16,7 @@
   - current_value: Current display value for the input (for editing existing records)
   - input_class: Additional CSS classes for the input field
   - container_class: Additional CSS classes for the container div
+  - param_name: Parameter name for the search query (default: "q")
   
   Example usage:
   <%= render 'shared/typeahead', 
@@ -35,6 +36,7 @@
   current_value ||= nil
   input_class ||= ""
   container_class ||= ""
+  param_name ||= "q"
   
   # Build CSS classes
   base_input_class = "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"
@@ -47,7 +49,8 @@
 <div class="<%= full_container_class %>" 
      data-controller="typeahead" 
      data-typeahead-url-value="<%= search_url %>"
-     data-typeahead-min-length-value="<%= min_length %>">
+     data-typeahead-min-length-value="<%= min_length %>"
+     data-typeahead-param-name-value="<%= param_name %>">
   
   <%= form.label field_name, label_text %>
   

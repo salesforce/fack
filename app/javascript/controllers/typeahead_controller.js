@@ -4,7 +4,8 @@ export default class extends Controller {
   static targets = ["input", "results", "hiddenField", "clearButton"]
   static values = { 
     url: String,
-    minLength: { type: Number, default: 2 }
+    minLength: { type: Number, default: 2 },
+    paramName: { type: String, default: "q" }
   }
 
   connect() {
@@ -45,7 +46,7 @@ export default class extends Controller {
 
   async performSearch(query) {
     try {
-      const response = await fetch(`${this.urlValue}?q=${encodeURIComponent(query)}`, {
+      const response = await fetch(`${this.urlValue}?${this.paramNameValue}=${encodeURIComponent(query)}`, {
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
@@ -53,8 +54,8 @@ export default class extends Controller {
       })
       
       if (response.ok) {
-        const users = await response.json()
-        this.displayResults(users)
+        const results = await response.json()
+        this.displayResults(results)
       }
     } catch (error) {
       console.error('Search failed:', error)
@@ -62,19 +63,19 @@ export default class extends Controller {
     }
   }
 
-  displayResults(users) {
-    if (users.length === 0) {
+  displayResults(results) {
+    if (results.length === 0) {
       this.hideResults()
       return
     }
 
-    this.resultsTarget.innerHTML = users.map((user, index) => 
+    this.resultsTarget.innerHTML = results.map((result, index) => 
       `<div class="typeahead-item px-3 py-2 cursor-pointer hover:bg-gray-100 border-b border-gray-200 last:border-b-0" 
-           data-action="click->typeahead#selectUser" 
-           data-user-id="${user.id}" 
-           data-user-email="${user.email}"
+           data-action="click->typeahead#selectItem" 
+           data-item-id="${result.id}" 
+           data-item-text="${result.text || result.email}"
            data-index="${index}">
-         ${user.email}
+         ${result.text || result.email}
        </div>`
     ).join('')
     
@@ -82,12 +83,12 @@ export default class extends Controller {
     this.selectedIndex = -1
   }
 
-  selectUser(event) {
-    const userId = event.currentTarget.dataset.userId
-    const userEmail = event.currentTarget.dataset.userEmail
+  selectItem(event) {
+    const itemId = event.currentTarget.dataset.itemId
+    const itemText = event.currentTarget.dataset.itemText
     
-    this.inputTarget.value = userEmail
-    this.hiddenFieldTarget.value = userId
+    this.inputTarget.value = itemText
+    this.hiddenFieldTarget.value = itemId
     this.hideResults()
     this.selectedIndex = -1
     this.updateClearButtonVisibility()

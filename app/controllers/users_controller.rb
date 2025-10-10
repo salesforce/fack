@@ -11,16 +11,16 @@ class UsersController < ApplicationController
   # GET /users/search
   def search
     query = params[:q]
-    if query.present?
-      @users = User.where("email ILIKE ?", "%#{query}%")
+    @users = if query.present?
+               User.where('email ILIKE ?', "%#{query}%")
                    .order(:email)
                    .limit(10)
-    else
-      @users = []
-    end
+             else
+               []
+             end
 
     respond_to do |format|
-      format.json { render json: @users.map { |user| { id: user.id, email: user.email } } }
+      format.json { render json: @users.map { |user| { id: user.id, text: user.email } } }
     end
   end
 

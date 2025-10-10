@@ -26,17 +26,15 @@
     <%= form.text_area :document, rows: 10, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 my-2 w-full" %>
   </div>
   <div class="my-5">
-    <div>
-      <%= form.label :library, style: "display: block" %>
-      <%= form.collection_select :library_id, 
-        Library.all.order(name: :asc), 
-        :id, 
-        :name, 
-        { prompt: 'Select a Library' , 
-         selected: params[:library_id] || document.library_id},
-        { class: 'block shadow rounded-md border border-gray-200 outline-none px-3 py-2 my-2 w-full'
-           } %>
-    </div>
+    <%= render 'shared/typeahead', 
+        form: form, 
+        field_name: :library_id, 
+        search_url: libraries_path,
+        label_text: 'Library',
+        placeholder: 'Start typing to search for a library...',
+        help_text: 'Type at least 2 characters to search for libraries by name',
+        current_value: document.library&.name,
+        param_name: 'contains' %>
   </div>
   <div class="inline">
     <%= form.submit class: "rounded-lg py-3 px-5 bg-sky-500 text-white inline-block font-medium cursor-pointer" %>

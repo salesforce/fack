@@ -11,6 +11,15 @@ class BaseLibrariesController < ApplicationController
                    Library.all.order(name: :asc).page(params[:page])
                  end
     @libraries = @libraries.search_by_name(params[:contains]) if params[:contains].present?
+
+    respond_to do |format|
+      format.html # Default HTML response
+      format.json do
+        # For typeahead, return limited results without pagination
+        libraries = @libraries.limit(10)
+        render json: libraries.map { |library| { id: library.id, text: library.name } }
+      end
+    end
   end
 
   # POST /libraries or /libraries.json

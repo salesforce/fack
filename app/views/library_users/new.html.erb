@@ -11,10 +11,14 @@
     </div>
   <% end %>
   <!-- User ID selection -->
-  <div class="my-5">
-    <%= form.label :user_id, "Grant access to user.", style: "display: block" %>
-    <%= form.collection_select :user_id, User.order(email: :asc), :id, :email, { prompt: 'Select User' }, { class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" } %>
-  </div>
+  <%= render 'shared/typeahead', 
+      form: form, 
+      field_name: :user_id, 
+      search_url: search_users_path,
+      label_text: 'Grant access to user',
+      placeholder: 'Start typing to search for a user...',
+      help_text: 'Type at least 2 characters to search for users by email',
+      current_value: @library_user.user&.email %>
   <div class="inline">
     <%= form.submit "Save", class: "rounded-lg py-3 px-5 bg-sky-500 text-white inline-block font-medium cursor-pointer" %>
   </div>

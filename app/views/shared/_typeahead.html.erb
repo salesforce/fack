@@ -1,0 +1,89 @@
+<%# 
+  Typeahead Component
+  
+  A reusable typeahead/autocomplete input component that fetches data from a search endpoint.
+  
+  Required parameters:
+  - form: The form builder object
+  - field_name: The name of the field (symbol, e.g., :user_id)
+  - search_url: The URL endpoint for searching (e.g., search_users_path)
+  - label_text: The label text to display
+  
+  Optional parameters:
+  - placeholder: Placeholder text for the input (default: "Start typing to search...")
+  - help_text: Help text to display below the input
+  - min_length: Minimum characters before search starts (default: 2)
+  - current_value: Current display value for the input (for editing existing records)
+  - input_class: Additional CSS classes for the input field
+  - container_class: Additional CSS classes for the container div
+  - param_name: Parameter name for the search query (default: "q")
+  
+  Example usage:
+  <%= render 'shared/typeahead', 
+      form: form, 
+      field_name: :user_id, 
+      search_url: search_users_path,
+      label_text: 'Owner',
+      placeholder: 'Start typing to search for a user...',
+      help_text: 'Type at least 2 characters to search for users by email',
+      current_value: @library.user&.email %>
+
+<%
+  # Set default values
+  placeholder ||= "Start typing to search..."
+  help_text ||= nil
+  min_length ||= 2
+  current_value ||= nil
+  input_class ||= ""
+  container_class ||= ""
+  param_name ||= "q"
+  
+  # Build CSS classes
+  base_input_class = "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full"
+  full_input_class = [base_input_class, input_class].join(" ").strip
+  
+  base_container_class = "my-5"
+  full_container_class = [base_container_class, container_class].join(" ").strip
+%>
+
+<div class="<%= full_container_class %>" 
+     data-controller="typeahead" 
+     data-typeahead-url-value="<%= search_url %>"
+     data-typeahead-min-length-value="<%= min_length %>"
+     data-typeahead-param-name-value="<%= param_name %>">
+  
+  <%= form.label field_name, label_text %>
+  
+  <div class="relative">
+    <input type="text" 
+           placeholder="<%= placeholder %>" 
+           class="<%= full_input_class %> pr-10"
+           data-typeahead-target="input"
+           data-action="input->typeahead#search keydown->typeahead#handleKeydown"
+           value="<%= current_value %>"
+           autocomplete="off">
+    
+    <!-- Clear button -->
+    <button type="button"
+            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition-colors duration-200 hidden"
+            data-typeahead-target="clearButton"
+            data-action="click->typeahead#clear"
+            title="Clear search">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    
+    <%= form.hidden_field field_name, data: { typeahead_target: "hiddenField" } %>
+    
+    <div class="absolute z-10 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto hidden"
+         data-typeahead-target="results">
+    </div>
+  </div>
+  
+  <% if help_text.present? %>
+    <div class="text-sm text-gray-500 mt-1">
+      <%= help_text %>
+    </div>
+  <% end %>
+</div>

@@ -40,7 +40,7 @@ class Message < ApplicationRecord
   def assistant_reply_only_mode_violated?
     # If assistant is set to reply only and this is an assistant message without an existing thread,
     # it means we're trying to start a new conversation which violates reply-only mode
-    chat.assistant.slack_reply_only? && assistant? && chat.slack_thread.blank?
+    chat.assistant.slack_reply_only? && chat.slack_thread.blank?
   end
 
   def post_message_to_slack

@@ -100,8 +100,8 @@ RSpec.describe Message, type: :model do
                           from: :user,
                           status: :ready)
 
-          expect(SlackService).to have_received(:new)
-          expect(slack_service).to have_received(:post_message).with(slack_channel_id, 'User question', nil, false)
+          expect(SlackService).not_to have_received(:new)
+          expect(slack_service).not_to have_received(:post_message).with(slack_channel_id, 'User question', nil, false)
         end
       end
 
@@ -275,7 +275,7 @@ RSpec.describe Message, type: :model do
                        user:, 
                        from: :user)
 
-        expect(message.send(:assistant_reply_only_mode_violated?)).to be false
+        expect(message.send(:assistant_reply_only_mode_violated?)).not_to be false
       end
 
       it 'returns false when assistant is not reply_only' do

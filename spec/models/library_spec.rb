@@ -16,6 +16,16 @@ RSpec.describe Library, type: :model do
       library = build(:library, name: nil, user:)
       expect(library).not_to be_valid
     end
+
+    it 'is valid with a description' do
+      library = build(:library, description: 'A test library description', user:)
+      expect(library).to be_valid
+    end
+
+    it 'is valid without a description' do
+      library = build(:library, description: nil, user:)
+      expect(library).to be_valid
+    end
   end
 
   describe 'associations' do

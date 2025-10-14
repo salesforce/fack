@@ -23,11 +23,13 @@
         <div class="flex space-x-4">
           <div class="flex-1">
             <label for="since" class="block text-sm font-medium text-stone-700 mb-1">Updated Since:</label>
-            <input type="datetime-local" name="since" id="since" value="<%= params[:since] %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
+            <% since_value = params[:since].present? ? Time.parse(params[:since]).strftime('%Y-%m-%dT%H:%M') : '' rescue '' %>
+            <input type="datetime-local" name="since" id="since" value="<%= since_value %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
           </div>
           <div class="flex-1">
             <label for="until" class="block text-sm font-medium text-stone-700 mb-1">Updated Until:</label>
-            <input type="datetime-local" name="until" id="until" value="<%= params[:until] %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
+            <% until_value = params[:until].present? ? Time.parse(params[:until]).strftime('%Y-%m-%dT%H:%M') : '' rescue '' %>
+            <input type="datetime-local" name="until" id="until" value="<%= until_value %>" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
           </div>
         </div>
       </div>

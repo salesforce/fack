@@ -161,32 +161,13 @@ URL: ${pageContext.url}`;
         
         console.log('Polling for answer, question ID:', result.data.id);
         
-        // Add status updates during polling
-        const statusUpdateInterval = setInterval(async () => {
-          try {
-            const statusCheck = await sendMessage({
-              action: 'getQuestion',
-              id: result.data.id
-            });
-            
-            if (statusCheck && statusCheck.success) {
-              updateLoadingMessageStatus(loadingId, statusCheck.data.status);
-            }
-          } catch (error) {
-            console.log('Status check failed:', error);
-          }
-        }, 5000); // Check status every 5 seconds
-        
-        // Poll for answer with faster, adaptive polling
+        // Poll for answer with 2-second polling
         const completedQuestion = await sendMessage({
           action: 'getQuestionWithPolling',
           id: result.data.id,
           maxAttempts: 60,
-          interval: 2000
+          interval: 3000
         });
-        
-        // Clear status update interval
-        clearInterval(statusUpdateInterval);
         
         console.log('Polling result:', completedQuestion);
         

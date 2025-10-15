@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const chatHistory = document.getElementById('chatHistory');
   const actionStatus = document.getElementById('actionStatus');
   const actionError = document.getElementById('actionError');
+  const clearChatBtn = document.getElementById('clearChatBtn');
   
   const saveConfigBtn = document.getElementById('saveConfigBtn');
   const apiBaseUrlInput = document.getElementById('apiBaseUrlInput');
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (authBtn) authBtn.addEventListener('click', authenticate);
   if (logoutBtn) logoutBtn.addEventListener('click', logout);
   if (askBtn) askBtn.addEventListener('click', askQuestion);
+  if (clearChatBtn) clearChatBtn.addEventListener('click', clearChatHistory);
   if (saveConfigBtn) saveConfigBtn.addEventListener('click', saveConfiguration);
 
   // Configuration section toggle
@@ -222,6 +224,16 @@ URL: ${pageContext.url}`;
     `;
     chatHistory.appendChild(messageDiv);
     scrollChatToBottom();
+  }
+
+  function clearChatHistory() {
+    if (confirm('Are you sure you want to clear the chat history?')) {
+      chatHistory.innerHTML = '';
+      actionStatus.textContent = 'Chat history cleared';
+      setTimeout(() => {
+        actionStatus.textContent = '';
+      }, 2000);
+    }
   }
 
   // Simple markdown formatter

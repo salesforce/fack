@@ -13,6 +13,8 @@
       background: white;
       box-sizing: border-box;
       overflow-x: hidden;
+      font-size: 14px;
+      line-height: 1.6;
     }
     
     .title { 
@@ -34,7 +36,8 @@
       border: none; 
       cursor: pointer; 
       border-radius: 6px; 
-      font-size: 14px; 
+      font-size: 15px; 
+      line-height: 1.5;
     }
     
     button:hover { 
@@ -58,44 +61,50 @@
     
     .section h4 {
       margin: 0 0 10px 0; 
-      font-size: 14px; 
+      font-size: 15px; 
       color: #333;
+      line-height: 1.5;
     }
     
     .status { 
       text-align: center; 
       padding: 10px; 
-      font-size: 13px; 
+      font-size: 14px; 
       color: #666; 
       min-height: 20px;
+      line-height: 1.6;
     }
     
     .error { 
       color: red; 
       margin-top: 10px; 
-      font-size: 13px; 
+      font-size: 14px; 
+      line-height: 1.6;
     }
     
     .success {
       color: green;
       margin-top: 10px;
-      font-size: 13px;
+      font-size: 14px;
+      line-height: 1.6;
     }
     
     .search-input {
       width: 100%;
       max-width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+      font-size: 14px;
+      line-height: 1.5;
     }
     
     .question-input {
       width: 100%;
       max-width: 100%;
-      padding: 8px;
+      padding: 10px;
       margin: 8px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -103,12 +112,14 @@
       resize: vertical;
       min-height: 60px;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
     }
     
     .chat-history {
       margin-bottom: 10px;
       padding: 10px;
-      font-size: 12px;
+      font-size: 14px;
       max-width: 100%;
       box-sizing: border-box;
       overflow-wrap: break-word;
@@ -116,14 +127,15 @@
     }
     
     .chat-message {
-      margin: 10px 0;
-      padding: 8px;
+      margin: 12px 0;
+      padding: 12px;
       border-radius: 8px;
       max-width: 100%;
       box-sizing: border-box;
       overflow-wrap: break-word;
       word-wrap: break-word;
       word-break: break-word;
+      line-height: 1.6;
     }
     
     .user-message {
@@ -148,9 +160,10 @@
     }
     
     .message-timestamp {
-      font-size: 10px;
+      font-size: 12px;
       opacity: 0.7;
-      margin-top: 4px;
+      margin-top: 6px;
+      line-height: 1.4;
     }
     
     .chat-input-section {
@@ -200,14 +213,26 @@
 
     .logout-btn {
       width: auto;
-      padding: 4px 12px;
+      padding: 6px 14px;
       margin: 0;
-      font-size: 12px;
+      font-size: 13px;
       background: #dc3545;
     }
 
     .logout-btn:hover {
       background: #c82333;
+    }
+
+    .clear-chat-btn {
+      width: auto;
+      padding: 6px 14px;
+      margin: 0;
+      font-size: 13px;
+      background: #6c757d;
+    }
+
+    .clear-chat-btn:hover {
+      background: #5a6268;
     }
 
     .chat-container {
@@ -229,44 +254,44 @@
 
     /* Markdown formatting styles */
     .markdown-content {
-      line-height: 1.5;
+      line-height: 1.7;
     }
 
     .markdown-content h1 {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
-      margin: 12px 0 8px 0;
+      margin: 14px 0 10px 0;
       color: #333;
       border-bottom: 1px solid #ddd;
-      padding-bottom: 4px;
+      padding-bottom: 6px;
     }
 
     .markdown-content h2 {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
-      margin: 10px 0 6px 0;
+      margin: 12px 0 8px 0;
       color: #444;
     }
 
     .markdown-content h3 {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: bold;
-      margin: 8px 0 4px 0;
+      margin: 10px 0 6px 0;
       color: #555;
     }
 
     .markdown-content p {
-      margin: 6px 0;
-      line-height: 1.4;
+      margin: 8px 0;
+      line-height: 1.7;
     }
 
     .markdown-content code {
       background: #f4f4f4;
       border: 1px solid #e0e0e0;
       border-radius: 3px;
-      padding: 1px 4px;
+      padding: 2px 5px;
       font-family: 'Courier New', monospace;
-      font-size: 11px;
+      font-size: 13px;
       color: #c7254e;
     }
 
@@ -274,11 +299,12 @@
       background: #f8f8f8;
       border: 1px solid #ddd;
       border-radius: 4px;
-      padding: 8px;
-      margin: 8px 0;
+      padding: 12px;
+      margin: 10px 0;
       overflow-x: auto;
       font-family: 'Courier New', monospace;
-      font-size: 11px;
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .markdown-content pre code {
@@ -289,14 +315,14 @@
     }
 
     .markdown-content ul, .markdown-content ol {
-      margin: 6px 0;
+      margin: 8px 0;
       padding-left: 20px;
       list-style-position: inside;
     }
 
     .markdown-content li {
-      margin: 2px 0;
-      line-height: 1.3;
+      margin: 4px 0;
+      line-height: 1.6;
       padding-left: 4px;
     }
 
@@ -462,6 +488,10 @@
 
   <!-- Chat Section (shown when authenticated) -->
   <div class="chat-container" id="chatSection" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h4 style="margin: 0; font-size: 14px; color: #666;">Chat History</h4>
+      <button id="clearChatBtn" class="clear-chat-btn">🗑️ Clear</button>
+    </div>
     <div id="chatHistory" class="chat-history"></div>
     
     <div class="section">

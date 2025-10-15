@@ -258,10 +258,10 @@ URL: ${pageContext.url}`;
     // Inline code (`code`)
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
     
-    // Headers
-    text = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-    text = text.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-    text = text.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+    // Headers - add markers to split lists later
+    text = text.replace(/^### (.*$)/gm, '<!--HEADING--><h3>$1</h3><!--/HEADING-->');
+    text = text.replace(/^## (.*$)/gm, '<!--HEADING--><h2>$1</h2><!--/HEADING-->');
+    text = text.replace(/^# (.*$)/gm, '<!--HEADING--><h1>$1</h1><!--/HEADING-->');
     
     // Bold (**bold** or __bold__)
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -271,19 +271,19 @@ URL: ${pageContext.url}`;
     text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
     text = text.replace(/_(.*?)_/g, '<em>$1</em>');
     
-    // Lists (- item or * item)
-    text = text.replace(/^[\s]*[-\*\+]\s+(.+)$/gm, '<li>$1</li>');
-    text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+    // Convert list items but don't wrap in ul/ol yet
+    text = text.replace(/^[\s]*[-\*\+]\s+(.+)$/gm, '<!--UL_ITEM--><li>$1</li>');
+    text = text.replace(/^[\s]*\d+\.\s+(.+)$/gm, '<!--OL_ITEM--><li>$1</li>');
     
-    // Numbered lists (1. item)
-    text = text.replace(/^[\s]*\d+\.\s+(.+)$/gm, '<li>$1</li>');
-    text = text.replace(/(<li>.*<\/li>)/s, function(match) {
-      if (match.includes('<ul>')) return match; // Already wrapped
-      return '<ol>' + match + '</ol>';
-    });
+    // Now process the text to create separate lists after headings
+    text = processListsWithHeadings(text);
     
-    // Links [text](url)
+    // Links [text](url) and (text)[url] formats
     text = text.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    text = text.replace(/\(([^\)]+)\)\[([^\]]+)\]/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    
+    // Clean up markers
+    text = text.replace(/<!--HEADING-->|<!--\/HEADING-->/g, '');
     
     // Line breaks
     text = text.replace(/\n\n/g, '</p><p>');
@@ -295,6 +295,37 @@ URL: ${pageContext.url}`;
     }
     
     return text;
+  }
+
+  function processListsWithHeadings(text) {
+    // Split text by headings to process each section separately
+    const sections = text.split(/(<!--HEADING-->.*?<!--\/HEADING-->)/);
+    
+    for (let i = 0; i < sections.length; i++) {
+      // Skip heading sections themselves
+      if (sections[i].includes('<!--HEADING-->')) continue;
+      
+      // Process unordered lists in this section
+      let section = sections[i];
+      const ulItems = section.match(/<!--UL_ITEM--><li>.*?<\/li>/g);
+      if (ulItems && ulItems.length > 0) {
+        const ulList = '<ul>' + ulItems.map(item => item.replace('<!--UL_ITEM-->', '')).join('') + '</ul>';
+        section = section.replace(/<!--UL_ITEM--><li>.*?<\/li>/g, '');
+        section = section + ulList;
+      }
+      
+      // Process ordered lists in this section
+      const olItems = section.match(/<!--OL_ITEM--><li>.*?<\/li>/g);
+      if (olItems && olItems.length > 0) {
+        const olList = '<ol>' + olItems.map(item => item.replace('<!--OL_ITEM-->', '')).join('') + '</ol>';
+        section = section.replace(/<!--OL_ITEM--><li>.*?<\/li>/g, '');
+        section = section + olList;
+      }
+      
+      sections[i] = section;
+    }
+    
+    return sections.join('');
   }
 
   function addLoadingMessage() {
@@ -697,10 +728,18 @@ setInterval(async () => {
   
   if (validation && !validation.valid) {
     // Token expired, show login form
-    document.getElementById('loginForm').style.display = 'block';
-    document.getElementById('userInfo').style.display = 'none';
-    document.getElementById('documentSection').style.display = 'none';
-    document.getElementById('authStatus').textContent = 'Session expired - please re-authenticate';
+    const loginForm = document.getElementById('loginForm');
+    const userInfo = document.getElementById('userInfo');
+    const documentSection = document.getElementById('documentSection');
+    const authStatus = document.getElementById('authStatus');
+    
+    if (loginForm) loginForm.style.display = 'block';
+    if (userInfo) userInfo.style.display = 'none';
+    if (documentSection) documentSection.style.display = 'none';
+    if (authStatus) authStatus.textContent = 'Session expired - please re-authenticate';
+    
+    // Use current UI structure
+    showUnauthenticatedState();
   }
 }, 30000);
 

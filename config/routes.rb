@@ -89,6 +89,10 @@ Rails.application.routes.draw do
           post 'receive'
         end
       end
+
+      # Auth routes
+      get 'auth/validate', to: 'auth#validate_token'
+      post 'auth/logout', to: 'auth#logout'
     end
   end
 

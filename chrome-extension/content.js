@@ -138,8 +138,7 @@ function sendToChat(text) {
   try {
     // Check if extension context is still valid
     if (!chrome.runtime?.id) {
-      console.warn('AI Chat Assistant: Extension context invalidated. Please refresh the page.');
-      showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+      // Extension was reloaded, silently return
       return;
     }
 
@@ -239,7 +238,7 @@ function handleKeyboardShortcuts(e) {
   try {
     // Check if extension context is still valid
     if (!chrome.runtime?.id) {
-      console.warn('AI Chat Assistant: Extension context invalidated during keyboard shortcut');
+      // Extension was reloaded, silently return without logging
       return;
     }
 

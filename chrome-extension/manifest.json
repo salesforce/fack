@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "FAQ (fack) AI Chat Assistant",
+  "name": "FAQ (fack) AI Help",
   "version": "1.0",
-  "description": "Basic Chrome extension to chat with Fack",
+  "description": "Get help on any page with answers from your company's documentation.",
   "permissions": [
     "storage",
     "activeTab",

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Faq AI Chat Assistant",
+  "name": "FAQ (fack) AI Chat Assistant",
   "version": "1.0",
   "description": "Basic Chrome extension to chat with Fack",
   "permissions": [

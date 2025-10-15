@@ -71,11 +71,6 @@ Rails.application.routes.draw do
   # API Routes - Setting default format to JSON
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      # Authentication routes for external clients (Chrome extensions, etc.)
-      post 'auth/login', to: 'auth#login'
-      get 'auth/validate', to: 'auth#validate_token'  
-      post 'auth/logout', to: 'auth#logout'
-
       resources :documents
       resources :libraries
       resources :questions

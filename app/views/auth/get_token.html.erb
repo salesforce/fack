@@ -8,7 +8,7 @@
     <p class="mb-5">Your API token has been generated for the Chrome extension:</p>
     
     <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-5 my-5 break-all font-mono text-sm min-h-15 flex items-center justify-center">
-      <div id="token-display" data-token="<%= @api_token&.token %>" class="text-gray-500 italic">
+      <div id="token-display" data-token="<%= current_user.email %>" class="text-gray-500 italic">
         <% if @api_token %>
           Loading token...
         <% else %>

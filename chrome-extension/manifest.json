@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Document Fetcher Extension",
+  "name": "Faq AI Chat Assistant",
   "version": "1.0",
-  "description": "Basic Chrome extension to authenticate and fetch documents",
+  "description": "Basic Chrome extension to chat with Fack",
   "permissions": [
     "storage",
     "activeTab",
@@ -11,7 +11,7 @@
   ],
   "host_permissions": [
     "http://localhost:3000/*",
-    "https://your-production-domain.com/*"
+    "https://fack.*/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -24,7 +24,6 @@
     {
       "matches": [
         "http://localhost:3000/auth/*",
-        "https://your-production-domain.com/auth/*",
         "http://*/auth/*",
         "https://*/auth/*"
       ],

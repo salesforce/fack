@@ -154,7 +154,8 @@ function sendToChat(text) {
         // Check if it's a context invalidation error
         if (chrome.runtime.lastError.message?.includes('context invalidated') || 
             chrome.runtime.lastError.message?.includes('Extension context')) {
-          showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+          // Extension was reloaded, silently ignore
+          return;
         } else {
           showNotification('Failed to send text to chat. Please try again.', 'error');
         }
@@ -170,7 +171,8 @@ function sendToChat(text) {
     
     if (error.message?.includes('Extension context invalidated') || 
         error.message?.includes('context invalidated')) {
-      showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+      // Extension was reloaded, silently ignore
+      return;
     } else {
       showNotification('Failed to send text to chat. Please try again.', 'error');
     }

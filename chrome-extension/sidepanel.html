@@ -326,6 +326,85 @@
       background: #f9f9f9;
       font-style: italic;
     }
+
+    /* Animated thinking icon */
+    .thinking-icon {
+      display: inline-block;
+      animation: thinking-sparkle 2s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    @keyframes thinking-sparkle {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      25% {
+        transform: scale(1.1) rotate(10deg);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.2) rotate(0deg);
+        opacity: 0.6;
+      }
+      75% {
+        transform: scale(1.1) rotate(-10deg);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    /* Animated thinking text */
+    .thinking-text {
+      display: inline-block;
+      animation: thinking-text-pulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes thinking-text-pulse {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.4;
+        transform: scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Animated thinking dots */
+    .thinking-dots {
+      display: inline-block;
+    }
+
+    .thinking-dot {
+      display: inline-block;
+      animation: thinking-dot-bounce 0.8s ease-in-out infinite;
+      opacity: 0.3;
+      font-weight: bold;
+    }
+
+    @keyframes thinking-dot-bounce {
+      0% {
+        transform: translateY(0px);
+        opacity: 0.3;
+      }
+      50% {
+        transform: translateY(-8px);
+        opacity: 1;
+        color: #007cba;
+      }
+      100% {
+        transform: translateY(0px);
+        opacity: 0.3;
+      }
+    }
   </style>
 </head>
 <body>

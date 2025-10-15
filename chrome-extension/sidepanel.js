@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Disable ask button
     askBtn.disabled = true;
-    askBtn.textContent = 'Thinking...';
+    askBtn.innerHTML = '<span class="thinking-icon">✨</span> Thinking...';
     
     // Add loading message
     const loadingId = addLoadingMessage();
@@ -182,7 +182,7 @@ URL: ${pageContext.url}`;
           action: 'getQuestionWithPolling',
           id: result.data.id,
           maxAttempts: 60,
-          interval: 1000
+          interval: 2000
         });
         
         // Clear status update interval
@@ -217,7 +217,7 @@ URL: ${pageContext.url}`;
     } finally {
       // Re-enable ask button
       askBtn.disabled = false;
-      askBtn.textContent = '🚀 Ask Question';
+      askBtn.innerHTML = '🚀 Ask Question';
     }
   }
 
@@ -334,7 +334,7 @@ URL: ${pageContext.url}`;
     messageDiv.id = messageId;
     messageDiv.className = 'chat-message loading-message';
     messageDiv.innerHTML = `
-      <div id="${messageId}-text">🤔 Thinking about your question...</div>
+      <div id="${messageId}-text"><span class="thinking-icon">✨</span> <span class="thinking-text">Thinking about your question...</span></div>
       <div id="${messageId}-status" style="font-size: 10px; opacity: 0.8; margin-top: 4px;">Starting...</div>
     `;
     chatHistory.appendChild(messageDiv);
@@ -352,8 +352,10 @@ URL: ${pageContext.url}`;
         dots = (dots + 1) % 4;
         elapsedSeconds++;
         
-        const dotString = '.'.repeat(dots);
-        textElement.textContent = `🤔 Thinking about your question${dotString}`;
+        const dotString = Array.from({length: dots}, (_, i) => 
+          `<span class="thinking-dot" style="animation-delay: ${i * 0.15}s;">.</span>`
+        ).join('');
+        textElement.innerHTML = `<span class="thinking-icon">✨</span> <span class="thinking-text">Thinking about your question</span><span class="thinking-dots">${dotString}</span>`;
         
         // Update status based on elapsed time
         if (elapsedSeconds < 5) {

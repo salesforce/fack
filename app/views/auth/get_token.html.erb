@@ -1,0 +1,127 @@
+<% content_for :title, "Chrome Extension Token" %>
+
+<div class="flex items-center justify-center py-12 px-4">
+  <div class="bg-white p-10 rounded-xl shadow-lg text-center max-w-lg w-full">
+    <div class="text-5xl text-green-500 mb-5">✓</div>
+    <h1 class="text-gray-800 mb-5 text-2xl font-semibold">Authentication Successful</h1>
+    
+    <p class="mb-5">Your API token has been generated for the Chrome extension:</p>
+    
+    <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-5 my-5 break-all font-mono text-sm min-h-15 flex items-center justify-center">
+      <div id="token-display" data-token="<%= @api_token&.token %>" class="text-gray-500 italic">
+        <% if @api_token %>
+          Loading token...
+        <% else %>
+          No token available. Please try again.
+        <% end %>
+      </div>
+    </div>
+    
+    <button id="copy-btn" class="bg-sky-600 text-white border-none py-2 px-5 rounded cursor-pointer mt-4 text-sm disabled:bg-gray-400 disabled:cursor-not-allowed hover:bg-sky-700" disabled>Copy Token</button>
+    
+    <div class="text-gray-600 text-sm leading-relaxed mt-5">
+      <strong>Instructions:</strong><br>
+      1. The token above will be automatically captured by your Chrome extension<br>
+      2. If using manually, copy the token and paste it into your extension<br>
+      3. You can safely close this window after the token is captured
+    </div>
+    
+    <div class="bg-yellow-50 border border-yellow-200 rounded p-4 mt-5 text-yellow-700 text-sm">
+      <strong>Note:</strong> This window will automatically close in 10 seconds, or you can close it manually once the extension has captured the token.
+    </div>
+  </div>
+</div>
+
+<script>
+  // Extract token from data attribute
+  function extractToken() {
+    const tokenDisplay = document.getElementById('token-display');
+    const token = tokenDisplay.getAttribute('data-token');
+    return token && token.length > 0 ? token : null;
+  }
+
+  // Display the token
+  function displayToken() {
+    const token = extractToken();
+    const tokenDisplay = document.getElementById('token-display');
+    const copyBtn = document.getElementById('copy-btn');
+    
+    if (token) {
+      tokenDisplay.textContent = token;
+      tokenDisplay.className = 'text-sky-600 font-semibold';
+      copyBtn.disabled = false;
+      
+      // Post message to parent window (for Chrome extension)
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'FACK_AUTH_TOKEN',
+          token: token,
+          success: true
+        }, '*');
+      }
+      
+      // Also try posting to parent frame
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          type: 'FACK_AUTH_TOKEN', 
+          token: token,
+          success: true
+        }, '*');
+      }
+    } else {
+      tokenDisplay.textContent = 'No token found. Please try again.';
+      tokenDisplay.className = 'text-gray-500 italic';
+    }
+  }
+
+  // Copy token to clipboard
+  function copyToken() {
+    const token = extractToken();
+    if (token) {
+      navigator.clipboard.writeText(token).then(() => {
+        const btn = document.getElementById('copy-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.className = btn.className.replace('bg-sky-600', 'bg-green-500').replace('hover:bg-sky-700', '');
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.className = btn.className.replace('bg-green-500', 'bg-sky-600') + ' hover:bg-sky-700';
+        }, 2000);
+      }).catch(err => {
+        console.error('Could not copy token:', err);
+        // Fallback: select text
+        const tokenDisplay = document.getElementById('token-display');
+        const range = document.createRange();
+        range.selectNode(tokenDisplay);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+      });
+    }
+  }
+
+  // Auto-close window after delay
+  function scheduleAutoClose() {
+    setTimeout(() => {
+      if (window.opener || window.parent !== window) {
+        window.close();
+      }
+    }, 10000); // 10 seconds
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    displayToken();
+    scheduleAutoClose();
+    
+    document.getElementById('copy-btn').addEventListener('click', copyToken);
+    
+    // Listen for messages from Chrome extension
+    window.addEventListener('message', (event) => {
+      if (event.data.type === 'FACK_TOKEN_CAPTURED') {
+        // Extension has captured the token, can close window
+        setTimeout(() => window.close(), 1000);
+      }
+    });
+  });
+</script>

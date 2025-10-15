@@ -25,6 +25,9 @@ Rails.application.routes.draw do
   get '/sessions/set_beta', to: 'sessions#set_beta'
   get '/sessions/logout', to: 'sessions#logout', as: :logout
 
+  # Chrome Extension SSO Token Generation
+  get '/auth/get_token', to: 'auth#get_token'
+
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
   post 'auth/saml/consume', to: 'saml#consume'
@@ -68,6 +71,11 @@ Rails.application.routes.draw do
   # API Routes - Setting default format to JSON
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      # Authentication routes for external clients (Chrome extensions, etc.)
+      post 'auth/login', to: 'auth#login'
+      get 'auth/validate', to: 'auth#validate_token'  
+      post 'auth/logout', to: 'auth#logout'
+
       resources :documents
       resources :libraries
       resources :questions

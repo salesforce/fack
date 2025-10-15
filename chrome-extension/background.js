@@ -196,11 +196,9 @@ class DocumentAPI {
   async getQuestionWithPolling(id, maxAttempts = 60, interval = 1000) {
     console.log(`Starting polling for question ${id}, max attempts: ${maxAttempts}`);
     
-    // Use adaptive polling - start fast, then slow down
+    // Use consistent 2-second polling interval
     const getInterval = (attempt) => {
-      if (attempt < 5) return 500;   // First 5 attempts: 500ms (fast)
-      if (attempt < 15) return 1000; // Next 10 attempts: 1s (medium)
-      return 2000;                   // Remaining attempts: 2s (slow)
+      return 2000; // All attempts: 2s (consistent)
     };
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {

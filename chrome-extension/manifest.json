@@ -31,7 +31,15 @@
     }
   ],
   "action": {
-    "default_title": "AI Chat Assistant"
+    "default_title": "AI Chat Assistant",
+    "default_icon": {
+      "16": "favicon-16x16.png",
+      "32": "favicon-32x32.png"
+    }
+  },
+  "icons": {
+    "16": "favicon-16x16.png",
+    "32": "favicon-32x32.png"
   },
   "side_panel": {
     "default_path": "sidepanel.html"

@@ -135,11 +135,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingId = addLoadingMessage();
     
     try {
+      // Get current page context
+      const pageContext = await getCurrentPageContext();
+      
+      // Append page context to question
+      const questionWithContext = `${question}
+
+---
+Context:
+Page: ${pageContext.title}
+URL: ${pageContext.url}`;
+      
       // Create question
-      console.log('Creating question:', question);
+      console.log('Creating question with context:', questionWithContext);
       const result = await sendMessage({ 
         action: 'createQuestion', 
-        question: question 
+        question: questionWithContext 
       });
       
       console.log('Create question result:', result);
@@ -478,11 +489,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         actionStatus.textContent = 'Success!';
       } else {
         actionError.textContent = result?.error || 'Action failed';
-        results.style.display = 'none';
+        if (results) results.style.display = 'none';
       }
     } catch (error) {
       actionError.textContent = 'Error: ' + error.message;
-      results.style.display = 'none';
+      if (results) results.style.display = 'none';
     } finally {
       // Re-enable action buttons
       actionButtons.forEach(btn => btn.disabled = false);
@@ -491,8 +502,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function displayResults(data) {
     if (!data) {
-      results.innerHTML = '<div>No data received</div>';
-      results.style.display = 'block';
+      if (results) {
+        results.innerHTML = '<div>No data received</div>';
+        results.style.display = 'block';
+      }
       return;
     }
 
@@ -500,8 +513,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const documents = Array.isArray(data) ? data : (data.documents || []);
     
     if (documents.length === 0) {
-      results.innerHTML = '<div>No documents found</div>';
-      results.style.display = 'block';
+      if (results) {
+        results.innerHTML = '<div>No documents found</div>';
+        results.style.display = 'block';
+      }
       return;
     }
 
@@ -517,8 +532,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
     `).join('');
 
-    results.innerHTML = resultHTML;
-    results.style.display = 'block';
+    if (results) {
+      results.innerHTML = resultHTML;
+      results.style.display = 'block';
+    }
   }
 
   function showAuthenticatedState() {
@@ -526,7 +543,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (headerBar) headerBar.style.display = 'flex';
     if (loginSection) loginSection.style.display = 'none';
     
-    chatSection.style.display = 'block';
+    if (chatSection) chatSection.style.display = 'block';
     
     clearMessages();
     
@@ -541,7 +558,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (headerBar) headerBar.style.display = 'none';
     if (loginSection) loginSection.style.display = 'block';
     
-    chatSection.style.display = 'none';
+    if (chatSection) chatSection.style.display = 'none';
     if (authStatus) authStatus.textContent = 'Not authenticated';
   }
 
@@ -627,6 +644,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage(message, resolve);
     });
+  }
+
+  // Get current page context (URL and title)
+  async function getCurrentPageContext() {
+    try {
+      // Query the active tab
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tabs && tabs.length > 0) {
+        const activeTab = tabs[0];
+        return {
+          url: activeTab.url || 'Unknown URL',
+          title: activeTab.title || 'Unknown Title'
+        };
+      }
+    } catch (error) {
+      console.warn('Could not get current page context:', error);
+    }
+    
+    // Fallback
+    return {
+      url: 'Unknown URL',
+      title: 'Unknown Title'
+    };
   }
 
   function escapeHtml(unsafe) {

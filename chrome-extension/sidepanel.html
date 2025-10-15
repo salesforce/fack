@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { 
+      width: 100%; 
+      max-width: 100%;
+      padding: 15px; 
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: white;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    
+    .title { 
+      font-size: 18px; 
+      font-weight: bold; 
+      margin-bottom: 20px; 
+      text-align: center; 
+      color: #333;
+      border-bottom: 2px solid #007cba;
+      padding-bottom: 10px;
+    }
+    
+    button { 
+      width: 100%; 
+      padding: 12px; 
+      margin: 8px 0;
+      background: #007cba; 
+      color: white; 
+      border: none; 
+      cursor: pointer; 
+      border-radius: 6px; 
+      font-size: 14px; 
+    }
+    
+    button:hover { 
+      background: #005a87; 
+    }
+    
+    button:disabled { 
+      background: #ccc; 
+      cursor: not-allowed; 
+    }
+    
+    .section {
+      margin-bottom: 15px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #f9f9f9;
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    
+    .section h4 {
+      margin: 0 0 10px 0; 
+      font-size: 14px; 
+      color: #333;
+    }
+    
+    .status { 
+      text-align: center; 
+      padding: 10px; 
+      font-size: 13px; 
+      color: #666; 
+      min-height: 20px;
+    }
+    
+    .error { 
+      color: red; 
+      margin-top: 10px; 
+      font-size: 13px; 
+    }
+    
+    .success {
+      color: green;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    
+    .search-input {
+      width: 100%;
+      max-width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    .question-input {
+      width: 100%;
+      max-width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+      min-height: 60px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .chat-history {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 12px;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    }
+    
+    .chat-message {
+      margin: 10px 0;
+      padding: 8px;
+      border-radius: 8px;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+    }
+    
+    .user-message {
+      background: #007cba;
+      color: white;
+      margin-left: 20px;
+      text-align: right;
+    }
+    
+    .assistant-message {
+      background: white;
+      border: 1px solid #ddd;
+      margin-right: 20px;
+    }
+    
+    .loading-message {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      color: #856404;
+      font-style: italic;
+      text-align: center;
+    }
+    
+    .message-timestamp {
+      font-size: 10px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+    
+    .chat-input-section {
+      border-top: 1px solid #ddd;
+      padding-top: 10px;
+    }
+
+    .toggle-button {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: #007cba;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+
+    .collapsible {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .collapsed {
+      max-height: 0;
+    }
+
+    .expanded {
+      max-height: 1000px;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+      margin: -15px -15px 15px -15px;
+      box-sizing: border-box;
+      max-width: calc(100% + 30px);
+    }
+
+    .logout-btn {
+      width: auto;
+      padding: 4px 12px;
+      margin: 0;
+      font-size: 12px;
+      background: #dc3545;
+    }
+
+    .logout-btn:hover {
+      background: #c82333;
+    }
+
+    .chat-container {
+      padding: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Prevent text overflow in all elements */
+    h4, p, div, span, label {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      max-width: 100%;
+    }
+
+    /* Markdown formatting styles */
+    .markdown-content {
+      line-height: 1.5;
+    }
+
+    .markdown-content h1 {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 12px 0 8px 0;
+      color: #333;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+
+    .markdown-content h2 {
+      font-size: 15px;
+      font-weight: bold;
+      margin: 10px 0 6px 0;
+      color: #444;
+    }
+
+    .markdown-content h3 {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 8px 0 4px 0;
+      color: #555;
+    }
+
+    .markdown-content p {
+      margin: 6px 0;
+      line-height: 1.4;
+    }
+
+    .markdown-content code {
+      background: #f4f4f4;
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #c7254e;
+    }
+
+    .markdown-content pre {
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px;
+      margin: 8px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+    }
+
+    .markdown-content pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #333;
+    }
+
+    .markdown-content ul, .markdown-content ol {
+      margin: 6px 0 6px 16px;
+      padding: 0;
+    }
+
+    .markdown-content li {
+      margin: 2px 0;
+      line-height: 1.3;
+    }
+
+    .markdown-content strong {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .markdown-content em {
+      font-style: italic;
+      color: #555;
+    }
+
+    .markdown-content a {
+      color: #007cba;
+      text-decoration: none;
+    }
+
+    .markdown-content a:hover {
+      text-decoration: underline;
+    }
+
+    .markdown-content blockquote {
+      border-left: 3px solid #007cba;
+      margin: 8px 0;
+      padding: 4px 8px;
+      background: #f9f9f9;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header bar (shown when authenticated) -->
+  <div class="header-bar" id="headerBar" style="display: none;">
+    <div class="title" style="margin: 0; font-size: 16px;">🤖 AI Chat Assistant</div>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
+  </div>
+
+  <!-- Login Section (shown when not authenticated) -->
+  <div id="loginSection">
+    <div class="title">🤖 AI Chat Assistant</div>
+    
+    <div class="section">
+      <h4>🔐 Authentication</h4>
+      <div id="loginForm">
+        <button id="authBtn">Authenticate with SSO</button>
+        <div class="status" id="authStatus">Not authenticated</div>
+        <div id="authError" class="error"></div>
+      </div>
+    </div>
+
+    <!-- Configuration Section -->
+    <div class="section">
+      <h4>⚙️ Configuration <button class="toggle-button" id="configToggle" style="position: static; width: 20px; height: 20px; font-size: 12px; margin-left: 5px;">−</button></h4>
+      <div id="configContent" class="collapsible expanded">
+        <div style="font-size: 12px; margin-bottom: 8px;">
+          <label>API Base URL:</label>
+          <input type="text" id="apiBaseUrlInput" class="search-input" 
+                 placeholder="http://localhost:3000/api/v1">
+        </div>
+        <div style="font-size: 12px; margin-bottom: 8px;">
+          <label>Auth Base URL:</label>
+          <input type="text" id="authBaseUrlInput" class="search-input" 
+                 placeholder="http://localhost:3000">
+        </div>
+        <button id="saveConfigBtn" style="font-size: 12px; padding: 6px 12px;">💾 Save Settings</button>
+        <div id="configStatus" class="status" style="min-height: 15px; font-size: 11px;"></div>
+        <div id="configError" class="error" style="font-size: 11px;"></div>
+      </div>
+    </div>
+    
+    <!-- Instructions -->
+    <div class="section">
+      <h4>ℹ️ How to Use</h4>
+      <div style="font-size: 11px; line-height: 1.4; color: #666;">
+        <p><strong>Welcome to AI Chat Assistant!</strong></p>
+        <p>• Click the extension icon to open this side panel</p>
+        <p>• The side panel stays open while you browse</p>
+        <p>• Configure your API endpoints above, then authenticate</p>
+        <p>• Once logged in, you can ask questions and get AI responses</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Section (shown when authenticated) -->
+  <div class="chat-container" id="chatSection" style="display: none;">
+    <div id="chatHistory" class="chat-history"></div>
+    
+    <div class="section">
+      <div class="chat-input-section">
+        <textarea id="questionInput" class="question-input" placeholder="Type your question here..." rows="3"></textarea>
+        <button id="askBtn">🚀 Ask Question</button>
+      </div>
+      
+      <div id="actionStatus" class="status"></div>
+      <div id="actionError" class="error"></div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

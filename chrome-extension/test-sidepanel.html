@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Side Panel Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; }
+    button { padding: 10px 15px; margin: 10px 5px; background: #007cba; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background: #005a87; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .result { margin-top: 15px; padding: 10px; border-radius: 4px; white-space: pre-wrap; font-family: monospace; }
+    .error { background: #ffebee; border: 1px solid #f44336; color: #c62828; }
+    .success { background: #e8f5e8; border: 1px solid #4caf50; color: #2e7d32; }
+    .info { background: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; }
+  </style>
+</head>
+<body>
+  <h1>Side Panel API Test</h1>
+  <p>This page helps debug side panel issues in Chrome extensions.</p>
+
+  <div>
+    <h3>API Availability Tests</h3>
+    <button onclick="testSidePanelAPI()">Test Side Panel API</button>
+    <button onclick="testChromeVersion()">Check Chrome Version</button>
+    <button onclick="testPermissions()">Check Permissions</button>
+  </div>
+
+  <div>
+    <h3>Side Panel Actions</h3>
+    <button onclick="openSidePanel()">Open Side Panel (Current Window)</button>
+    <button onclick="openSidePanelNoWindow()">Open Side Panel (No Window ID)</button>
+    <button onclick="getCurrentWindow()">Get Current Window Info</button>
+  </div>
+
+  <div>
+    <h3>Alternative Actions</h3>
+    <button onclick="openSeparateWindow()">Open Separate Window (Fallback)</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    function showResult(message, type = 'info') {
+      const resultDiv = document.getElementById('result');
+      resultDiv.className = `result ${type}`;
+      resultDiv.textContent = message;
+    }
+
+    function testSidePanelAPI() {
+      if (typeof chrome === 'undefined') {
+        showResult('Chrome extension APIs not available. This page must be run as part of a Chrome extension.', 'error');
+        return;
+      }
+
+      if (!chrome.sidePanel) {
+        showResult('chrome.sidePanel API not available. Requires Chrome 114+.', 'error');
+        return;
+      }
+
+      try {
+        // Test if we can access sidePanel methods
+        const hasOpen = typeof chrome.sidePanel.open === 'function';
+        const hasSetOptions = typeof chrome.sidePanel.setOptions === 'function';
+        
+        showResult(`Side Panel API available:\n- open(): ${hasOpen}\n- setOptions(): ${hasSetOptions}`, 'success');
+      } catch (error) {
+        showResult(`Side Panel API error: ${error.message}`, 'error');
+      }
+    }
+
+    function testChromeVersion() {
+      const userAgent = navigator.userAgent;
+      const match = userAgent.match(/Chrome\/(\d+)/);
+      const version = match ? parseInt(match[1]) : null;
+      
+      if (version) {
+        const supported = version >= 114;
+        showResult(`Chrome version: ${version}\nSide Panel supported: ${supported}`, supported ? 'success' : 'error');
+      } else {
+        showResult('Could not detect Chrome version', 'error');
+      }
+    }
+
+    function testPermissions() {
+      if (!chrome.permissions) {
+        showResult('Permissions API not available', 'error');
+        return;
+      }
+
+      chrome.permissions.getAll((permissions) => {
+        const hasStorage = permissions.permissions.includes('storage');
+        const hasTabs = permissions.permissions.includes('tabs');
+        const hasSidePanel = permissions.permissions.includes('sidePanel');
+        
+        showResult(`Extension permissions:\n- storage: ${hasStorage}\n- tabs: ${hasTabs}\n- sidePanel: ${hasSidePanel}`, 'info');
+      });
+    }
+
+    async function openSidePanel() {
+      try {
+        const currentWindow = await chrome.windows.getCurrent();
+        showResult(`Current window ID: ${currentWindow.id}\nAttempting to open side panel...`, 'info');
+        
+        await chrome.sidePanel.open({ windowId: currentWindow.id });
+        showResult(`Side panel opened successfully for window ${currentWindow.id}`, 'success');
+      } catch (error) {
+        showResult(`Side panel error: ${error.message}`, 'error');
+      }
+    }
+
+    async function openSidePanelNoWindow() {
+      try {
+        showResult('Attempting to open side panel without window ID...', 'info');
+        await chrome.sidePanel.open();
+        showResult('Side panel opened successfully (no window ID)', 'success');
+      } catch (error) {
+        showResult(`Side panel error: ${error.message}`, 'error');
+      }
+    }
+
+    async function getCurrentWindow() {
+      try {
+        const currentWindow = await chrome.windows.getCurrent();
+        showResult(`Current window info:\nID: ${currentWindow.id}\nFocused: ${currentWindow.focused}\nState: ${currentWindow.state}\nType: ${currentWindow.type}`, 'info');
+      } catch (error) {
+        showResult(`Window info error: ${error.message}`, 'error');
+      }
+    }
+
+    async function openSeparateWindow() {
+      try {
+        const newWindow = await chrome.windows.create({
+          url: 'sidepanel.html',
+          type: 'popup',
+          width: 400,
+          height: 600,
+          left: screen.width - 420,
+          top: 100
+        });
+        showResult(`Separate window opened successfully. ID: ${newWindow.id}`, 'success');
+      } catch (error) {
+        showResult(`Window creation error: ${error.message}`, 'error');
+      }
+    }
+
+    // Auto-run basic tests on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        testSidePanelAPI();
+      }, 100);
+    });
+  </script>
+</body>
+</html>

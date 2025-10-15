@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Test Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+    .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    button { padding: 10px 15px; margin: 5px; background: #007cba; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    button:hover { background: #005a87; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    input[type="text"] { padding: 8px; margin: 5px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+    .result { margin-top: 10px; padding: 10px; background: #f5f5f5; border-radius: 4px; white-space: pre-wrap; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Document API Test Page</h1>
+  <p>This page helps you test the Document API endpoints used by the Chrome extension.</p>
+
+  <div class="section">
+    <h3>Configuration</h3>
+    <label>API Base URL: <input type="text" id="apiUrl" value="http://localhost:3000/api/v1"></label><br>
+    <label>Auth Token: <input type="text" id="authToken" placeholder="Bearer token"></label><br>
+    <button onclick="saveConfig()">Save Config</button>
+  </div>
+
+  <div class="section">
+    <h3>Test Authentication</h3>
+    <button onclick="testAuth()">Test Token Validation</button>
+    <div id="authResult" class="result" style="display: none;"></div>
+  </div>
+
+  <div class="section">
+    <h3>Document Operations</h3>
+    <button onclick="getAllDocuments()">Get All Documents</button>
+    <button onclick="getDocumentsWithParams()">Get Documents (with params)</button><br>
+    
+    <label>Search Query: <input type="text" id="searchQuery" placeholder="Enter search terms"></label>
+    <button onclick="searchDocuments()">Search Documents</button><br>
+    
+    <label>Similar Text: <input type="text" id="similarText" placeholder="Enter text to find similar docs"></label>
+    <button onclick="findSimilar()">Find Similar Documents</button><br>
+    
+    <div id="docResult" class="result" style="display: none;"></div>
+  </div>
+
+  <div class="section">
+    <h3>Raw API Test</h3>
+    <label>Endpoint: <input type="text" id="rawEndpoint" placeholder="/documents" value="/documents"></label><br>
+    <label>Method: 
+      <select id="rawMethod">
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+    </label><br>
+    <label>Body (JSON): <textarea id="rawBody" rows="3" cols="50" placeholder='{"key": "value"}'></textarea></label><br>
+    <button onclick="rawApiCall()">Make Raw API Call</button>
+    <div id="rawResult" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    let apiConfig = {
+      baseUrl: 'http://localhost:3000/api/v1',
+      token: ''
+    };
+
+    // Load saved config
+    const savedConfig = localStorage.getItem('apiTestConfig');
+    if (savedConfig) {
+      apiConfig = JSON.parse(savedConfig);
+      document.getElementById('apiUrl').value = apiConfig.baseUrl;
+      document.getElementById('authToken').value = apiConfig.token;
+    }
+
+    function saveConfig() {
+      apiConfig.baseUrl = document.getElementById('apiUrl').value;
+      apiConfig.token = document.getElementById('authToken').value;
+      localStorage.setItem('apiTestConfig', JSON.stringify(apiConfig));
+      showResult('authResult', 'Configuration saved!', 'success');
+    }
+
+    async function makeApiCall(endpoint, options = {}) {
+      const url = apiConfig.baseUrl + endpoint;
+      const defaultOptions = {
+        headers: {
+          'Authorization': `Bearer ${apiConfig.token}`,
+          'Content-Type': 'application/json'
+        }
+      };
+
+      const response = await fetch(url, { ...defaultOptions, ...options });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return response.json();
+    }
+
+    async function testAuth() {
+      try {
+        const result = await makeApiCall('/auth/validate');
+        showResult('authResult', JSON.stringify(result, null, 2), result.valid ? 'success' : 'error');
+      } catch (error) {
+        showResult('authResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function getAllDocuments() {
+      try {
+        const result = await makeApiCall('/documents');
+        showResult('docResult', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('docResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function getDocumentsWithParams() {
+      try {
+        const result = await makeApiCall('/documents?per_page=5&sort=updated_at');
+        showResult('docResult', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('docResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function searchDocuments() {
+      const query = document.getElementById('searchQuery').value.trim();
+      if (!query) {
+        showResult('docResult', 'Please enter a search query', 'error');
+        return;
+      }
+
+      try {
+        const result = await makeApiCall(`/documents?contains=${encodeURIComponent(query)}`);
+        showResult('docResult', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('docResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function findSimilar() {
+      const text = document.getElementById('similarText').value.trim();
+      if (!text) {
+        showResult('docResult', 'Please enter text to find similar documents', 'error');
+        return;
+      }
+
+      try {
+        const result = await makeApiCall(`/documents?similar_to=${encodeURIComponent(text)}`);
+        showResult('docResult', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('docResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function rawApiCall() {
+      const endpoint = document.getElementById('rawEndpoint').value;
+      const method = document.getElementById('rawMethod').value;
+      const body = document.getElementById('rawBody').value.trim();
+
+      const options = { method };
+      if (body && method !== 'GET') {
+        options.body = body;
+      }
+
+      try {
+        const result = await makeApiCall(endpoint, options);
+        showResult('rawResult', JSON.stringify(result, null, 2), 'success');
+      } catch (error) {
+        showResult('rawResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    function showResult(elementId, content, type) {
+      const element = document.getElementById(elementId);
+      element.textContent = content;
+      element.className = `result ${type || ''}`;
+      element.style.display = 'block';
+    }
+
+    // Check if token is provided on page load
+    if (!apiConfig.token) {
+      showResult('authResult', 'Please enter your API token in the configuration section above.', 'error');
+    }
+  </script>
+</body>
+</html>

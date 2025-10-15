@@ -392,20 +392,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       const sourceUrl = new URL(source);
       const sourceDisplay = sourceUrl.hostname + sourceUrl.pathname;
       
-      messageDiv.innerHTML = `
-        <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px;">
-          📄 Selected from: ${sourceDisplay}
-        </div>
-        <div>${escapeHtml(text)}</div>
-        <div class="message-timestamp">${new Date().toLocaleTimeString()}</div>
-      `;
-      
-      chatHistory.appendChild(messageDiv);
       scrollChatToBottom();
       
       // Auto-populate the question input with a prompt
       if (questionInput) {
-        const prompt = `Please analyze this selected text:\n\n"${text}"\n\n`;
+        const prompt = `Please analyze this selected text:\n\n"${text}"\n\nSource: ${source}`;
         questionInput.value = prompt;
         questionInput.focus();
       }

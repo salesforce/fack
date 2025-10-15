@@ -136,6 +136,13 @@ function showSelectionIndicator(text) {
 
 function sendToChat(text) {
   try {
+    // Check if extension context is still valid
+    if (!chrome.runtime?.id) {
+      console.warn('AI Chat Assistant: Extension context invalidated. Please refresh the page.');
+      showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+      return;
+    }
+
     // Send the selected text to the side panel
     chrome.runtime.sendMessage({
       action: 'sendToChat',
@@ -144,6 +151,14 @@ function sendToChat(text) {
     }, (response) => {
       if (chrome.runtime.lastError) {
         console.error('AI Chat Assistant: Error sending to chat:', chrome.runtime.lastError);
+        
+        // Check if it's a context invalidation error
+        if (chrome.runtime.lastError.message?.includes('context invalidated') || 
+            chrome.runtime.lastError.message?.includes('Extension context')) {
+          showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+        } else {
+          showNotification('Failed to send text to chat. Please try again.', 'error');
+        }
       } else {
         console.log('AI Chat Assistant: Text sent to chat:', response);
         
@@ -153,6 +168,13 @@ function sendToChat(text) {
     });
   } catch (error) {
     console.error('AI Chat Assistant: Error in sendToChat:', error);
+    
+    if (error.message?.includes('Extension context invalidated') || 
+        error.message?.includes('context invalidated')) {
+      showNotification('Extension reloaded. Please refresh this page to continue using text selection.', 'error');
+    } else {
+      showNotification('Failed to send text to chat. Please try again.', 'error');
+    }
   }
 }
 
@@ -215,13 +237,19 @@ function escapeHtml(unsafe) {
 
 function handleKeyboardShortcuts(e) {
   try {
+    // Check if extension context is still valid
+    if (!chrome.runtime?.id) {
+      console.warn('AI Chat Assistant: Extension context invalidated during keyboard shortcut');
+      return;
+    }
+
     // Ctrl+Shift+C to send page content to chat
     if (e.ctrlKey && e.shiftKey && e.key === 'C') {
       e.preventDefault();
       const pageText = document.body?.innerText?.substring(0, 1000) || ''; // First 1000 characters
       if (pageText.trim()) {
         sendToChat(pageText);
-        showNotification('Page content sent to AI chat!', 'success');
+        // Don't show notification here since sendToChat will handle it
       }
     }
   } catch (error) {

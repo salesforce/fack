@@ -29,6 +29,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load configuration and check authentication status on load
   await loadConfiguration();
   await checkAuthStatus();
+  
+  // Check for pending chat text from content scripts
+  await checkPendingChatText();
+
+  // Listen for messages from content scripts
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'addTextToChat') {
+      addTextFromContentScript(request.text, request.source);
+      sendResponse({ success: true });
+    }
+  });
 
   // Event listeners - with null checks
   if (authBtn) authBtn.addEventListener('click', authenticate);
@@ -350,6 +361,55 @@ document.addEventListener('DOMContentLoaded', async () => {
   function scrollChatToBottom() {
     // Scroll the whole page to bottom instead of just chat container
     window.scrollTo(0, document.body.scrollHeight);
+  }
+
+  async function checkPendingChatText() {
+    try {
+      const result = await chrome.storage.local.get('pendingChatText');
+      if (result.pendingChatText) {
+        const { text, source, timestamp } = result.pendingChatText;
+        
+        // Only process if it's recent (within last 5 minutes)
+        if (Date.now() - timestamp < 300000) {
+          addTextFromContentScript(text, source);
+        }
+        
+        // Clear the pending text
+        await chrome.storage.local.remove('pendingChatText');
+      }
+    } catch (error) {
+      console.error('Error checking pending chat text:', error);
+    }
+  }
+
+  function addTextFromContentScript(text, source) {
+    // Only add if we're authenticated and chat section is visible
+    if (chatSection && chatSection.style.display !== 'none') {
+      // Create a special message showing the selected text
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'chat-message user-message';
+      
+      const sourceUrl = new URL(source);
+      const sourceDisplay = sourceUrl.hostname + sourceUrl.pathname;
+      
+      messageDiv.innerHTML = `
+        <div style="opacity: 0.8; font-size: 10px; margin-bottom: 4px;">
+          📄 Selected from: ${sourceDisplay}
+        </div>
+        <div>${escapeHtml(text)}</div>
+        <div class="message-timestamp">${new Date().toLocaleTimeString()}</div>
+      `;
+      
+      chatHistory.appendChild(messageDiv);
+      scrollChatToBottom();
+      
+      // Auto-populate the question input with a prompt
+      if (questionInput) {
+        const prompt = `Please analyze this selected text:\n\n"${text}"\n\n`;
+        questionInput.value = prompt;
+        questionInput.focus();
+      }
+    }
   }
 
   function updateLoadingMessageStatus(messageId, status) {

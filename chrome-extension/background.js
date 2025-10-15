@@ -273,11 +273,46 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
-// Message handling for popup
+// Message handling for popup and content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   (async () => {
     try {
       switch (request.action) {
+        case 'sendToChat':
+          // Handle text from content script
+          console.log('Background: Received text from content script:', request.text);
+          
+          try {
+            // Store in storage for side panel to retrieve
+            await chrome.storage.local.set({
+              pendingChatText: {
+                text: request.text,
+                source: request.source,
+                timestamp: Date.now()
+              }
+            });
+            
+            console.log('Background: Text stored in chrome.storage.local');
+            sendResponse({ success: true, message: 'Text stored for chat' });
+            
+            // Try to send direct message to side panel if it's listening
+            try {
+              chrome.runtime.sendMessage({
+                action: 'addTextToChat',
+                text: request.text,
+                source: request.source
+              }).catch(() => {
+                console.log('Background: Side panel not currently open, text stored for later');
+              });
+            } catch (e) {
+              console.log('Background: Side panel not available, text stored for when it opens');
+            }
+            
+          } catch (error) {
+            console.error('Background: Error handling sendToChat:', error);
+            sendResponse({ success: false, error: error.message });
+          }
+          break;
         case 'authenticate':
           const authResult = await documentAPI.authenticateWithSSO();
           sendResponse(authResult);

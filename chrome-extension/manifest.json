@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "FAQ (fack) AI Help",
+  "name": "FAQ (fack)",
   "version": "1.0",
   "description": "Get help on any page with answers from your company's documentation.",
   "permissions": [

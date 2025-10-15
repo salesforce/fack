@@ -198,7 +198,7 @@ class DocumentAPI {
     
     // Use consistent 2-second polling interval
     const getInterval = (attempt) => {
-      return 2000; // All attempts: 2s (consistent)
+      return 3000; // All attempts: 2s (consistent)
     };
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {

@@ -24,6 +24,20 @@ class DocumentAPI {
       throw new Error('Invalid URL format');
     }
 
+    // Request permission for this URL
+    const urlPattern = `${new URL(baseUrl).origin}/*`;
+    console.log('🔐 Requesting permission for:', urlPattern);
+    
+    const granted = await chrome.permissions.request({
+      origins: [urlPattern]
+    });
+    
+    if (!granted) {
+      throw new Error('Permission denied. Please allow access to this URL.');
+    }
+    
+    console.log('✅ Permission granted for:', urlPattern);
+
     this.baseUrl = baseUrl;
     
     await chrome.storage.local.set({

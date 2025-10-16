@@ -8,11 +8,14 @@
     "activeTab",
     "tabs",
     "sidePanel",
-    "identity",
     "scripting"
   ],
   "host_permissions": [
     "http://localhost:3000/*"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -21,18 +24,6 @@
     {
       "matches": ["<all_urls>"],
       "js": ["content.js"]
-    },
-    {
-      "matches": [
-        "http://localhost:3000/auth/get_token",
-        "http://localhost:3000/auth/*",
-        "http://localhost:3000/sessions/new",
-        "http://*/auth/*",
-        "https://*/auth/*",
-        "https://*/sessions/new"
-      ],
-      "js": ["auth-content.js"],
-      "run_at": "document_end"
     }
   ],
   "action": {

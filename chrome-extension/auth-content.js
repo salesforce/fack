@@ -1,21 +1,15 @@
-// Content script specifically for the auth/token pages
+// Content script for Chrome extension authentication
 // 
-// NOTE: This is a LEGACY FALLBACK flow. The primary authentication method now uses
-// chrome.identity.launchWebAuthFlow() which is more secure and doesn't require this content script.
-// 
-// This script is kept for backward compatibility and will only run when the auth page
-// is accessed WITHOUT the redirect_uri parameter (legacy flow).
-// 
-// New flow (chrome.identity.launchWebAuthFlow):
-//   1. Extension calls chrome.identity.getRedirectURL() to get redirect URI
-//   2. Opens auth page with redirect_uri parameter
-//   3. After auth, Rails redirects to chrome-extension:// URI with token
-//   4. launchWebAuthFlow intercepts and extracts token
+// This script enables tab-based authentication flow:
+//   1. Extension opens /auth/get_token in a new tab (background.js)
+//   2. User logs in via SSO (if not already authenticated)
+//   3. Rails renders the auth page with token in DOM (#token-display element)
+//   4. This script extracts the token from the page
+//   5. Sends token to background script via chrome.runtime.sendMessage()
+//   6. Background script stores token and closes the auth tab
 //
-// Legacy flow (this script):
-//   1. Opens auth page in a tab without redirect_uri
-//   2. This content script captures token from page
-//   3. Sends token to service worker via chrome.runtime.sendMessage
+// This approach works everywhere (localhost, staging, production) and is
+// simpler than chrome.identity.launchWebAuthFlow() which has limitations.
 
 console.log('🔵 Auth content script loaded for:', window.location.href);
 console.log('🔵 Document ready state:', document.readyState);
@@ -76,9 +70,7 @@ function checkForToken() {
   return false;
 }
 
-// Note: The auth page handles postMessage communication directly, so no listener needed here
-
-// Main initialization with better redirect handling
+// Main initialization
 function init() {
   console.log('Initializing auth content script');
   

@@ -37,10 +37,6 @@ class AuthController < ApplicationController
         user: {
           id: current_user.id,
           email: current_user.email
-        },
-        token_info: {
-          last_used: current_user.api_tokens.where(active: true).maximum(:last_used),
-          active_tokens: current_user.api_tokens.where(active: true).count
         }
       }
     else

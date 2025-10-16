@@ -28,6 +28,15 @@
       <%= render "chats/form", chat: @chat, assistant: @chat.assistant %>
     </div>
   </div>
+  
+  <!-- Chart Section -->
+  <div class="mt-8 bg-white rounded-lg shadow-sm border border-stone-200 p-6">
+    <h2 class="text-stone-700 font-light text-2xl mb-4">Chat Activity - Last 30 Days</h2>
+    <div class="w-full" style="height: 300px;">
+      <canvas id="chatsPerDayChart"></canvas>
+    </div>
+  </div>
+  
   <div>
     <h1 class="text-stone-700 font-light text-3xl mt-6">Recent Chats</h1>
     <%= render "shared/chat_list", chats: @assistant.chats.limit(10).order(created_at: :desc) %>
@@ -46,6 +55,7 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
   document.querySelector('a[href="#"]').addEventListener("click", function(e) {
     e.preventDefault();
@@ -54,4 +64,96 @@
   document.getElementById("close-modal").addEventListener("click", function() {
     document.getElementById("details-modal").classList.add("hidden");
   });
+  
+  // Initialize Chart.js
+  function initializeChart() {
+    const ctx = document.getElementById('chatsPerDayChart');
+    if (!ctx) return;
+    
+    // Destroy existing chart if it exists to prevent duplicates
+    if (window.chatsChart) {
+      window.chatsChart.destroy();
+    }
+    
+    const chartData = <%= raw @chats_per_day.to_json %>;
+    const labels = chartData.map(d => {
+      const date = new Date(d.date);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    });
+    const data = chartData.map(d => d.count);
+    
+    window.chatsChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Chats per Day',
+          data: data,
+          borderColor: '#0ea5e9',
+          backgroundColor: 'rgba(14, 165, 233, 0.1)',
+          tension: 0.3,
+          fill: true,
+          pointRadius: 3,
+          pointHoverRadius: 5,
+          pointBackgroundColor: '#0ea5e9',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: {
+              size: 13
+            },
+            bodyFont: {
+              size: 13
+            },
+            callbacks: {
+              label: function(context) {
+                return 'Chats: ' + context.parsed.y;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              font: {
+                size: 11
+              }
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              font: {
+                size: 10
+              }
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+  }
+  
+  // Listen for both DOMContentLoaded and Turbo events
+  document.addEventListener('DOMContentLoaded', initializeChart);
+  document.addEventListener('turbo:load', initializeChart);
 </script>

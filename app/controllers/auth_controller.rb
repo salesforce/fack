@@ -5,21 +5,25 @@ class AuthController < ApplicationController
   skip_before_action :require_login, only: [:get_token, :validate_token]
 
   # GET /auth/get_token
-  # Generate and display API token for authenticated SSO user (for Chrome extensions)
-  # For chrome, we don't need to generate a token, we just need to know the user is authenticated
+  # Return user email for authenticated SSO user (for Chrome extensions)
   def get_token
     Rails.logger.info '=== AUTH GET_TOKEN CALLED ==='
+    Rails.logger.info "Session user_id: #{session[:user_id]}"
     Rails.logger.info "Current user: #{current_user&.email || 'NOT AUTHENTICATED'}"
+    Rails.logger.info "Request path: #{request.fullpath}"
 
-    # User is authenticated via SSO session, generate token
+    # User is authenticated via SSO session, return email
     if current_user
-      Rails.logger.info "User authenticated for browser. #{current_user.email}"
+      Rails.logger.info "✅ User authenticated successfully: #{current_user.email}"
+      # Render the page with current_user available
     else
+      Rails.logger.info "❌ User not authenticated, redirecting to login"
       # User not authenticated, redirect to login with return URL
       redirect_to new_session_path(redirect_to: request.fullpath)
     end
   rescue StandardError => e
     Rails.logger.error "Auth error: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
     redirect_to root_path, alert: 'Authentication failed. Please try again.'
   end
 

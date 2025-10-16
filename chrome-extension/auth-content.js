@@ -48,7 +48,7 @@ function checkForToken() {
 
 // Note: The auth page handles postMessage communication directly, so no listener needed here
 
-// Main initialization
+// Main initialization with better redirect handling
 function init() {
   console.log('Initializing auth content script');
   
@@ -57,15 +57,38 @@ function init() {
     return;
   }
   
-  // If not found immediately, wait for DOM to be ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => checkForToken(), 100);
-    });
-  } else {
-    // DOM is already ready, try again after a short delay
+  // Set up polling with multiple attempts
+  let attempts = 0;
+  const maxAttempts = 30; // 15 seconds total (500ms * 30)
+  
+  const pollForToken = () => {
+    attempts++;
+    console.log(`Polling for token, attempt ${attempts}/${maxAttempts}`);
+    
+    if (checkForToken() || attempts >= maxAttempts) {
+      if (attempts >= maxAttempts && !tokenSent) {
+        console.log('❌ Token polling timeout - token not found after 15 seconds');
+      }
+      return;
+    }
+    
+    setTimeout(pollForToken, 500);
+  };
+  
+  // Start polling immediately
+  setTimeout(pollForToken, 100);
+  
+  // Also listen for DOM changes (Turbo redirects)
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM ready - checking for token again');
     setTimeout(() => checkForToken(), 100);
-  }
+  });
+  
+  // Listen for Turbo redirects specifically  
+  document.addEventListener('turbo:load', () => {
+    console.log('Turbo load detected - checking for token again');
+    setTimeout(() => checkForToken(), 100);
+  });
 }
 
 // Start the initialization

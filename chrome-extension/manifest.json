@@ -22,12 +22,13 @@
     },
     {
       "matches": [
+        "http://localhost:3000/auth/get_token",
         "http://localhost:3000/auth/*",
         "http://*/auth/*",
         "https://*/auth/*"
       ],
       "js": ["auth-content.js"],
-      "run_at": "document_start"
+      "run_at": "document_end"
     }
   ],
   "action": {

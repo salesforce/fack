@@ -1,4 +1,8 @@
-# Chrome Extension Integration Guide
+# Chrome Extension Integration Guide (DEPRECATED)
+
+⚠️ **This document is outdated.** See [chrome-extension-authentication.md](./chrome-extension-authentication.md) for current implementation.
+
+---
 
 This guide explains how to integrate your Chrome extension with the Rails API authentication system using SSO.
 

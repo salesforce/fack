@@ -1,15 +1,29 @@
 class SessionsController < ApplicationController
   skip_before_action :require_login
 
-  def new; end
+  def new
+    @redirect_to = params[:redirect_to]
+  end
 
   def create
     user = User.find_by_email(params[:session][:email])
+    
+    # Debug logging
+    Rails.logger.info "Login attempt for: #{params[:session][:email]}"
+    
     if user&.authenticate(params[:session][:password])
       login_user(user)
-      redirect_back(fallback_location: root_path)
+      
+      # Use redirect_to parameter if provided, otherwise fallback to previous page or root
+      if params[:redirect_to].present?
+        redirect_to params[:redirect_to]
+      else
+        redirect_to(root_path)
+      end
     else
-      redirect_to new_session_url, notice: 'Error logging in.'
+      # Preserve redirect_to parameter on failed login
+      redirect_params = params[:redirect_to].present? ? { redirect_to: params[:redirect_to] } : {}
+      redirect_to new_session_url(redirect_params), notice: 'Error logging in.'
     end
   end
 

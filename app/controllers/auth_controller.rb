@@ -15,8 +15,8 @@ class AuthController < ApplicationController
     if current_user
       Rails.logger.info "User authenticated for browser. #{current_user.email}"
     else
-      # User not authenticated, redirect to SSO login
-      redirect_to auth_saml_init_path
+      # User not authenticated, redirect to login with return URL
+      redirect_to new_session_path(redirect_to: request.fullpath)
     end
   rescue StandardError => e
     Rails.logger.error "Auth error: #{e.message}"

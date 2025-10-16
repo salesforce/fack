@@ -3,6 +3,9 @@
 class SamlController < ApplicationController
   skip_before_action :verify_authenticity_token
   def init
+    # Store redirect_to parameter in session since SAML redirects lose URL parameters
+    session[:saml_redirect_to] = params[:redirect_to] if params[:redirect_to].present?
+    
     request = OneLogin::RubySaml::Authrequest.new
     redirect_to(request.create(saml_settings), allow_other_host: true)
   end
@@ -39,11 +42,16 @@ class SamlController < ApplicationController
       # Setting the session logs the user in.  Need to make some methods for this.
       if user
         login_user(user)
+        
+        # Use stored redirect_to parameter if available, otherwise fallback to root
+        redirect_url = session[:saml_redirect_to].presence || root_path
+        session.delete(:saml_redirect_to) # Clean up the session
+        
+        redirect_to redirect_url, notice:
       else
         notice = 'Login failed.  Please contact an admin for help.'
+        redirect_to root_path, notice:
       end
-
-      redirect_to root_path, notice:
     else
       redirect_to(request.create(saml_settings))
     end

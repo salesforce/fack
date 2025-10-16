@@ -252,11 +252,9 @@ URL: ${pageContext.url}`;
     
     // Bold (**bold** or __bold__)
     text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    text = text.replace(/__(.*?)__/g, '<strong>$1</strong>');
     
     // Italic (*italic* or _italic_)
     text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    text = text.replace(/_(.*?)_/g, '<em>$1</em>');
     
     // Convert list items but don't wrap in ul/ol yet
     text = text.replace(/^[\s]*[-\*\+]\s+(.+)$/gm, '<!--UL_ITEM--><li>$1</li>');

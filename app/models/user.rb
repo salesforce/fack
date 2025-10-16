@@ -17,8 +17,6 @@ class User < ApplicationRecord
   has_many :assistants, through: :assistant_users
   has_many :comments, dependent: :destroy
 
-  has_many :api_tokens, dependent: :destroy
-
   private
 
   def password_strength

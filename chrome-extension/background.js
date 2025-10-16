@@ -38,17 +38,13 @@ class DocumentAPI {
   }
 
   async authenticateWithSSO() {
-    const isLocalhost = this.baseUrl.includes('localhost') || this.baseUrl.includes('127.0.0.1');
+    // Always use tab-based authentication - it's simpler and works everywhere
+    console.log('🔐 Using tab-based authentication');
+    return this.authenticateWithTab();
     
-    if (isLocalhost) {
-      // Development: Use tab-based authentication (chrome.identity doesn't work well with localhost)
-      console.log('Using tab-based authentication for localhost development');
-      return this.authenticateWithTab();
-    } else {
-      // Production: Use chrome.identity.launchWebAuthFlow
-      console.log('Using chrome.identity.launchWebAuthFlow for production');
-      return this.authenticateWithChromeIdentity();
-    }
+    // Note: chrome.identity.launchWebAuthFlow() is available but not used
+    // because the tab-based flow is more flexible and easier to debug.
+    // If you need chrome.identity flow, use authenticateWithChromeIdentity() instead.
   }
 
   async authenticateWithTab() {
@@ -142,76 +138,6 @@ class DocumentAPI {
           }
         }, 300000);
       });
-    });
-  }
-
-  async authenticateWithChromeIdentity() {
-    return new Promise((resolve) => {
-      // Production: Use Chrome extension redirect URL
-      const redirectURL = chrome.identity.getRedirectURL('oauth');
-      console.log('Chrome Identity Redirect URL:', redirectURL);
-      
-      // Construct auth URL with redirect_uri parameter
-      const authUrl = `${this.baseUrl}/auth/get_token?redirect_uri=${encodeURIComponent(redirectURL)}`;
-      console.log('Starting authentication flow:', authUrl);
-      
-      // Launch web auth flow
-      chrome.identity.launchWebAuthFlow(
-        {
-          url: authUrl,
-          interactive: true
-        },
-        (responseUrl) => {
-          // Check for errors
-          if (chrome.runtime.lastError) {
-            console.error('Authentication error:', chrome.runtime.lastError);
-            resolve({ 
-              success: false, 
-              error: chrome.runtime.lastError.message || 'Authentication failed'
-            });
-            return;
-          }
-          
-          // User cancelled
-          if (!responseUrl) {
-            console.log('Authentication cancelled by user');
-            resolve({ success: false, error: 'Authentication cancelled' });
-            return;
-          }
-          
-          console.log('Authentication completed, response URL:', responseUrl);
-          
-          try {
-            // Parse the response URL to extract the token
-            const url = new URL(responseUrl);
-            const token = url.searchParams.get('token');
-            
-            if (!token) {
-              console.error('No token found in response URL');
-              resolve({ success: false, error: 'No token received' });
-              return;
-            }
-            
-            console.log('Token extracted successfully');
-            
-            // Store token
-            this.token = token;
-            chrome.storage.local.set({ 
-              apiToken: this.token 
-            }).then(() => {
-              console.log('Token stored in chrome.storage');
-              resolve({ success: true, token: this.token });
-            }).catch((error) => {
-              console.error('Failed to store token:', error);
-              resolve({ success: false, error: 'Failed to store token' });
-            });
-            
-          } catch (error) {
-            console.error('Error parsing response URL:', error);
-            resolve({ success: false, error: 'Invalid response from server' });
-          }
-        }
-      );
     });
   }
 

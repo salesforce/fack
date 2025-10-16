@@ -28,7 +28,6 @@ Rails.application.routes.draw do
   # Chrome Extension SSO Token Generation
   get '/auth/get_token', to: 'auth#get_token'
   get '/auth/validate', to: 'auth#validate_token'
-  get '/auth/callback', to: 'auth#callback'
 
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'

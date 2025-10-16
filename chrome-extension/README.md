@@ -62,7 +62,7 @@ A Chrome extension that provides a persistent AI chat interface through a side p
 The extension makes calls to these endpoints:
 
 - `GET /auth/get_token` - SSO authentication for extensions
-- `GET /api/v1/auth/validate` - Validate current token
+- `GET /auth/validate` - Validate current token
 - `POST /api/v1/questions` - Submit questions to AI
 - `GET /api/v1/questions/{id}` - Get question status and response
 

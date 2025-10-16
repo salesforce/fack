@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   # Chrome Extension SSO Token Generation
   get '/auth/get_token', to: 'auth#get_token'
+  get '/auth/validate', to: 'auth#validate_token'
 
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
@@ -90,8 +91,7 @@ Rails.application.routes.draw do
         end
       end
 
-      # Auth routes
-      get 'auth/validate', to: 'auth#validate_token'
+      # Auth routes moved to main auth controller
     end
   end
 

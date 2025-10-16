@@ -26,8 +26,7 @@ The Chrome extension authentication uses your existing SSO system:
 ### Authentication
 - `GET /auth/get_token` - SSO authentication and token generation for extensions
 - `GET /auth/token_display` - Secure token display page
-- `GET /api/v1/auth/validate` - Validate current token and get user info  
-- `POST /api/v1/auth/logout` - Invalidate current token
+- `GET /auth/validate` - Validate current token and get user info  
 
 ### Data Access
 - `GET /api/v1/chats` - List user's chats

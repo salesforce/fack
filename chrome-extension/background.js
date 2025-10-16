@@ -102,7 +102,7 @@ class DocumentAPI {
     if (!this.token) return { valid: false };
 
     try {
-      const response = await fetch(`${this.baseUrl}/api/v1/auth/validate`, {
+      const response = await fetch(`${this.baseUrl}/auth/validate`, {
         headers: {
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'

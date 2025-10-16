@@ -20,8 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const clearChatBtn = document.getElementById('clearChatBtn');
   
   const saveConfigBtn = document.getElementById('saveConfigBtn');
-  const apiBaseUrlInput = document.getElementById('apiBaseUrlInput');
-  const authBaseUrlInput = document.getElementById('authBaseUrlInput');
+  const baseUrlInput = document.getElementById('baseUrlInput');
   const configStatus = document.getElementById('configStatus');
   const configError = document.getElementById('configError');
   const configToggle = document.getElementById('configToggle');
@@ -607,8 +606,7 @@ URL: ${pageContext.url}`;
     try {
       const result = await sendMessage({ action: 'getConfiguration' });
       if (result && result.success) {
-        apiBaseUrlInput.value = result.data.apiBaseUrl;
-        authBaseUrlInput.value = result.data.authBaseUrl;
+        baseUrlInput.value = result.data.baseUrl;
         configStatus.textContent = 'Configuration loaded';
         configStatus.style.color = '#666';
       }
@@ -618,12 +616,11 @@ URL: ${pageContext.url}`;
   }
 
   async function saveConfiguration() {
-    const apiBaseUrl = apiBaseUrlInput.value.trim();
-    const authBaseUrl = authBaseUrlInput.value.trim();
+    const baseUrl = baseUrlInput.value.trim();
 
     // Basic validation
-    if (!apiBaseUrl || !authBaseUrl) {
-      configError.textContent = 'Both URLs are required';
+    if (!baseUrl) {
+      configError.textContent = 'Base URL is required';
       return;
     }
 
@@ -636,19 +633,18 @@ URL: ${pageContext.url}`;
     try {
       const result = await sendMessage({ 
         action: 'updateConfiguration',
-        apiBaseUrl: apiBaseUrl,
-        authBaseUrl: authBaseUrl
+        baseUrl: baseUrl
       });
 
       if (result && result.success) {
         configStatus.textContent = '✅ Settings saved successfully!';
         configStatus.style.color = '#28a745';
         
-        // If user was authenticated, they should re-authenticate with new URLs
+        // If user was authenticated, they should re-authenticate with new URL
         const validation = await sendMessage({ action: 'validateToken' });
         if (!validation || !validation.valid) {
           showUnauthenticatedState();
-          authStatus.textContent = 'Please re-authenticate with new URLs';
+          authStatus.textContent = 'Please re-authenticate with new URL';
         }
       } else {
         configError.textContent = result?.error || 'Failed to save settings';

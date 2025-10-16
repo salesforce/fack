@@ -1,8 +1,7 @@
 class DocumentAPI {
   constructor() {
     this.token = null;
-    this.apiBaseUrl = 'http://localhost:3000/api/v1'; // Default
-    this.authBaseUrl = 'http://localhost:3000'; // Default
+    this.baseUrl = 'http://localhost:3000'; // Default
     this.init();
   }
 
@@ -10,44 +9,38 @@ class DocumentAPI {
     // Load configuration from storage
     const result = await chrome.storage.local.get([
       'apiToken', 
-      'apiBaseUrl', 
-      'authBaseUrl'
+      'baseUrl'
     ]);
     
     this.token = result.apiToken;
-    this.apiBaseUrl = result.apiBaseUrl || 'http://localhost:3000/api/v1';
-    this.authBaseUrl = result.authBaseUrl || 'http://localhost:3000';
+    this.baseUrl = result.baseUrl || 'http://localhost:3000';
   }
 
-  async updateConfiguration(apiBaseUrl, authBaseUrl) {
-    // Validate URLs
+  async updateConfiguration(baseUrl) {
+    // Validate URL
     try {
-      new URL(apiBaseUrl);
-      new URL(authBaseUrl);
+      new URL(baseUrl);
     } catch (error) {
       throw new Error('Invalid URL format');
     }
 
-    this.apiBaseUrl = apiBaseUrl;
-    this.authBaseUrl = authBaseUrl;
+    this.baseUrl = baseUrl;
     
     await chrome.storage.local.set({
-      apiBaseUrl: this.apiBaseUrl,
-      authBaseUrl: this.authBaseUrl
+      baseUrl: this.baseUrl
     });
   }
 
   getConfiguration() {
     return {
-      apiBaseUrl: this.apiBaseUrl,
-      authBaseUrl: this.authBaseUrl
+      baseUrl: this.baseUrl
     };
   }
 
   async authenticateWithSSO() {
     return new Promise((resolve) => {
       // Open SSO authentication tab
-      const authUrl = `${this.authBaseUrl}/auth/get_token`;
+      const authUrl = `${this.baseUrl}/auth/get_token`;
       
       chrome.tabs.create({
         url: authUrl,
@@ -109,7 +102,7 @@ class DocumentAPI {
     if (!this.token) return { valid: false };
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/validate`, {
+      const response = await fetch(`${this.baseUrl}/api/v1/auth/validate`, {
         headers: {
           'Authorization': `Bearer ${this.token}`,
           'Content-Type': 'application/json'
@@ -139,7 +132,7 @@ class DocumentAPI {
       throw new Error('Not authenticated');
     }
 
-    const url = `${this.apiBaseUrl}${endpoint}`;
+    const url = `${this.baseUrl}/api/v1${endpoint}`;
     const defaultOptions = {
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -347,7 +340,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
           break;
 
         case 'updateConfiguration':
-          await documentAPI.updateConfiguration(request.apiBaseUrl, request.authBaseUrl);
+          await documentAPI.updateConfiguration(request.baseUrl);
           sendResponse({ success: true });
           break;
 

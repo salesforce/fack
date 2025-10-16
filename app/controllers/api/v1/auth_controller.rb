@@ -27,34 +27,6 @@ module Api
           }, status: :unauthorized
         end
       end
-
-      # POST /api/v1/auth/logout
-      # Invalidate current token
-      def logout
-        if current_user
-          # Find and deactivate the current token
-          authenticate_with_http_token do |token, _options|
-            current_api_token = ApiToken.where(active: true).find_by_token(token)
-            if current_api_token
-              current_api_token.update!(active: false)
-              render json: {
-                success: true,
-                message: 'Token successfully invalidated'
-              }
-            else
-              render json: {
-                success: false,
-                error: 'Token not found'
-              }, status: :not_found
-            end
-          end
-        else
-          render json: {
-            success: false,
-            error: 'Not authenticated'
-          }, status: :unauthorized
-        end
-      end
     end
   end
 end

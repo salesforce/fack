@@ -16,6 +16,9 @@
     <% if ENV['DISABLE_PASSWORD_LOGIN'] != "true" %>
       <%= form_for :session, url: sessions_path, method: :post, class: "mt-8 space-y-6" do |f| %>
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <% if @redirect_to.present? %>
+          <input type="hidden" name="redirect_to" value="<%= @redirect_to %>">
+        <% end %>
         <div class="rounded-md shadow-sm -space-y-px">
           <div>
             <%= f.label :email, class: "sr-only" %>
@@ -41,7 +44,8 @@
       <% end %>
     <% end %>
     <div>
-      <%= link_to "Login with SSO", "/auth/saml/init", class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-800 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500" %>
+      <% sso_url = @redirect_to.present? ? "/auth/saml/init?redirect_to=#{CGI.escape(@redirect_to)}" : "/auth/saml/init" %>
+      <%= link_to "Login with SSO", sso_url, class: "group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-800 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500" %>
     </div>
   </div>
 </div>

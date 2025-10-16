@@ -1,0 +1,53 @@
+<% content_for :title, "Chrome Extension Token" %>
+
+<div class="flex items-center justify-center py-12 px-4">
+  <div class="bg-white p-10 rounded-xl shadow-lg text-center max-w-lg w-full">
+    <% if params[:redirect_uri].present? %>
+      <!-- Modern flow: automatic redirect via chrome.identity.launchWebAuthFlow -->
+      <div class="text-5xl text-blue-500 mb-5 animate-pulse">⟳</div>
+      <h1 class="text-gray-800 mb-5 text-2xl font-semibold">Redirecting...</h1>
+      <p class="text-gray-600">
+        Authentication successful! Redirecting back to your extension...<br>
+        <span class="text-sm mt-2 inline-block">This window will close automatically.</span>
+      </p>
+    <% else %>
+      <!-- Legacy flow: content script captures token -->
+      <div class="text-5xl text-green-500 mb-5">✓</div>
+      <h1 class="text-gray-800 mb-5 text-2xl font-semibold">Authentication Successful</h1>
+      
+      <p class="mb-5">Your user email for the Chrome extension:</p>
+      
+      <div class="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-5 my-5 break-all font-mono text-sm min-h-15 flex items-center justify-center">
+        <div id="token-display" data-token="<%= current_user&.email %>" class="text-sky-600 font-semibold">
+          <%= current_user&.email || 'No email available. Please try again.' %>
+        </div>
+      </div>
+      
+      <div class="text-gray-600 text-sm leading-relaxed mt-5">
+        <strong>Instructions:</strong><br>
+        Your email above will be automatically captured by your Chrome extension.<br>
+        You can safely close this window after the email is captured.
+      </div>
+    <% end %>
+    
+    <!-- Debug info (remove in production) -->
+    <div class="bg-gray-100 border border-gray-300 rounded p-3 mt-3 text-xs text-gray-600">
+      <strong>Debug:</strong> User: <%= current_user&.email || 'NOT AUTHENTICATED' %> | 
+      Session: <%= session[:user_id] || 'NO SESSION' %> |
+      Redirect URI: <%= params[:redirect_uri].present? ? 'Yes' : 'No' %>
+    </div>
+  </div>
+</div>
+
+<% unless params[:redirect_uri].present? %>
+<script>
+  console.log('Auth page loaded - email should be captured by Chrome extension content script');
+  console.log('Email in data-token:', document.getElementById('token-display')?.getAttribute('data-token'));
+  
+  // Redirect to root after extension captures token (5 seconds)
+  setTimeout(() => {
+    console.log('Redirecting to root...');
+    window.location.href = '/';
+  }, 5000);
+</script>
+<% end %>

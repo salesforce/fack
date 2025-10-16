@@ -25,6 +25,10 @@ Rails.application.routes.draw do
   get '/sessions/set_beta', to: 'sessions#set_beta'
   get '/sessions/logout', to: 'sessions#logout', as: :logout
 
+  # Chrome Extension SSO Token Generation
+  get '/auth/get_token', to: 'auth#get_token'
+  get '/auth/validate', to: 'auth#validate_token'
+
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
   post 'auth/saml/consume', to: 'saml#consume'
@@ -86,6 +90,8 @@ Rails.application.routes.draw do
           post 'receive'
         end
       end
+
+      # Auth routes moved to main auth controller
     end
   end
 

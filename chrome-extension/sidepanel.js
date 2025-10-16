@@ -130,10 +130,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Disable ask button
     askBtn.disabled = true;
-    askBtn.innerHTML = '<span class="thinking-icon">✨</span> Thinking...';
+    askBtn.innerHTML = 'Working...';
     
-    // Add loading message
-    const loadingId = addLoadingMessage();
+    // Add working message
+    const workingId = addWorkingMessage();
     
     try {
       // Get current page context
@@ -157,9 +157,6 @@ URL: ${pageContext.url}`;
       console.log('Create question result:', result);
       
       if (result && result.success) {
-        // Remove loading message
-        removeMessage(loadingId);
-        
         console.log('Polling for answer, question ID:', result.data.id);
         
         // Poll for answer with 2-second polling
@@ -174,28 +171,26 @@ URL: ${pageContext.url}`;
         
         if (completedQuestion && completedQuestion.success) {
           if (completedQuestion.data.answer) {
-            addAssistantMessage(completedQuestion.data.answer);
+            updateWorkingMessage(workingId, completedQuestion.data.answer);
           } else {
             console.log('Question status:', completedQuestion.data.status);
-            addAssistantMessage(`I'm still working on your answer. Status: ${completedQuestion.data.status || 'processing'}`);
+            updateWorkingMessage(workingId, `I'm still working on your answer. Status: ${completedQuestion.data.status || 'processing'}`);
           }
         } else {
           const errorMsg = completedQuestion?.error || 'Unknown polling error';
           console.error('Polling failed:', errorMsg);
-          addAssistantMessage(`Sorry, there was an error getting your answer: ${errorMsg}`);
+          updateWorkingMessage(workingId, `Sorry, there was an error getting your answer: ${errorMsg}`);
         }
       } else {
-        removeMessage(loadingId);
         const errorMsg = result?.error || 'Failed to ask question';
         console.error('Create question failed:', errorMsg);
         actionError.textContent = errorMsg;
-        addAssistantMessage(`Sorry, I couldn't process your question: ${errorMsg}`);
+        updateWorkingMessage(workingId, `Sorry, I couldn't process your question: ${errorMsg}`);
       }
     } catch (error) {
-      removeMessage(loadingId);
       console.error('Ask question error:', error);
       actionError.textContent = 'Error: ' + error.message;
-      addAssistantMessage("Sorry, there was an error: " + error.message);
+      updateWorkingMessage(workingId, "Sorry, there was an error: " + error.message);
     } finally {
       // Re-enable ask button
       askBtn.disabled = false;
@@ -320,67 +315,28 @@ URL: ${pageContext.url}`;
     return sections.join('');
   }
 
-  function addLoadingMessage() {
-    const messageId = 'loading-' + Date.now();
+  function addWorkingMessage() {
+    const messageId = 'working-' + Date.now();
     const messageDiv = document.createElement('div');
     messageDiv.id = messageId;
-    messageDiv.className = 'chat-message loading-message';
+    messageDiv.className = 'chat-message assistant-message';
     messageDiv.innerHTML = `
-      <div id="${messageId}-text"><span class="thinking-icon">✨</span> <span class="thinking-text">Thinking about your question...</span></div>
-      <div id="${messageId}-status" style="font-size: 10px; opacity: 0.8; margin-top: 4px;">Starting...</div>
+      <div class="markdown-content">Working...</div>
+      <div class="message-timestamp">${new Date().toLocaleTimeString()}</div>
     `;
     chatHistory.appendChild(messageDiv);
     scrollChatToBottom();
     
-    // Add a progress indicator that updates
-    let dots = 0;
-    let elapsedSeconds = 0;
-    
-    const progressInterval = setInterval(() => {
-      const textElement = document.getElementById(`${messageId}-text`);
-      const statusElement = document.getElementById(`${messageId}-status`);
-      
-      if (textElement && statusElement) {
-        dots = (dots + 1) % 4;
-        elapsedSeconds++;
-        
-        const dotString = Array.from({length: dots}, (_, i) => 
-          `<span class="thinking-dot" style="animation-delay: ${i * 0.15}s;">.</span>`
-        ).join('');
-        textElement.innerHTML = `<span class="thinking-icon">✨</span> <span class="thinking-text">Thinking about your question</span><span class="thinking-dots">${dotString}</span>`;
-        
-        // Update status based on elapsed time
-        if (elapsedSeconds < 5) {
-          statusElement.textContent = `Processing... (${elapsedSeconds}s)`;
-        } else if (elapsedSeconds < 15) {
-          statusElement.textContent = `AI is working on your answer... (${elapsedSeconds}s)`;
-        } else if (elapsedSeconds < 30) {
-          statusElement.textContent = `Complex question, still processing... (${elapsedSeconds}s)`;
-        } else if (elapsedSeconds < 60) {
-          statusElement.textContent = `Almost there, generating detailed response... (${elapsedSeconds}s)`;
-        } else {
-          statusElement.textContent = `Taking longer than usual, but still working... (${Math.floor(elapsedSeconds/60)}m ${elapsedSeconds%60}s)`;
-        }
-      } else {
-        clearInterval(progressInterval);
-      }
-    }, 1000); // Update every second now
-    
-    // Store interval ID so we can clear it when removing the message
-    messageDiv.dataset.progressInterval = progressInterval;
-    
     return messageId;
   }
 
-  function removeMessage(messageId) {
+  function updateWorkingMessage(messageId, answer) {
     const message = document.getElementById(messageId);
     if (message) {
-      // Clear progress interval if it exists
-      const intervalId = message.dataset.progressInterval;
-      if (intervalId) {
-        clearInterval(parseInt(intervalId));
+      const contentDiv = message.querySelector('.markdown-content');
+      if (contentDiv) {
+        contentDiv.innerHTML = formatMarkdown(answer);
       }
-      message.remove();
     }
   }
 
@@ -428,6 +384,9 @@ URL: ${pageContext.url}`;
       const sourceUrl = new URL(source);
       const sourceDisplay = sourceUrl.hostname + sourceUrl.pathname;
       
+      // Show the selected text as a user message
+      const truncatedText = text.length > 200 ? text.substring(0, 200) + '...' : text;
+
       scrollChatToBottom();
       
       // Auto-populate the question input with a prompt
@@ -439,40 +398,6 @@ URL: ${pageContext.url}`;
     }
   }
 
-  function updateLoadingMessageStatus(messageId, status) {
-    const statusElement = document.getElementById(`${messageId}-status`);
-    if (statusElement && status) {
-      let statusText = `Status: ${status}`;
-      
-      // Add helpful explanations for different statuses
-      switch (status.toLowerCase()) {
-        case 'pending':
-          statusText = '⏳ Question received, queuing for processing...';
-          break;
-        case 'processing':
-        case 'in_progress':
-          statusText = '🔄 AI is analyzing your question...';
-          break;
-        case 'generating':
-          statusText = '✍️ Generating your answer...';
-          break;
-        case 'generated':
-          statusText = '✅ Answer generated!';
-          break;
-        case 'completed':
-          statusText = '✅ Answer ready!';
-          break;
-        case 'failed':
-        case 'error':
-          statusText = '❌ Processing failed';
-          break;
-        default:
-          statusText = `📊 Status: ${status}`;
-      }
-      
-      statusElement.textContent = statusText;
-    }
-  }
 
   async function getAllDocuments() {
     await performAction('getDocuments', {}, 'Loading all documents...');

@@ -41,9 +41,13 @@ function handleTextSelection(event) {
     AIChatAssistant.selectionTimeout = setTimeout(() => {
       try {
         const selection = window.getSelection();
-        if (!selection) return;
+        if (!selection) {
+          console.log('AI Chat Assistant: No selection object found');
+          return;
+        }
         
         const text = selection.toString().trim();
+        console.log('AI Chat Assistant: Selection detected, text length:', text.length);
         
         if (text.length > 0) {
           AIChatAssistant.selectedText = text;
@@ -51,6 +55,8 @@ function handleTextSelection(event) {
           
           // Show a small indicator that text was captured
           showSelectionIndicator(text);
+        } else {
+          console.log('AI Chat Assistant: Selection was empty or whitespace only');
         }
       } catch (error) {
         console.error('AI Chat Assistant: Error in text selection:', error);
@@ -63,6 +69,8 @@ function handleTextSelection(event) {
 
 function showSelectionIndicator(text) {
   try {
+    console.log('AI Chat Assistant: showSelectionIndicator called with text length:', text.length);
+    
     // Remove any existing indicator
     const existingIndicator = document.getElementById('ai-chat-ext-selection-indicator');
     if (existingIndicator) {
@@ -70,7 +78,10 @@ function showSelectionIndicator(text) {
     }
 
     // Only show indicator for text longer than 5 characters
-    if (text.length < 5) return;
+    if (text.length < 5) {
+      console.log('AI Chat Assistant: Text too short, not showing indicator');
+      return;
+    }
 
     // Create indicator
     const indicator = document.createElement('div');
@@ -117,6 +128,7 @@ function showSelectionIndicator(text) {
   });
   
   document.body.appendChild(indicator);
+  console.log('AI Chat Assistant: Selection indicator added to page');
   
   // Auto-remove after 5 seconds
   setTimeout(() => {
@@ -136,12 +148,16 @@ function showSelectionIndicator(text) {
 
 function sendToChat(text) {
   try {
+    console.log('AI Chat Assistant: sendToChat called with text length:', text.length);
+    
     // Check if extension context is still valid
     if (!chrome.runtime?.id) {
+      console.log('AI Chat Assistant: Extension context not valid, returning');
       // Extension was reloaded, silently return
       return;
     }
 
+    console.log('AI Chat Assistant: Sending message to background script');
     // Send the selected text to the side panel
     chrome.runtime.sendMessage({
       action: 'sendToChat',

@@ -38,32 +38,76 @@ class DocumentAPI {
   }
 
   async authenticateWithSSO() {
+    const isLocalhost = this.baseUrl.includes('localhost') || this.baseUrl.includes('127.0.0.1');
+    
+    if (isLocalhost) {
+      // Development: Use tab-based authentication (chrome.identity doesn't work well with localhost)
+      console.log('Using tab-based authentication for localhost development');
+      return this.authenticateWithTab();
+    } else {
+      // Production: Use chrome.identity.launchWebAuthFlow
+      console.log('Using chrome.identity.launchWebAuthFlow for production');
+      return this.authenticateWithChromeIdentity();
+    }
+  }
+
+  async authenticateWithTab() {
     return new Promise((resolve) => {
-      // Open SSO authentication tab
+      // Open SSO authentication tab (original working method for localhost)
       const authUrl = `${this.baseUrl}/auth/get_token`;
+      console.log('Opening auth tab:', authUrl);
       
       chrome.tabs.create({
         url: authUrl,
         active: true
-      }, (tab) => {
+      }, async (tab) => {
         const authTabId = tab.id;
         let resolved = false;
+        console.log('Auth tab created with ID:', authTabId);
+
+        // Wait for page to load, then inject the auth content script
+        chrome.tabs.onUpdated.addListener(function listener(tabId, changeInfo) {
+          if (tabId === authTabId && changeInfo.status === 'complete') {
+            console.log('Auth page loaded, injecting content script...');
+            
+            // Inject the auth content script manually
+            chrome.scripting.executeScript({
+              target: { tabId: authTabId },
+              files: ['auth-content.js']
+            }).then(() => {
+              console.log('✅ Auth content script injected successfully');
+            }).catch((error) => {
+              console.error('❌ Failed to inject auth content script:', error);
+            });
+            
+            // Remove this listener after first execution
+            chrome.tabs.onUpdated.removeListener(listener);
+          }
+        });
 
         // Listen for messages from the auth tab
         const messageListener = (message, sender, sendResponse) => {
+          console.log('Background received message:', message, 'from tab:', sender.tab?.id);
+          
           // Only handle messages from our auth tab
-          if (sender.tab?.id !== authTabId) return;
+          if (sender.tab?.id !== authTabId) {
+            console.log('Message not from auth tab, ignoring');
+            return;
+          }
 
           if (message.type === 'FACK_AUTH_TOKEN' && message.success && !resolved) {
             resolved = true;
+            console.log('✅ Token received from auth tab:', message.token);
             
             // Store token
             this.token = message.token;
             chrome.storage.local.set({ 
               apiToken: this.token 
             }).then(() => {
+              console.log('Token stored, cleaning up and closing tab');
               // Clean up
               chrome.runtime.onMessage.removeListener(messageListener);
+              chrome.tabs.onRemoved.removeListener(tabRemovedListener);
               chrome.tabs.remove(authTabId);
               resolve({ success: true, token: this.token });
             });
@@ -74,6 +118,7 @@ class DocumentAPI {
         const tabRemovedListener = (tabId) => {
           if (tabId === authTabId && !resolved) {
             resolved = true;
+            console.log('Auth tab closed before authentication completed');
             chrome.runtime.onMessage.removeListener(messageListener);
             chrome.tabs.onRemoved.removeListener(tabRemovedListener);
             resolve({ success: false, error: 'Authentication cancelled' });
@@ -83,11 +128,13 @@ class DocumentAPI {
         // Add listeners
         chrome.runtime.onMessage.addListener(messageListener);
         chrome.tabs.onRemoved.addListener(tabRemovedListener);
+        console.log('Listeners added, waiting for token...');
 
         // Timeout after 5 minutes
         setTimeout(() => {
           if (!resolved) {
             resolved = true;
+            console.log('❌ Authentication timeout after 5 minutes');
             chrome.runtime.onMessage.removeListener(messageListener);
             chrome.tabs.onRemoved.removeListener(tabRemovedListener);
             chrome.tabs.remove(authTabId).catch(() => {}); // Tab might already be closed
@@ -95,6 +142,76 @@ class DocumentAPI {
           }
         }, 300000);
       });
+    });
+  }
+
+  async authenticateWithChromeIdentity() {
+    return new Promise((resolve) => {
+      // Production: Use Chrome extension redirect URL
+      const redirectURL = chrome.identity.getRedirectURL('oauth');
+      console.log('Chrome Identity Redirect URL:', redirectURL);
+      
+      // Construct auth URL with redirect_uri parameter
+      const authUrl = `${this.baseUrl}/auth/get_token?redirect_uri=${encodeURIComponent(redirectURL)}`;
+      console.log('Starting authentication flow:', authUrl);
+      
+      // Launch web auth flow
+      chrome.identity.launchWebAuthFlow(
+        {
+          url: authUrl,
+          interactive: true
+        },
+        (responseUrl) => {
+          // Check for errors
+          if (chrome.runtime.lastError) {
+            console.error('Authentication error:', chrome.runtime.lastError);
+            resolve({ 
+              success: false, 
+              error: chrome.runtime.lastError.message || 'Authentication failed'
+            });
+            return;
+          }
+          
+          // User cancelled
+          if (!responseUrl) {
+            console.log('Authentication cancelled by user');
+            resolve({ success: false, error: 'Authentication cancelled' });
+            return;
+          }
+          
+          console.log('Authentication completed, response URL:', responseUrl);
+          
+          try {
+            // Parse the response URL to extract the token
+            const url = new URL(responseUrl);
+            const token = url.searchParams.get('token');
+            
+            if (!token) {
+              console.error('No token found in response URL');
+              resolve({ success: false, error: 'No token received' });
+              return;
+            }
+            
+            console.log('Token extracted successfully');
+            
+            // Store token
+            this.token = token;
+            chrome.storage.local.set({ 
+              apiToken: this.token 
+            }).then(() => {
+              console.log('Token stored in chrome.storage');
+              resolve({ success: true, token: this.token });
+            }).catch((error) => {
+              console.error('Failed to store token:', error);
+              resolve({ success: false, error: 'Failed to store token' });
+            });
+            
+          } catch (error) {
+            console.error('Error parsing response URL:', error);
+            resolve({ success: false, error: 'Invalid response from server' });
+          }
+        }
+      );
     });
   }
 

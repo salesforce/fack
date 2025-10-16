@@ -1,38 +1,68 @@
 // Content script specifically for the auth/token pages
-// This script captures the token from the auth page and forwards it to the service worker
+// 
+// NOTE: This is a LEGACY FALLBACK flow. The primary authentication method now uses
+// chrome.identity.launchWebAuthFlow() which is more secure and doesn't require this content script.
+// 
+// This script is kept for backward compatibility and will only run when the auth page
+// is accessed WITHOUT the redirect_uri parameter (legacy flow).
+// 
+// New flow (chrome.identity.launchWebAuthFlow):
+//   1. Extension calls chrome.identity.getRedirectURL() to get redirect URI
+//   2. Opens auth page with redirect_uri parameter
+//   3. After auth, Rails redirects to chrome-extension:// URI with token
+//   4. launchWebAuthFlow intercepts and extracts token
+//
+// Legacy flow (this script):
+//   1. Opens auth page in a tab without redirect_uri
+//   2. This content script captures token from page
+//   3. Sends token to service worker via chrome.runtime.sendMessage
 
-console.log('Auth content script loaded for:', window.location.href);
+console.log('🔵 Auth content script loaded for:', window.location.href);
+console.log('🔵 Document ready state:', document.readyState);
 
 let tokenSent = false;
 
 // Function to extract token from the page
 function extractTokenFromPage() {
-  if (tokenSent) return null;
+  if (tokenSent) {
+    console.log('🔵 Token already sent, skipping');
+    return null;
+  }
   
   // Check for token in data attribute (this contains the user email)
   const tokenDisplay = document.getElementById('token-display');
+  console.log('🔵 Looking for token-display element:', tokenDisplay);
+  
   if (tokenDisplay) {
     const token = tokenDisplay.getAttribute('data-token');
+    console.log('🔵 Token from data-token attribute:', token);
+    
     if (token && token.length > 0) {
-      console.log('Found token in data attribute');
+      console.log('✅ Found valid token:', token);
       return token;
     }
   }
   
+  console.log('❌ No token found on page');
   return null;
 }
 
 // Function to send token to service worker
 function sendTokenToServiceWorker(token) {
-  if (tokenSent) return;
+  if (tokenSent) {
+    console.log('🔵 Token already sent, not sending again');
+    return;
+  }
   
-  console.log('Sending token to service worker');
+  console.log('🚀 Sending token to service worker:', token);
   tokenSent = true;
   
   chrome.runtime.sendMessage({
     type: 'FACK_AUTH_TOKEN',
     success: true,
     token: token
+  }, (response) => {
+    console.log('✅ Message sent to background, response:', response);
   });
 }
 

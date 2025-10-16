@@ -40,11 +40,21 @@ A Chrome extension that provides a persistent AI chat interface through a side p
 
 ### 2. Authentication
 
+The extension uses Chrome's secure `chrome.identity.launchWebAuthFlow()` API for authentication:
+
 1. Configure API URLs if needed (defaults to localhost:3000)
 2. Click "🔐 Authenticate with SSO" 
-3. Complete SSO login in the opened tab
-4. Extension automatically captures and stores your API token
-5. Authentication section disappears, showing clean chat interface
+3. Complete SSO login in a secure Chrome authentication window
+4. Extension automatically captures and stores your API token via redirect
+5. Authentication window closes automatically
+6. Authentication section disappears, showing clean chat interface
+
+**Authentication Flow:**
+- Extension generates a secure Chrome extension redirect URI
+- Opens your Rails SSO login page with the redirect URI
+- After successful authentication, Rails redirects to the extension URI with the token
+- Chrome automatically captures the token and closes the auth window
+- More secure than tab-based authentication (no content script required)
 
 ### 3. Chat with AI
 
@@ -68,10 +78,13 @@ The extension makes calls to these endpoints:
 
 ## Security Features
 
+- **Chrome Identity API**: Uses secure `chrome.identity.launchWebAuthFlow()` for authentication
 - **Secure Token Storage**: Uses Chrome's encrypted local storage
-- **Origin Verification**: Validates message origins during authentication
+- **No Content Script Injection**: Token capture happens via secure redirect (no DOM access needed)
+- **Automatic Window Closure**: Auth window closes automatically after token capture
 - **Automatic Token Cleanup**: Clears invalid/expired tokens
 - **HTTPS Support**: Ready for production HTTPS deployment
+- **Legacy Fallback**: Maintains backward compatibility with content script flow
 
 ## Development
 
@@ -128,17 +141,14 @@ The AI chat interface provides:
 
 ## Troubleshooting
 
-**"window is not defined" Error:**
-- This was fixed by replacing `window.open()` with `chrome.tabs.create()` in the service worker
-- The extension now opens a new tab instead of a popup window for authentication
-- Added dedicated auth content script to capture tokens from the auth page
-
 **Authentication Issues:**
-- Check browser console for messages from the auth content script
-- Ensure CORS is configured on your Rails server
+- Check browser console for Chrome Identity API errors
+- Ensure `redirect_uri` is properly handled by Rails controller
 - Check that `/auth/get_token` endpoint is accessible
 - Verify SSO/SAML configuration is working
-- Look for "Auth content script loaded" message in the auth tab's console
+- Check for "Chrome Identity Redirect URL" in background service worker console
+- Ensure CORS is configured if using cross-origin requests
+- If Chrome Identity API fails, extension falls back to legacy tab-based flow
 
 **API Call Failures:**
 - Check browser console for network errors

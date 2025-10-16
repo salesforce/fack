@@ -1,0 +1,47 @@
+<% content_for :title, "Authentication Callback" %>
+
+<div class="flex items-center justify-center py-12 px-4">
+  <div class="bg-white p-10 rounded-xl shadow-lg text-center max-w-lg w-full">
+    <div class="text-5xl text-blue-500 mb-5 animate-pulse">⟳</div>
+    <h1 class="text-gray-800 mb-5 text-2xl font-semibold">Authentication Successful</h1>
+    <p class="text-gray-600">
+      Completing authentication...<br>
+      <span class="text-sm mt-2 inline-block">This window will close automatically.</span>
+    </p>
+    
+    <!-- Debug info (remove in production) -->
+    <div class="bg-gray-100 border border-gray-300 rounded p-3 mt-5 text-xs text-gray-600">
+      <strong>Debug:</strong> Token ready for Chrome extension capture
+    </div>
+  </div>
+</div>
+
+<script>
+  // For chrome.identity.launchWebAuthFlow to work, we need to redirect to 
+  // the same URL with the token as a query parameter
+  (function() {
+    const currentUrl = new URL(window.location.href);
+    
+    // Check if token is already in URL (to prevent redirect loop)
+    if (currentUrl.searchParams.has('token')) {
+      console.log('Token already in URL, Chrome extension should capture this');
+      // chrome.identity.launchWebAuthFlow will intercept and close the window
+      // If window doesn't close after 2 seconds, show a message
+      setTimeout(() => {
+        document.body.innerHTML = '<div class="flex items-center justify-center py-12"><div class="text-center"><p class="text-gray-600">You can close this window now.</p></div></div>';
+      }, 2000);
+      return;
+    }
+    
+    // Token not in URL yet, add it and redirect once
+    const token = '<%= j @token %>';
+    if (token) {
+      console.log('Adding token to URL for Chrome extension capture');
+      currentUrl.searchParams.set('token', token);
+      window.location.href = currentUrl.toString();
+    } else {
+      console.error('No token available');
+    }
+  })();
+</script>
+

@@ -10,6 +10,9 @@ class Library < ApplicationRecord
   has_many :library_users, dependent: :destroy
   has_many :users, through: :library_users
 
+  # Recently viewed items feature
+  has_many :viewed_items, as: :viewable, dependent: :destroy
+
   pg_search_scope :search_by_name,
                   against: %i[name description],
                   using: {

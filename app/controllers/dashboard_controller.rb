@@ -11,5 +11,9 @@ class DashboardController < ApplicationController
                                   .group('assistants.id')
                                   .order('last_chat_time DESC')
                                   .limit(5)
+    @recently_viewed_documents = current_user.recently_viewed_documents(limit: 5)
+                                             .includes(:viewed_items)
+    @recently_viewed_libraries = current_user.recently_viewed_libraries(limit: 5)
+                                             .includes(:viewed_items)
   end
 end

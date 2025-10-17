@@ -9,6 +9,21 @@ class Document < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_neighbors :embedding
 
+  # Recently viewed items feature
+  has_many :viewed_items, as: :viewable, dependent: :destroy
+
+  # Returns the total number of views for this document
+  # @return [Integer] the total number of times this document has been viewed
+  def total_views
+    viewed_items.count
+  end
+
+  # Returns the number of unique users who have viewed this document
+  # @return [Integer] the number of unique viewers
+  def unique_viewers
+    viewed_items.distinct.count(:user_id)
+  end
+
   # Primary search scope using PostgreSQL full-text search
   # Searches across both title and document content with strict word matching
   # - prefix: true allows partial word matching (e.g., "test" matches "testing")

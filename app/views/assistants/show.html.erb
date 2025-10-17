@@ -70,6 +70,22 @@
     const ctx = document.getElementById('chatsPerDayChart');
     if (!ctx) return;
     
+    // Check if Chart.js is loaded, if not wait for it
+    if (typeof Chart === 'undefined') {
+      // Wait for Chart.js to load
+      const checkChart = setInterval(() => {
+        if (typeof Chart !== 'undefined') {
+          clearInterval(checkChart);
+          createChart(ctx);
+        }
+      }, 100);
+      return;
+    }
+    
+    createChart(ctx);
+  }
+  
+  function createChart(ctx) {
     // Destroy existing chart if it exists to prevent duplicates
     if (window.chatsChart) {
       window.chatsChart.destroy();

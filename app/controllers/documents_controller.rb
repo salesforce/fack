@@ -15,6 +15,9 @@ class DocumentsController < BaseDocumentsController
 
   # GET /documents/1 or /documents/1.json
   def show
+    # Track view for authenticated users
+    track_view(@document)
+
     # Handle flagging functionality (requires user to be logged in)
     if params[:flag] && current_user
       @document.disliked_by current_user, vote_scope: 'flag'

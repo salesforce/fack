@@ -17,6 +17,44 @@ class User < ApplicationRecord
   has_many :assistants, through: :assistant_users
   has_many :comments, dependent: :destroy
 
+  # Recently viewed items feature
+  has_many :viewed_items, dependent: :destroy
+
+  # Returns the most recently viewed documents for this user
+  # @param limit [Integer] the maximum number of documents to return (default: 5)
+  # @return [ActiveRecord::Relation<Document>] the recently viewed documents, ordered by most recent first
+  def recently_viewed_documents(limit: 5)
+    Document.joins(:viewed_items)
+            .where(viewed_items: { user_id: id })
+            .order('viewed_items.viewed_at DESC')
+            .distinct
+            .limit(limit)
+  end
+
+  # Returns the most recently viewed libraries for this user
+  # @param limit [Integer] the maximum number of libraries to return (default: 5)
+  # @return [ActiveRecord::Relation<Library>] the recently viewed libraries, ordered by most recent first
+  def recently_viewed_libraries(limit: 5)
+    Library.joins(:viewed_items)
+           .where(viewed_items: { user_id: id })
+           .order('viewed_items.viewed_at DESC')
+           .distinct
+           .limit(limit)
+  end
+
+  # Generic method to get recently viewed items of any type
+  # @param viewable_type [String] the type of viewable items to retrieve (e.g., 'Document')
+  # @param limit [Integer] the maximum number of items to return (default: 5)
+  # @return [ActiveRecord::Relation] the recently viewed items
+  def recently_viewed(viewable_type:, limit: 5)
+    viewable_type.constantize
+                 .joins(:viewed_items)
+                 .where(viewed_items: { user_id: id })
+                 .order('viewed_items.viewed_at DESC')
+                 .distinct
+                 .limit(limit)
+  end
+
   private
 
   def password_strength

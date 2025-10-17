@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_10_203736) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -240,6 +240,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_10_203736) do
     t.index ["email"], name: "index_users_on_email"
   end
 
+  create_table "viewed_items", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "viewable_type", null: false
+    t.bigint "viewable_id", null: false
+    t.datetime "viewed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "viewable_type", "viewable_id"], name: "index_viewed_items_on_user_and_viewable", unique: true
+    t.index ["user_id", "viewed_at"], name: "index_viewed_items_on_user_id_and_viewed_at"
+    t.index ["user_id"], name: "index_viewed_items_on_user_id"
+    t.index ["viewable_type", "viewable_id", "viewed_at"], name: "idx_on_viewable_type_viewable_id_viewed_at_8b1b0b8043"
+    t.index ["viewable_type", "viewable_id"], name: "index_viewed_items_on_viewable"
+  end
+
   create_table "votes", force: :cascade do |t|
     t.string "votable_type"
     t.bigint "votable_id"
@@ -289,6 +303,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_10_203736) do
   add_foreign_key "messages", "users"
   add_foreign_key "questions", "libraries"
   add_foreign_key "questions", "users"
+  add_foreign_key "viewed_items", "users"
   add_foreign_key "webhooks", "assistants"
   add_foreign_key "webhooks", "libraries"
 end

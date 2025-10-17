@@ -12,7 +12,10 @@ class LibrariesController < BaseLibrariesController
   end
 
   # GET /libraries/1 or /libraries/1.json
-  def show; end
+  def show
+    # Track view for authenticated users
+    track_view(@library)
+  end
 
   def users
     @library = Library.find(params[:id])

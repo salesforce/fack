@@ -12,17 +12,17 @@ class Document < ApplicationRecord
   # Recently viewed items feature
   has_many :viewed_items, as: :viewable, dependent: :destroy
 
-  # Returns the total number of views for this document
-  # @return [Integer] the total number of times this document has been viewed
-  def total_views
+  # Returns the number of unique users who have viewed this document
+  # Note: Due to the unique index on [user_id, viewable_type, viewable_id],
+  # each user can only have one view record per document. When a user views
+  # the document multiple times, only the timestamp is updated.
+  # @return [Integer] the number of unique users who have viewed this document
+  def unique_viewers
     viewed_items.count
   end
 
-  # Returns the number of unique users who have viewed this document
-  # @return [Integer] the number of unique viewers
-  def unique_viewers
-    viewed_items.distinct.count(:user_id)
-  end
+  # Alias for backward compatibility
+  alias total_views unique_viewers
 
   # Primary search scope using PostgreSQL full-text search
   # Searches across both title and document content with strict word matching

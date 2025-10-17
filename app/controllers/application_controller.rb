@@ -91,4 +91,18 @@ class ApplicationController < ActionController::Base
     flash[:alert] = 'You are not authorized to perform this action.'
     redirect_back(fallback_location: root_path)
   end
+
+  # Tracks a view for any viewable object (Document, Library, etc.)
+  # Updates the timestamp if the user has already viewed this item
+  # @param viewable [ActiveRecord::Base] the object being viewed (must have viewed_items association)
+  def track_view(viewable)
+    return unless current_user
+
+    viewed_item = ViewedItem.find_or_initialize_by(
+      user: current_user,
+      viewable: viewable
+    )
+    viewed_item.viewed_at = Time.current
+    viewed_item.save
+  end
 end

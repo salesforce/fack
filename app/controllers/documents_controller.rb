@@ -16,7 +16,7 @@ class DocumentsController < BaseDocumentsController
   # GET /documents/1 or /documents/1.json
   def show
     # Track view for authenticated users
-    track_document_view if current_user
+    track_view(@document)
 
     # Handle flagging functionality (requires user to be logged in)
     if params[:flag] && current_user
@@ -41,18 +41,5 @@ class DocumentsController < BaseDocumentsController
 
     @related_docs = related_documents(@document).first(5)
     @comments = @document.comments.includes(:user).ordered
-  end
-
-  private
-
-  # Tracks a document view for the current user
-  # Updates the timestamp if the user has already viewed this document
-  def track_document_view
-    viewed_item = ViewedItem.find_or_initialize_by(
-      user: current_user,
-      viewable: @document
-    )
-    viewed_item.viewed_at = Time.current
-    viewed_item.save
   end
 end

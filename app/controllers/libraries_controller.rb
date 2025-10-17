@@ -14,7 +14,7 @@ class LibrariesController < BaseLibrariesController
   # GET /libraries/1 or /libraries/1.json
   def show
     # Track view for authenticated users
-    track_library_view if current_user
+    track_view(@library)
   end
 
   def users
@@ -45,18 +45,5 @@ class LibrariesController < BaseLibrariesController
     final_contents = "<documents>\n#{contents}\n</documents>"
 
     send_data final_contents, filename: "#{@library.name.parameterize}-documents.xml", type: 'application/xml' # Change filename and type
-  end
-
-  private
-
-  # Tracks a library view for the current user
-  # Updates the timestamp if the user has already viewed this library
-  def track_library_view
-    viewed_item = ViewedItem.find_or_initialize_by(
-      user: current_user,
-      viewable: @library
-    )
-    viewed_item.viewed_at = Time.current
-    viewed_item.save
   end
 end

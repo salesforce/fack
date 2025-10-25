@@ -83,9 +83,12 @@ module GptConcern
     access_token = oauth_token['access_token']
     instance_url = oauth_token['instance_url']
 
+    # 15000 characters is about equivalent to 8192 tokens for the text-embedding-ada-002 model.
+    truncated_input = input.truncate(ENV['MAX_EMBEDDING_INPUT_LENGTH'] || 15000)
+
     new_endpoint_url = "#{instance_url}/services/data/v58.0/einstein/llm/embeddings"
     request_body = {
-      prompts: { wrappedListString: [input] },
+      prompts: { wrappedListString: [truncated_input] },
       additionalConfig: {
         applicationName: 'fack',
         model: ENV.fetch('EMBEDDING_MODEL','llmgateway__AzureOpenAITextEmbeddingAda_002')

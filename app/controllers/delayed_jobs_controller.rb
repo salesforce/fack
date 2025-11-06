@@ -25,7 +25,7 @@ class DelayedJobsController < ApplicationController
 
     authorize @job, :update?
 
-    @job.update(run_at: Time.now)
+    @job.update(run_at: Time.now, locked_at: nil, locked_by: nil)
     redirect_to delayed_jobs_path, notice: 'Job has been scheduled to run immediately.'
   end
 

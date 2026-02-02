@@ -1,0 +1,79 @@
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        Connect MCP Client
+      </h1>
+      <p class="text-lg text-gray-600">
+        Get your Fack configuration in 30 seconds
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-xl sm:rounded-lg sm:px-10 border border-gray-100">
+      <div class="space-y-6">
+        <div class="text-center">
+          <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-semibold text-gray-900 mb-2">
+            What is MCP?
+          </h2>
+          <p class="text-sm text-gray-600 mb-4">
+            Model Context Protocol lets AI assistants like Cursor and Claude Desktop access your Fack knowledge base directly.
+          </p>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-medium text-blue-900 mb-2">What you'll get:</h3>
+          <ul class="text-sm text-blue-800 space-y-1">
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Search your documents from Cursor/Claude</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Ask AI questions about your knowledge base</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Create and manage documents</span>
+            </li>
+          </ul>
+        </div>
+
+        <%= form_with url: mcp_oauth_authorize_path, method: :post, local: true, class: "space-y-4" do |f| %>
+          <%= hidden_field_tag :client_name, params[:client] || 'MCP Client' %>
+          
+          <div>
+            <%= f.submit "Authorize & Get Config", class: "w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors" %>
+          </div>
+        <% end %>
+
+        <div class="text-center">
+          <p class="text-xs text-gray-500">
+            This will create an API token for MCP access.<br>
+            You can revoke it anytime at 
+            <%= link_to "API Tokens", api_tokens_path, class: "text-indigo-600 hover:text-indigo-500" %>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">
+        Not ready yet? 
+        <%= link_to "Go to Dashboard", root_path, class: "text-indigo-600 hover:text-indigo-500 font-medium" %>
+      </p>
+    </div>
+  </div>
+</div>

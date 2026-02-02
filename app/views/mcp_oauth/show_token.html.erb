@@ -1,0 +1,151 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-2xl">
+    <div class="text-center mb-8">
+      <div class="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900">
+        You're All Set!
+      </h1>
+      <p class="mt-2 text-lg text-gray-600">
+        Copy this config into Cursor or Claude Desktop
+      </p>
+    </div>
+
+    <div class="bg-white shadow-xl sm:rounded-lg border border-gray-100 overflow-hidden">
+      <!-- Step 1: Copy Config -->
+      <div class="px-6 py-5 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold mr-3">1</span>
+          Copy this configuration
+        </h3>
+        
+        <div class="relative">
+          <pre id="config-code" class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono"><code>{
+  "mcpServers": {
+    "fack": {
+      "url": "<%= @fack_base_url %>/mcp",
+      "headers": {
+        "Authorization": "Bearer <%= @token %>"
+      }
+    }
+  }
+}</code></pre>
+          <button
+            type="button"
+            onclick="copyConfig()"
+            class="absolute top-2 right-2 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded transition-colors"
+          >
+            <span id="copy-btn-text">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Where to Paste -->
+      <div class="px-6 py-5">
+        <h3 class="text-lg font-medium text-gray-900 mb-4 flex items-center">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold mr-3">2</span>
+          Paste into your settings
+        </h3>
+
+        <div class="space-y-4">
+          <!-- Cursor Instructions -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h4 class="font-medium text-gray-900 mb-2 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+              </svg>
+              For Cursor
+            </h4>
+            <ol class="text-sm text-gray-700 space-y-1 ml-7">
+              <li>1. Open Cursor Settings (⌘+,)</li>
+              <li>2. Search for "MCP"</li>
+              <li>3. Paste the config above</li>
+              <li>4. Restart Cursor</li>
+            </ol>
+          </div>
+
+          <!-- Claude Desktop Instructions -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h4 class="font-medium text-gray-900 mb-2 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
+                <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path>
+              </svg>
+              For Claude Desktop
+            </h4>
+            <ol class="text-sm text-gray-700 space-y-1 ml-7">
+              <li>1. Open: <code class="bg-gray-100 px-1 py-0.5 rounded text-xs">~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+              <li>2. Paste the config above</li>
+              <li>3. Restart Claude Desktop</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Try It -->
+      <div class="px-6 py-5 bg-gray-50 border-t border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900 mb-3 flex items-center">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-sm font-bold mr-3">3</span>
+          Try it out!
+        </h3>
+        
+        <div class="bg-white border border-gray-200 rounded-lg p-4">
+          <p class="text-sm font-medium text-gray-900 mb-2">Example commands:</p>
+          <ul class="text-sm text-gray-700 space-y-2">
+            <li class="flex items-start">
+              <span class="text-indigo-600 mr-2">→</span>
+              <code class="bg-gray-100 px-2 py-1 rounded">"What libraries are in Fack?"</code>
+            </li>
+            <li class="flex items-start">
+              <span class="text-indigo-600 mr-2">→</span>
+              <code class="bg-gray-100 px-2 py-1 rounded">"Ask Fack: How do I deploy to production?"</code>
+            </li>
+            <li class="flex items-start">
+              <span class="text-indigo-600 mr-2">→</span>
+              <code class="bg-gray-100 px-2 py-1 rounded">"Search Fack for kubernetes configuration"</code>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <div class="flex">
+        <svg class="w-5 h-5 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+          <h4 class="text-sm font-medium text-yellow-900 mb-1">Keep your token secure</h4>
+          <p class="text-sm text-yellow-800">
+            This token gives full access to your Fack account. Keep it private and don't commit it to git. 
+            You can revoke it anytime at <%= link_to "API Tokens", api_tokens_path, class: "underline font-medium" %>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center space-y-2">
+      <%= link_to "Done - Go to Dashboard", root_path, class: "inline-block px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700" %>
+      <p class="text-sm text-gray-600">
+        <%= link_to "Need help? Read the docs", "/docs/mcp-remote-quickstart.md", class: "text-indigo-600 hover:text-indigo-500" %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyConfig() {
+  const code = document.getElementById('config-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copy-btn-text');
+    btn.textContent = 'Copied!';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+    }, 2000);
+  });
+}
+</script>

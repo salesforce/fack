@@ -13,6 +13,44 @@ We are experiementing with other use cases like:
 
 Almost any RAG-based solution can be quickly implmented in fack.
 
+## MCP Integration
+
+Fack can be accessed via the Model Context Protocol (MCP), allowing AI assistants like Cursor and Claude Desktop to query your documents and ask questions directly.
+
+### ⭐ Recommended: Remote + OAuth (Best of Both Worlds!)
+
+**No local code + Browser auth = 60 seconds to setup**
+
+1. Visit: **http://localhost:3000/mcp/connect**
+2. Click "Authorize & Get Config"
+3. Copy the config shown
+4. Paste into Cursor/Claude settings
+5. Done!
+
+[Try it now →](http://localhost:3000/mcp/connect) | [Full Guide →](docs/mcp-oauth-setup.md)
+
+### Alternative: Manual Token
+
+If you prefer to create the token manually instead of using OAuth:
+
+1. Get your token at http://localhost:3000/api_tokens
+2. Add to config:
+
+```json
+{
+  "mcpServers": {
+    "fack": {
+      "url": "http://localhost:3000/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_API_TOKEN"
+      }
+    }
+  }
+}
+```
+
+[Manual Setup Guide →](docs/mcp-remote-quickstart.md)
+
 ## Why is it Called Fack?
 The term FAQ, or Frequently Asked Questions, is often pronounced [fack](https://english.stackexchange.com/questions/4165/what-is-the-commonly-accepted-pronunciation-of-faq). 
 

@@ -1,0 +1,27 @@
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Your MCP Configuration</h1>
+      <p class="mt-2 text-gray-600">Ready to paste into Cursor or Claude Desktop</p>
+    </div>
+
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="p-6">
+        <pre class="bg-gray-900 text-gray-100 p-4 rounded overflow-x-auto"><code>{
+  "mcpServers": {
+    "fack": {
+      "url": "<%= @fack_base_url %>/mcp",
+      "headers": {
+        "Authorization": "Bearer <%= @token.token %>"
+      }
+    }
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center">
+      <%= link_to "Manage API Tokens", api_tokens_path, class: "text-indigo-600 hover:text-indigo-500" %>
+    </div>
+  </div>
+</div>

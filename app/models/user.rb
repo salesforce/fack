@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :assistant_users
   has_many :assistants, through: :assistant_users
   has_many :comments, dependent: :destroy
+  has_many :api_tokens, dependent: :destroy
 
   # Recently viewed items feature
   has_many :viewed_items, dependent: :destroy

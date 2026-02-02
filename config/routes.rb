@@ -29,6 +29,17 @@ Rails.application.routes.draw do
   get '/auth/get_token', to: 'auth#get_token'
   get '/auth/validate', to: 'auth#validate_token'
 
+  # MCP (Model Context Protocol) - OAuth Flow
+  get '/mcp/connect', to: 'mcp_oauth#connect'
+  post '/mcp/oauth/authorize', to: 'mcp_oauth#authorize', as: :mcp_oauth_authorize
+  get '/mcp/config', to: 'mcp_oauth#config'
+
+  # MCP Server-Sent Events (Direct Connection)
+  get '/mcp/sse', to: 'mcp_sse#sse'
+  post '/mcp/message', to: 'mcp_sse#message'
+  get '/mcp/tools', to: 'mcp_sse#tools'
+  post '/mcp/call', to: 'mcp_sse#call_tool'
+
   # SAML Authentication
   get 'auth/saml/init', to: 'saml#init'
   post 'auth/saml/consume', to: 'saml#consume'

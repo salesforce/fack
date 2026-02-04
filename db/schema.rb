@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_04_071147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
   enable_extension "vector"
 
@@ -25,6 +26,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
     t.bigint "user_id", null: false
     t.boolean "shown_once"
     t.datetime "last_used"
+    t.integer "token_type", default: 0, null: false
+    t.string "source", default: "web", null: false
+    t.index ["source"], name: "index_api_tokens_on_source"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"
   end
 
@@ -66,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, (((((COALESCE(name, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || COALESCE(instructions, ''::text)))", stored: true
     t.string "slack_channel_name_starts_with"
     t.boolean "enable_channel_join_message", default: false
+    t.boolean "pagerduty_recent_incidents"
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["search_vector"], name: "index_assistants_on_search_vector", using: :gin
     t.index ["slack_channel_name_starts_with"], name: "index_assistants_on_slack_channel_name_starts_with"
@@ -140,11 +145,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
     t.datetime "deleted_date"
     t.index ["check_hash"], name: "index_documents_on_check_hash"
     t.index ["created_at"], name: "index_documents_on_created_at"
+    t.index ["document"], name: "index_documents_on_document", opclass: :gin_trgm_ops, using: :gin
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["questions_count"], name: "index_documents_on_questions_count"
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin
+    t.index ["title"], name: "index_documents_on_title", opclass: :gin_trgm_ops, using: :gin
     t.index ["token_count"], name: "index_documents_on_token_count"
     t.index ["user_id"], name: "index_documents_on_user_id"
   end
@@ -152,6 +159,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
   create_table "documents_questions", id: false, force: :cascade do |t|
     t.bigint "document_id", null: false
     t.bigint "question_id", null: false
+  end
+
+  create_table "github_authorizations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_github_authorizations_on_user_id"
   end
 
   create_table "google_authorizations", force: :cascade do |t|
@@ -295,6 +310,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_17_181945) do
   add_foreign_key "comments", "users"
   add_foreign_key "documents", "libraries"
   add_foreign_key "documents", "users"
+  add_foreign_key "github_authorizations", "users"
   add_foreign_key "google_authorizations", "users"
   add_foreign_key "libraries", "users"
   add_foreign_key "library_users", "libraries"

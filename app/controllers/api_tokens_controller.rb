@@ -41,6 +41,7 @@ class ApiTokensController < ApplicationController
   def create
     @api_token = ApiToken.new(api_token_params)
     @api_token.user_id = current_user.id if @api_token.user_id.nil?
+    @api_token.source = 'web' # Mark as web-created token
     authorize @api_token
 
     respond_to do |format|

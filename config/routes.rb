@@ -34,6 +34,10 @@ Rails.application.routes.draw do
   post 'auth/saml/consume', to: 'saml#consume'
   get 'auth/saml/metadata', to: 'saml#metadata'
 
+  # CLI Authentication Flow
+  get 'cli/authorize', to: 'cli_auth#new', as: :cli_authorize
+  post 'cli/authorize', to: 'cli_auth#create', as: :cli_authorize_create
+
   # General Resources
   resources :users, only: [:index] do
     collection do

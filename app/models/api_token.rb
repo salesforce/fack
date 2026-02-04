@@ -9,6 +9,13 @@ class ApiToken < ApplicationRecord
   belongs_to :user
   # encrypts :token, deterministic: true
 
+  # Source tracking: where was this token created?
+  enum :source, { web: 'web', cli: 'cli', mobile: 'mobile' }, prefix: true
+
+  # Scopes for filtering
+  scope :cli_tokens, -> { where(source: 'cli') }
+  scope :web_tokens, -> { where(source: 'web') }
+
   private
 
   def generate_token

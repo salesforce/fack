@@ -22,6 +22,25 @@
         <span class="text-stone-600"><%= api_token.user.email %></span>
       <% end %>
 
+      <%= render 'shared/labelled_field', label: "Source" do %>
+        <% if api_token.source_cli? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            CLI
+          </span>
+        <% elsif api_token.source_mobile? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            Mobile
+          </span>
+        <% else %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            Web
+          </span>
+        <% end %>
+      <% end %>
+
       <%= render 'shared/labelled_field', label: "Last used" do %>
         <span class="<%= 'font-bold text-green-500' if api_token.last_used && api_token.last_used > 7.days.ago %>">
           <% if api_token.last_used %>

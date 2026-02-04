@@ -1,0 +1,63 @@
+<div class="w-full max-w-2xl mx-auto">
+  <% content_for :title, "Authorize CLI Access" %>
+  
+  <div class="mb-6">
+    <%= render 'shared/page_header', title: '🔐 Authorize CLI Access', subtitle: 'Grant access to the FACK CLI tool' %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow-md border border-stone-200">
+    <div class="p-6 border-b border-stone-200 bg-gradient-to-r from-sky-50 to-blue-50">
+      <p class="text-sm text-stone-600 mb-1">You are logged in as:</p>
+      <p class="text-lg font-semibold text-stone-800"><%= current_user.email %></p>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <div>
+            <p class="font-semibold text-blue-900 mb-2">What this does:</p>
+            <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
+              <li>Creates a new API token for your CLI tool</li>
+              <li>Grants full access to your account</li>
+              <li>Can be revoked anytime from your API Tokens page</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          <div>
+            <p class="font-semibold text-amber-900 mb-1">Security Note:</p>
+            <p class="text-sm text-amber-800">This token will have the same access as your password. Keep it secure and revoke it if compromised.</p>
+          </div>
+        </div>
+      </div>
+
+      <%= form_tag cli_authorize_path, method: :post, class: 'mt-6', data: { turbo: false } do %>
+        <%= hidden_field_tag :state, @state %>
+        <%= hidden_field_tag :port, @port %>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <%= submit_tag "Authorize CLI", 
+              class: "flex-1 bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-150 ease-in-out shadow-sm", 
+              data: { confirm: "This will create a new API token. Continue?" } %>
+          <%= link_to "Cancel", root_path, 
+              class: "flex-1 bg-white hover:bg-stone-50 text-stone-700 font-semibold py-3 px-6 rounded-lg border border-stone-300 transition duration-150 ease-in-out text-center" %>
+        </div>
+      <% end %>
+
+      <div class="mt-6 pt-4 border-t border-stone-200 text-center">
+        <p class="text-sm text-stone-600">
+          View and manage your tokens at <%= link_to "API Tokens", api_tokens_path, class: "text-sky-600 hover:text-sky-700 font-medium" %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

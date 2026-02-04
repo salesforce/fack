@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :assistant_users
   has_many :assistants, through: :assistant_users
   has_many :comments, dependent: :destroy
+  has_many :api_tokens, dependent: :destroy
 
   # Recently viewed items feature
   has_many :viewed_items, dependent: :destroy
@@ -53,6 +54,18 @@ class User < ApplicationRecord
                  .order('viewed_items.viewed_at DESC')
                  .distinct
                  .limit(limit)
+  end
+
+  # Returns CLI tokens for this user
+  # @return [ActiveRecord::Relation<ApiToken>] the CLI tokens
+  def cli_tokens
+    api_tokens.cli_tokens
+  end
+
+  # Returns web tokens for this user
+  # @return [ActiveRecord::Relation<ApiToken>] the web tokens
+  def web_tokens
+    api_tokens.web_tokens
   end
 
   private

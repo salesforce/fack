@@ -127,11 +127,11 @@ class CliLogin
 
     case RbConfig::CONFIG['host_os']
     when /darwin/
-      system("open '#{auth_url}'")
+      system('open', auth_url)
     when /linux/
-      system("xdg-open '#{auth_url}'")
+      system('xdg-open', auth_url)
     when /mswin|mingw|cygwin/
-      system("start '#{auth_url}'")
+      system('start', auth_url)
     else
       puts '⚠️  Could not detect your OS. Please open the URL above manually.'
     end

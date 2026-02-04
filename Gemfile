@@ -89,7 +89,7 @@ gem 'pgvector'
 
 gem 'dotenv-rails', groups: %i[development test]
 
-gem 'httparty'
+gem 'httparty', '>= 0.24.0'
 
 # Markdown renderer
 gem 'redcarpet'

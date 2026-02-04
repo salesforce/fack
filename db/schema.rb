@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_04_071147) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_04_072813) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -26,7 +26,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_04_071147) do
     t.bigint "user_id", null: false
     t.boolean "shown_once"
     t.datetime "last_used"
-    t.integer "token_type", default: 0, null: false
     t.string "source", default: "web", null: false
     t.index ["source"], name: "index_api_tokens_on_source"
     t.index ["user_id"], name: "index_api_tokens_on_user_id"

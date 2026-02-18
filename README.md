@@ -1147,8 +1147,17 @@ The library allows document owners to keep their documents separate from each ot
 Get the id of the library from the URL.
 
 ### 2. Get an API Token
-1. Open /api_tokens in the ui.
+
+**Option A: Web UI**
+1. Open /api_tokens in the UI.
 2. Create a token.
+
+**Option B: CLI Authentication (Recommended)**
+1. Run `ruby scripts/cli_login.rb` from the project directory.
+2. Your browser will open to authorize the CLI.
+3. Token is automatically saved to `~/.fack/credentials`.
+
+For more details, see [CLI Authentication Guide](docs/CLI_AUTHENTICATION.md).
 
 ### 3. Locate the Directory with your Documents
 You can clone your doc repo or have an directory anywhere on your computer.

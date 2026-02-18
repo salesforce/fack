@@ -6,14 +6,24 @@
       <%= render partial: 'shared/button_group', locals: { buttons: { "New" => new_api_token_path } } %>
     <% end %>
   </div>
+  <div class="flex justify-start items-center mb-3">
+    <div class="flex items-center">
+      <% source_filter = params[:source] %>
+      <%= link_to 'All', api_tokens_path, class: "p-3 mr-4 pb-1 border-b-2 hover:border-sky-500 #{'border-sky-500' if source_filter.blank?}" %>
+      <%= link_to 'CLI', api_tokens_path(source: 'cli'), class: "p-3 mr-4 pb-1 border-b-2 hover:border-sky-500 #{'border-sky-500' if source_filter == 'cli'}" %>
+      <%= link_to 'Web', api_tokens_path(source: 'web'), class: "p-3 mr-4 pb-1 border-b-2 hover:border-sky-500 #{'border-sky-500' if source_filter == 'web'}" %>
+    </div>
+  </div>
   <ul id="api_tokens" class="min-w-full list-none p-0">
-    <li class="font-bold grid grid-cols-1 sm:grid-cols-4 text-xs text-stone-800 bg-stone-200 py-2 rounded-t-lg">
-      <!-- Use grid-cols-1 for mobile and sm:grid-cols-5 for small screens and up -->
+    <li class="font-bold grid grid-cols-1 sm:grid-cols-5 text-xs text-stone-800 bg-stone-200 py-2 rounded-t-lg">
       <div class="p-2">
         NAME
       </div>
       <div class="p-2">
         USER
+      </div>
+      <div class="p-2">
+        SOURCE
       </div>
       <div class="p-2">
         LAST USED
@@ -23,13 +33,27 @@
       </div>
     </li>
     <% @api_tokens.each_with_index do |api_token, index| %>
-      <li class="<%= 'border-t border-stone-300' unless index == 0 %> font-light grid grid-cols-1 sm:grid-cols-4 justify-between py-2 text-sm bg-white hover:bg-stone-100 <%= 'rounded-b-lg' if index == @api_tokens.length - 1 %>">
-        <!-- Adjustments here similar to the header row -->
+      <li class="<%= 'border-t border-stone-300' unless index == 0 %> font-light grid grid-cols-1 sm:grid-cols-5 justify-between py-2 text-sm bg-white hover:bg-stone-100 <%= 'rounded-b-lg' if index == @api_tokens.length - 1 %>">
         <div class="p-2">
           <%= link_to api_token.name, api_token_path(api_token), class: "text-sky-600 font-light" %>
         </div>
         <div class="p-2">
           <span class="text-stone-500 text-sm"><%= api_token.user.email %></span>
+        </div>
+        <div class="p-2">
+          <% if api_token.source_cli? %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+              CLI
+            </span>
+          <% elsif api_token.source_mobile? %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+              Mobile
+            </span>
+          <% else %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+              Web
+            </span>
+          <% end %>
         </div>
         <div class="p-2 <%= 'font-bold text-green-500' if api_token.last_used && api_token.last_used > 7.days.ago %>">
           <% if api_token.last_used %>

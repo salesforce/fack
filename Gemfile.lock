@@ -83,7 +83,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.4.1)
-    bigdecimal (3.2.2)
+    bigdecimal (4.0.1)
     bindex (0.8.1)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
@@ -136,7 +136,7 @@ GEM
       railties (>= 6.1.0)
     faker (3.5.2)
       i18n (>= 1.8.11, < 2)
-    faraday (2.13.2)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -189,7 +189,7 @@ GEM
       builder (>= 2.1.2)
       rexml (~> 3.0)
     hashie (5.0.0)
-    httparty (0.23.1)
+    httparty (0.24.2)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
@@ -246,8 +246,8 @@ GEM
     minitest (5.25.5)
     msgpack (1.8.0)
     multi_json (1.16.0)
-    multi_xml (0.7.2)
-      bigdecimal (~> 3.1)
+    multi_xml (0.8.1)
+      bigdecimal (>= 3.1, < 5)
     multipart-post (2.4.1)
     mutex_m (0.3.0)
     neighbor (0.6.0)
@@ -550,9 +550,10 @@ DEPENDENCIES
   dotenv-rails
   factory_bot_rails
   faker
+  faraday (>= 2.14.1, < 3.0)
   google-api-client
   googleauth
-  httparty
+  httparty (>= 0.24.0)
   importmap-rails
   jbuilder
   kaminari

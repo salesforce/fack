@@ -6,6 +6,18 @@ class ApiTokensController < ApplicationController
   # GET /api_tokens or /api_tokens.json
   def index
     @api_tokens = policy_scope(ApiToken).order(last_used: :desc)
+    
+    # Filter by source if provided
+    case params[:source]
+    when 'cli'
+      @api_tokens = @api_tokens.cli_tokens
+    when 'web'
+      @api_tokens = @api_tokens.web_tokens
+    # when 'mobile'
+    #   @api_tokens = @api_tokens.where(source: 'mobile')
+    # 'all' or nil shows all tokens
+    end
+    
     authorize ApiToken
   end
 

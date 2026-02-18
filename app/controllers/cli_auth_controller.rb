@@ -70,7 +70,8 @@ class CliAuthController < ApplicationController
       redirect_url = "http://127.0.0.1:#{@port}/callback?token=#{CGI.escape(@api_token.token)}&state=#{CGI.escape(@state)}"
       redirect_to redirect_url, allow_other_host: true
     else
-      flash[:error] = 'Failed to create token'
+      error_message = @api_token.errors.full_messages.first || 'Failed to create token'
+      flash[:error] = error_message
       render :new, status: :unprocessable_entity
     end
   end

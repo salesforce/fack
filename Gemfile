@@ -92,7 +92,7 @@ gem 'dotenv-rails', groups: %i[development test]
 gem 'httparty', '>= 0.24.0'
 
 # Security: Fix CVE-2026-25765 (SSRF vulnerability)
-gem 'faraday', '>= 2.14.1'
+gem 'faraday', '>= 2.14.1', '< 3.0'
 
 # Markdown renderer
 gem 'redcarpet'

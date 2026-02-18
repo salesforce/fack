@@ -12,6 +12,8 @@ class CliAuthController < ApplicationController
       return
     end
 
+    authorize :cli_auth, :new?
+
     @state = params[:state]
     @port = params[:port] || '9090'
 
@@ -32,8 +34,22 @@ class CliAuthController < ApplicationController
 
   # POST /cli/authorize
   def create
+    authorize :cli_auth, :create?
+
     @state = params[:state]
     @port = params[:port] || '9090'
+
+    # Validate state parameter exists
+    unless @state.present?
+      render plain: 'Error: Missing state parameter', status: :bad_request
+      return
+    end
+
+    # Validate state format (should be alphanumeric/hex, prevent injection)
+    unless valid_state?(@state)
+      render plain: 'Error: Invalid state parameter format', status: :bad_request
+      return
+    end
 
     # Validate port
     unless valid_port?(@port)
@@ -50,7 +66,8 @@ class CliAuthController < ApplicationController
 
     if @api_token.save
       # Redirect to localhost with token
-      redirect_url = "http://127.0.0.1:#{@port}/callback?token=#{@api_token.token}&state=#{@state}"
+      # URL encode state and token to prevent injection
+      redirect_url = "http://127.0.0.1:#{@port}/callback?token=#{CGI.escape(@api_token.token)}&state=#{CGI.escape(@state)}"
       redirect_to redirect_url, allow_other_host: true
     else
       flash[:error] = 'Failed to create token'
@@ -63,5 +80,11 @@ class CliAuthController < ApplicationController
   def valid_port?(port)
     # Only allow ports between 1024 and 65535 (non-privileged ports)
     port.to_i.between?(1024, 65535)
+  end
+
+  def valid_state?(state)
+    # State should be alphanumeric/hex string, reasonable length (32-128 chars typical)
+    # Prevents URL injection attacks
+    state.present? && state.match?(/\A[a-zA-Z0-9]+\z/) && state.length.between?(16, 256)
   end
 end

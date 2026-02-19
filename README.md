@@ -425,12 +425,15 @@ Each object in the `questions` array includes:
 
 ##### Parameters
 
-> | name      |  type     | data type               | description                                                           |
-> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | document  |  required | text                    | The content of the document.  10,000 token limit.  |
-> | title  |  required | text                    | The title of the document   |
-> | library_id  |  required | text | The ID of the library to which this document will be added            |  
-> | external_id  |  optional | text          | A unique ID provided by the client. If a POST request includes the same external_id as an existing record, the record will be updated instead of created. |    
+> | name        | type     | data type | description                                                                                                                                 |
+> |-------------|----------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
+> | document    | required | text      | The content of the document. 10,000 token limit.                                                                                              |
+> | title       | required | text      | The title of the document.                                                                                                                  |
+> | library_id  | required | text      | The ID of the library to which this document will be added.                                                                                 |
+> | external_id | optional | text      | A unique ID provided by the client. If a POST includes the same external_id as an existing record, the record will be updated instead of created. |
+> | enabled     | optional | boolean   | Whether the document is enabled.                                                                                                            |
+> | url         | optional | text      | URL for the document.                                                                                                                       |
+> | source_url  | optional | text      | Source URL for the document.                                                                                                                |
 
 ##### Example POST Data
 Make sure you have the top level "document" attribute.
@@ -439,6 +442,10 @@ Make sure you have the top level "document" attribute.
 >     "document": "Restart your computer to fix it.",
 >     "title": "How to fix a computer",
 >     "library_id": 23,
+>     "external_id": "optional_unique_id",
+>     "enabled": true,
+>     "url": "https://example.com/doc",
+>     "source_url": "https://example.com/source"
 >    }
 > ```
 
@@ -452,7 +459,31 @@ Make sure you have the top level "document" attribute.
 ##### Example cURL
 
 > ```javascript
->  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document": {"document":"Document Content", "library_id":"your_library_id", "external_id":"optional_unique_id"}}' http://localhost:3000/api/v1/documents
+>  curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document": {"document":"Document Content", "title":"My Doc", "library_id":"your_library_id", "external_id":"optional_unique_id", "enabled":true, "url":"https://example.com", "source_url":"https://example.com/source"}}' http://localhost:3000/api/v1/documents
+> ```
+</details>
+
+<details>
+ <summary><code>PATCH</code> / <code>PUT</code> <code><b>/api/v1/documents/_id_</b></code> <code>Update Document</code></summary>
+
+##### Parameters
+
+Same body as Create; wrap attributes in a top-level `document` object. All fields are optional for update.
+
+> | name        | type     | data type | description                    |
+> |-------------|----------|-----------|--------------------------------|
+> | document    | optional | text      | The content of the document.   |
+> | title       | optional | text      | The title of the document.     |
+> | library_id  | optional | text      | The ID of the library.         |
+> | external_id | optional | text      | Client-provided unique ID.     |
+> | enabled     | optional | boolean   | Whether the document is enabled. |
+> | url         | optional | text      | URL for the document.          |
+> | source_url  | optional | text      | Source URL for the document.   |
+
+##### Example cURL
+
+> ```
+>  curl -X PATCH -H "Content-Type: application/json" -H "Authorization: Bearer <token>" -d '{"document": {"title":"Updated Title", "enabled":false}}' http://localhost:3000/api/v1/documents/<id>
 > ```
 </details>
     
@@ -512,9 +543,17 @@ The `document` object includes:
 
 ##### Parameters
 
-| name  | type     | data type | description                     |
-|-------|----------|-----------|---------------------------------|
-| page  | optional | integer   | The page number to retrieve. Defaults to 1. |
+| name         | type     | data type | description                                                                                                                                 |
+|--------------|----------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| page         | optional | integer   | The page number to retrieve. Defaults to 1.                                                                                                 |
+| per_page     | optional | integer   | Number of documents per page. Defaults to 10.                                                                                              |
+| library_id   | optional | integer   | Filter documents by library ID.                                                                                                             |
+| show_deleted | optional | string    | `true` = include deleted; `only` = only deleted documents; omit = exclude deleted (default).                                              |
+| since        | optional | string    | Return documents with `updated_at` after this time. ISO 8601, RFC 3339, or formats like `YYYY-MM-DD`, `YYYY-MM-DDTHH:MM:SSZ`.               |
+| until        | optional | string    | Return documents with `updated_at` before this time. Same date formats as `since`.                                                          |
+| contains     | optional | string    | Full-text search: return documents that contain this text (takes priority over `similar_to`).                                               |
+| similar_to   | optional | string    | Semantic search: return documents similar to this text (ignored if `contains` is present). Results ordered by similarity.                    |
+| sort         | optional | string    | Sort order: `questions` (by questions count desc), `tokens` (by token count desc); default = `updated_at` desc. Ignored when using `contains` or `similar_to`. |
 
 ##### Responses
 
@@ -541,7 +580,9 @@ Each object in the `documents` array includes:
 ##### Example cURL
 
 >```
->curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/documents?page=1"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/documents?page=1&per_page=10&library_id=1&sort=questions"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/documents?contains=setup&since=2024-01-01T00:00:00Z"
+>curl -X GET -H "Authorization: Bearer <token>" "http://localhost:3000/api/v1/documents?similar_to=how+to+configure+falcon"
 >```
 
 >```javascript

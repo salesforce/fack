@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_18_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "vector"
 
@@ -148,6 +149,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_18_120000) do
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["questions_count"], name: "index_documents_on_questions_count"
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin
+    t.index ["source_url"], name: "index_documents_on_source_url", unique: true, where: "((source_url IS NOT NULL) AND ((source_url)::text <> ''::text))"
     t.index ["token_count"], name: "index_documents_on_token_count"
     t.index ["updated_at"], name: "index_documents_on_updated_at"
     t.index ["user_id"], name: "index_documents_on_user_id"

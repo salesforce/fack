@@ -265,11 +265,11 @@ GEM
       net-protocol
     nio4r (2.7.4)
     nkf (0.2.0)
-    nokogiri (1.18.9-arm64-darwin)
+    nokogiri (1.19.1-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.9-x86_64-darwin)
+    nokogiri (1.19.1-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.9-x86_64-linux-gnu)
+    nokogiri (1.19.1-x86_64-linux-gnu)
       racc (~> 1.4)
     nori (2.7.1)
       bigdecimal
@@ -322,7 +322,7 @@ GEM
     pundit (2.5.0)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (3.1.18)
+    rack (3.1.20)
     rack-cors (3.0.0)
       logger
       rack (>= 3.0.14)
@@ -536,6 +536,7 @@ PLATFORMS
   arm64-darwin-24
   arm64-darwin-25
   x86_64-darwin-22
+  x86_64-darwin-25
   x86_64-linux
 
 DEPENDENCIES
@@ -559,6 +560,7 @@ DEPENDENCIES
   jbuilder
   kaminari
   neighbor
+  nokogiri (>= 1.19.1)
   omniauth-google-oauth2
   optparse
   pager_duty-connection
@@ -567,6 +569,7 @@ DEPENDENCIES
   pgvector
   puma (~> 6.4)
   pundit (~> 2.3)
+  rack (~> 3.1.20)
   rack-cors
   rails (~> 7.2.0)
   rails-controller-testing
@@ -594,7 +597,7 @@ DEPENDENCIES
   websocket-client-simple
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.3.8p144
 
 BUNDLED WITH
    2.4.13

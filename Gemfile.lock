@@ -536,6 +536,7 @@ PLATFORMS
   arm64-darwin-24
   arm64-darwin-25
   x86_64-darwin-22
+  x86_64-darwin-25
   x86_64-linux
 
 DEPENDENCIES
@@ -596,7 +597,7 @@ DEPENDENCIES
   websocket-client-simple
 
 RUBY VERSION
-   ruby 3.2.2p53
+   ruby 3.3.8p144
 
 BUNDLED WITH
    2.4.13

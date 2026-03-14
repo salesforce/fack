@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_13_120001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -158,6 +158,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
   create_table "documents_questions", id: false, force: :cascade do |t|
     t.bigint "document_id", null: false
     t.bigint "question_id", null: false
+    t.index ["document_id", "question_id"], name: "index_documents_questions_on_document_id_and_question_id"
+    t.index ["question_id", "document_id"], name: "index_documents_questions_on_question_id_and_document_id"
   end
 
   create_table "google_authorizations", force: :cascade do |t|

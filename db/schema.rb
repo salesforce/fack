@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_13_120001) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_14_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -146,6 +146,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_13_120001) do
     t.index ["deleted_date"], name: "index_documents_on_deleted_date"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
+    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_include_enabled", include: ["enabled"]
+    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_where_embedding_null", where: "(embedding IS NULL)"
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["questions_count"], name: "index_documents_on_questions_count"
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin

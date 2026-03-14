@@ -15,6 +15,22 @@ class LibrariesController < BaseLibrariesController
   def show
     # Track view for authenticated users
     track_view(@library)
+
+    # Batch document stats in a single query for big libraries (avoids 4+ separate queries)
+    docs_scope = @library.documents
+    @library_stats = docs_scope.pick(
+      Arel.sql('COUNT(*)::int'),
+      Arel.sql('COUNT(*) FILTER (WHERE enabled IS NOT TRUE)::int'),
+      Arel.sql('COUNT(*) FILTER (WHERE embedding IS NULL)::int')
+    ) || [0, 0, 0]
+    @documents_count, @disabled_count, @without_embedding_count = @library_stats
+
+    # Preload recent documents with library to avoid N+1 in doc_list; exclude heavy embedding/search_vector
+    @recent_documents = docs_scope
+      .select(Document.column_names.excluding('embedding', 'search_vector').map { |c| "documents.#{c}" }.join(', '))
+      .order(created_at: :desc)
+      .limit(5)
+      .includes(:library)
   end
 
   def users

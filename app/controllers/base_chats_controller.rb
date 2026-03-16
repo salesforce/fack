@@ -38,6 +38,8 @@ class BaseChatsController < ApplicationController
 
   # DELETE /chats/1 or /chats/1.json
   def destroy
+    authorize @chat
+
     @chat.destroy!
 
     respond_to do |format|

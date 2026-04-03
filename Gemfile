@@ -146,3 +146,4 @@ gem 'google-api-client'
 gem 'googleauth'
 
 gem 'uri', '>= 1.0.4'
+gem 'connection_pool', '~> 2.5'

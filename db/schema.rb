@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_03_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -68,6 +68,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, (((((COALESCE(name, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || COALESCE(instructions, ''::text)))", stored: true
     t.string "slack_channel_name_starts_with"
     t.boolean "enable_channel_join_message", default: false
+    t.boolean "respond_to_bots", default: false, null: false
     t.index ["library_id"], name: "index_assistants_on_library_id"
     t.index ["search_vector"], name: "index_assistants_on_search_vector", using: :gin
     t.index ["slack_channel_name_starts_with"], name: "index_assistants_on_slack_channel_name_starts_with"
@@ -146,6 +147,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
     t.index ["deleted_date"], name: "index_documents_on_deleted_date"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
+    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_include_enabled", include: ["enabled"]
+    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_where_embedding_null", where: "(embedding IS NULL)"
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["questions_count"], name: "index_documents_on_questions_count"
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin
@@ -158,6 +161,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_13_120000) do
   create_table "documents_questions", id: false, force: :cascade do |t|
     t.bigint "document_id", null: false
     t.bigint "question_id", null: false
+    t.index ["document_id", "question_id"], name: "index_documents_questions_on_document_id_and_question_id"
+    t.index ["question_id", "document_id"], name: "index_documents_questions_on_question_id_and_document_id"
   end
 
   create_table "google_authorizations", force: :cascade do |t|

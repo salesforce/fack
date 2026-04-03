@@ -31,6 +31,8 @@ gem 'jbuilder'
 
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
+# Keep compatible with Rails 7.2 Redis cache store initialization
+gem 'connection_pool', '< 3.0'
 
 # Enable CORS for Chrome extension support
 gem 'rack-cors'

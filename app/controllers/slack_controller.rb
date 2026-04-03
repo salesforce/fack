@@ -294,8 +294,10 @@ class SlackController < ApplicationController
 
       chat.messages.create!(content: message_text, user_id: chat.user_id, from: 'user')
     else
-      # Ignore messages from the bot itself
-      return if user == bot_user_id || event['bot_id'] # Skip bot messages
+      # Ignore messages from this bot itself to avoid loops.
+      # Other bot/app messages are processed only if assistant.respond_to_bots is enabled.
+      return if user == bot_user_id
+      return if event['bot_id'].present? && !assistant.respond_to_bots
 
       # Disable reply to non-bot created threads. Eventually we should enable @fack for other threads
       return if parent_user_id != bot_user_id && assistant.disable_nonbot_chat

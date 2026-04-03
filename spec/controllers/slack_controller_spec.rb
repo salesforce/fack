@@ -66,6 +66,66 @@ RSpec.describe SlackController, type: :request do
         expect(Chat.last.first_message).to eq('Hello!')
       end
     end
+
+    context 'when receiving a bot-originated app mention' do
+      let(:payload) do
+        {
+          type: 'event_callback',
+          event: {
+            type: 'app_mention',
+            user: 'UWORKFLOW',
+            bot_id: 'BWORKFLOW',
+            text: '<@U123456> Hello from workflow',
+            channel: 'random',
+            ts: '1234567890.123456'
+          }
+        }
+      end
+
+      before do
+        allow(Assistant).to receive(:find_by).with(slack_channel_name: 'random').and_return(assistant)
+      end
+
+      context 'when respond_to_bots is disabled' do
+        let(:assistant) do
+          Assistant.create!(
+            name: 'Test Assistant',
+            user:,
+            libraries: '1,2',
+            input: 'Sample input',
+            instructions: 'Sample instructions',
+            output: 'Sample output',
+            respond_to_bots: false
+          )
+        end
+
+        it 'does not create a chat' do
+          expect do
+            post '/slack/events', params: payload.to_json, headers:
+          end.not_to change(Chat, :count)
+        end
+      end
+
+      context 'when respond_to_bots is enabled' do
+        let(:assistant) do
+          Assistant.create!(
+            name: 'Test Assistant',
+            user:,
+            libraries: '1,2',
+            input: 'Sample input',
+            instructions: 'Sample instructions',
+            output: 'Sample output',
+            respond_to_bots: true
+          )
+        end
+
+        it 'creates a chat' do
+          expect do
+            post '/slack/events', params: payload.to_json, headers:
+          end.to change(Chat, :count).by(1)
+        end
+      end
+    end
   end
 
   def generate_slack_signature(secret, timestamp, body)

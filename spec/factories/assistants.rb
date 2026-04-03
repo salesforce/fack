@@ -8,6 +8,7 @@ FactoryBot.define do
     instructions { 'Sample instructions' }
     output { 'Sample output' }
     slack_reply_only { false }
+    respond_to_bots { false }
     association :user
   end
 end

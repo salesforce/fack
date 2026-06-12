@@ -15,7 +15,7 @@ gem 'sprockets-rails'
 gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '~> 6.4'
+gem 'puma', '>= 7.2.1', '< 8.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'importmap-rails'
@@ -93,8 +93,15 @@ gem 'dotenv-rails', groups: %i[development test]
 
 gem 'httparty', '>= 0.24.0'
 
-# Security: Fix CVE-2026-25765 (SSRF vulnerability)
-gem 'faraday', '>= 2.14.1', '< 3.0'
+# Security: Fix CVE-2026-25765, CVE-2026-33637 (Faraday vulnerabilities)
+gem 'faraday', '>= 2.14.2', '< 3.0'
+
+# Security: direct minimum versions to address current advisories
+gem 'addressable', '>= 2.9.0'
+gem 'jwt', '>= 2.10.3'
+gem 'rack-session', '>= 2.1.2'
+gem 'erb', '>= 6.0.4'
+gem 'net-imap', '>= 0.6.4'
 
 # Security: Fix GHSA-wx95-c6cv-8532 (nokogiri), CVE-2026-22860, CVE-2026-25500 (rack)
 gem 'nokogiri', '>= 1.19.1'

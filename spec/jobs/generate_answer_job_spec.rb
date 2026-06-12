@@ -9,8 +9,8 @@ RSpec.describe GenerateAnswerJob, type: :job do
   let(:user) { create(:user, email: 'user@example.com', password: 'Password1!') }
   let(:library) { create(:library, name: 'Test Library', user:) }
   let(:question) { create(:question, user:, library_id: library.id, question: 'What is the meaning of life?', library_ids_included: [library.id]) }
-  let(:doc1) { create(:document, user:, library_id: library.id, title: 'Doc 1', document: 'Life is 42.', created_at: 2.days.ago, token_count: 10) }
-  let(:doc2) { create(:document, user:, library_id: library.id, title: 'Doc 2', document: 'Life is complex.', created_at: 1.day.ago, token_count: 15, enabled: true) }
+  let(:doc1) { create(:document, user:, library_id: library.id, title: 'Doc 1', document: 'Life is 42.', created_at: 3.days.ago, token_count: 10) }
+  let(:doc2) { create(:document, user:, library_id: library.id, title: 'Doc 2', document: 'Life is complex.', created_at: 12.hours.ago, token_count: 15, enabled: true) }
 
   before do
     # Stub environment variables

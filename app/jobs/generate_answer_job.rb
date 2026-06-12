@@ -15,6 +15,11 @@ class GenerateAnswerJob < ApplicationJob
 
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
 
+    lookback_days = question.doc_lookback_days || ENV.fetch('QUESTION_DOC_LOOKBACK_DAYS', '365').to_i
+    if lookback_days.positive?
+      related_docs = related_docs.where('documents.created_at >= ?', lookback_days.days.ago)
+    end
+
     question.library_ids_included.push(question.library_id) if question.library_id
     if question.library_ids_included.present? && question.library_ids_included.none?(&:nil?) && question.library_ids_included.length.positive?
       related_docs = related_docs.where(library_id: question.library_ids_included)

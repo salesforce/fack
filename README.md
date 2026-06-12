@@ -93,6 +93,7 @@ The [OpenAI doc](https://cookbook.openai.com/examples/question_answering_using_e
 | `ROOT_URL` | Base URL for the application | http://localhost:3000 |
 | `SSO_METADATA_URL` | URL for SAML/SSO metadata | - |
 | `ALLOWED_ADDITIONAL_TOPICS` | Comma-separated list of additional allowed topics | - |
+| `QUESTION_DOC_LOOKBACK_DAYS` | Limit question-answer retrieval to docs created in the last N days (`0` disables filter) | 365 |
 | `REDIS_URL` | Redis connection URL | redis://localhost:6379/1 |
 
 
@@ -140,6 +141,9 @@ EGPT_MAX_TOKENS=
 
 ## Which OpenAI model to use. (OPTIONAL)
 EGPT_GEN_MODEL=
+
+## Limit question-answer retrieval to docs created in last N days. 0 disables the filter. (OPTIONAL)
+QUESTION_DOC_LOOKBACK_DAYS=365
 
 ## Disable Password Login if you have SSO enabled.  (OPTIONAL)
 DISABLE_PASSWORD_LOGIN=<true/false>
@@ -278,6 +282,7 @@ This structure provides flexibility in customizing assistants based on different
 > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
 > | question  |  required | text                    | The question to ask of the documentation   |
 > | library_ids_included  |  optional | comma separated ids (reference to library)            | The libraries to limit the answers   |    
+> | doc_lookback_days  |  optional | integer            | Limit retrieval to docs created in the last N days for this question (overrides global `QUESTION_DOC_LOOKBACK_DAYS`)   |
 
 
 ##### Responses
@@ -290,7 +295,7 @@ This structure provides flexibility in customizing assistants based on different
 ##### Example cURL
 
 > ```javascript
-> curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" -d '{"question": { "question" : "how do i setup falcon?", library_ids_included: ["1"] }}' http://localhost:3000/api/v1/questions
+> curl -X POST -H "Authorization: Bearer <token>" -H "Content-Type: application/json" -d '{"question": { "question" : "how do i setup falcon?", "library_ids_included": ["1"], "doc_lookback_days": 7 }}' http://localhost:3000/api/v1/questions
 > ```
 
 > ```javascript

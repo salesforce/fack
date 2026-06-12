@@ -60,6 +60,27 @@ RSpec.describe GenerateAnswerJob, type: :job do
         expect(question.prompt).to include(doc2.title) # doc2 fits within token limit
         expect(question.prompt).not_to include(doc1.title)
       end
+
+      it 'filters documents using QUESTION_DOC_LOOKBACK_DAYS when set' do
+        allow(ENV).to receive(:fetch).with('QUESTION_DOC_LOOKBACK_DAYS', '365').and_return('1')
+
+        perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
+
+        question.reload
+        expect(question.prompt).to include(doc2.title)
+        expect(question.prompt).not_to include(doc1.title)
+      end
+
+      it 'uses question doc_lookback_days over QUESTION_DOC_LOOKBACK_DAYS env var' do
+        allow(ENV).to receive(:fetch).with('QUESTION_DOC_LOOKBACK_DAYS', '365').and_return('10')
+        question.update!(doc_lookback_days: 1)
+
+        perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
+
+        question.reload
+        expect(question.prompt).to include(doc2.title)
+        expect(question.prompt).not_to include(doc1.title)
+      end
     end
 
     context 'when no related documents are found' do

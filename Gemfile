@@ -103,9 +103,12 @@ gem 'rack-session', '>= 2.1.2'
 gem 'erb', '>= 6.0.4'
 gem 'net-imap', '>= 0.6.4'
 
-# Security: Fix GHSA-wx95-c6cv-8532 (nokogiri), CVE-2026-22860, CVE-2026-25500 (rack)
-gem 'nokogiri', '>= 1.19.1'
+# Security: Fix GHSA-c4rq-3m3g-8wgx, GHSA-v2fc-qm4h-8hqv (nokogiri), CVE-2026-22860, CVE-2026-25500 (rack)
+gem 'nokogiri', '>= 1.19.3'
 gem 'rack', '~> 3.1.20'
+
+# Security: Fix GHSA-pp92-crg2-gfv9 (oauth2 redirect/authority leak)
+gem 'oauth2', '>= 2.0.22'
 
 # Markdown renderer
 gem 'redcarpet'

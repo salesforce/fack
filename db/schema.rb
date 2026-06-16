@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_03_120000) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_12_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -232,6 +232,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_03_120000) do
     t.string "source_url"
     t.string "library_ids_included", default: [], array: true
     t.datetime "generated_at"
+    t.integer "doc_lookback_days"
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, question)", stored: true
     t.index ["created_at"], name: "index_questions_on_created_at"
     t.index ["embedding"], name: "index_questions_on_embedding", opclass: :vector_cosine_ops, using: :ivfflat

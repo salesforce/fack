@@ -9,8 +9,8 @@ RSpec.describe GenerateAnswerJob, type: :job do
   let(:user) { create(:user, email: 'user@example.com', password: 'Password1!') }
   let(:library) { create(:library, name: 'Test Library', user:) }
   let(:question) { create(:question, user:, library_id: library.id, question: 'What is the meaning of life?', library_ids_included: [library.id]) }
-  let(:doc1) { create(:document, user:, library_id: library.id, title: 'Doc 1', document: 'Life is 42.', created_at: 2.days.ago, token_count: 10) }
-  let(:doc2) { create(:document, user:, library_id: library.id, title: 'Doc 2', document: 'Life is complex.', created_at: 1.day.ago, token_count: 15, enabled: true) }
+  let(:doc1) { create(:document, user:, library_id: library.id, title: 'Doc 1', document: 'Life is 42.', created_at: 3.days.ago, token_count: 10) }
+  let(:doc2) { create(:document, user:, library_id: library.id, title: 'Doc 2', document: 'Life is complex.', created_at: 12.hours.ago, token_count: 15, enabled: true) }
 
   before do
     # Stub environment variables
@@ -58,6 +58,27 @@ RSpec.describe GenerateAnswerJob, type: :job do
         question.reload
         expect(question.prompt.scan('URL:').count).to eq(1) # Only 1 doc due to MAX_DOCS=1
         expect(question.prompt).to include(doc2.title) # doc2 fits within token limit
+        expect(question.prompt).not_to include(doc1.title)
+      end
+
+      it 'filters documents using QUESTION_DOC_LOOKBACK_DAYS when set' do
+        allow(ENV).to receive(:fetch).with('QUESTION_DOC_LOOKBACK_DAYS', '365').and_return('1')
+
+        perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
+
+        question.reload
+        expect(question.prompt).to include(doc2.title)
+        expect(question.prompt).not_to include(doc1.title)
+      end
+
+      it 'uses question doc_lookback_days over QUESTION_DOC_LOOKBACK_DAYS env var' do
+        allow(ENV).to receive(:fetch).with('QUESTION_DOC_LOOKBACK_DAYS', '365').and_return('10')
+        question.update!(doc_lookback_days: 1)
+
+        perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
+
+        question.reload
+        expect(question.prompt).to include(doc2.title)
         expect(question.prompt).not_to include(doc1.title)
       end
     end

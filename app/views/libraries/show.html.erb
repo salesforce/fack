@@ -37,7 +37,7 @@
     </li>
   </ul>
   <h2 class="text-xl text-stone-600 py-4">Recent Documents</h2>
-  <%= render 'shared/doc_list', docs: @recent_documents, render_body: false %>
+  <%= render 'shared/doc_list', docs: @recent_documents %>
   <div class="my-2">
     <%= link_to "View all #{@documents_count} documents", library_documents_path(@library.id), class:"text-sky-500 hover:underline" %>
   </div>

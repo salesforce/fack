@@ -17,7 +17,7 @@ class LibrariesController < BaseLibrariesController
     @documents_count = docs_scope.count
 
     # Avoid selecting large vector columns for the listing payload.
-    heavy_columns = %w[document embedding search_vector]
+    heavy_columns = %w[embedding search_vector]
     recent_columns = (Document.column_names - heavy_columns).map { |column| "documents.#{column}" }
     @recent_documents = docs_scope
                         .includes(:library)

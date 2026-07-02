@@ -1,4 +1,3 @@
-<% render_body = local_assigns.fetch(:render_body, true) %>
 <ul class="space-y-4">
   <% docs.each_with_index do |document, index| %>
     <li class="bg-white p-4 rounded-lg border border-stone-300 hover:shadow-lg group">
@@ -55,13 +54,11 @@
             </svg>
           </a>
         </summary>
-        <% if render_body %>
-          <div class="rounded-lg mt-4 bg-white font-light">
-            <% cache document do %>
-              <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
-            <% end %>
-          </div>
-        <% end %>
+        <div class="rounded-lg mt-4 bg-white font-light">
+          <% cache document do %>
+            <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+          <% end %>
+        </div>
       </details>
     </li>
   <% end %>

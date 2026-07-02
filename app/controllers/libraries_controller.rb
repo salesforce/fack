@@ -15,7 +15,6 @@ class LibrariesController < BaseLibrariesController
   def show
     docs_scope = @library.documents
     @documents_count = docs_scope.count
-    @docs_without_embedding_count = docs_scope.where(embedding: nil).count
 
     # Avoid selecting large vector columns for the listing payload.
     heavy_columns = %w[document embedding search_vector]

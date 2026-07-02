@@ -13,6 +13,19 @@ class LibrariesController < BaseLibrariesController
 
   # GET /libraries/1 or /libraries/1.json
   def show
+    docs_scope = @library.documents
+    @documents_count = docs_scope.count
+    @docs_without_embedding_count = docs_scope.where(embedding: nil).count
+
+    # Avoid selecting large vector columns for the listing payload.
+    heavy_columns = %w[document embedding search_vector]
+    recent_columns = (Document.column_names - heavy_columns).map { |column| "documents.#{column}" }
+    @recent_documents = docs_scope
+                        .includes(:library)
+                        .select(recent_columns.join(', '))
+                        .order(created_at: :desc)
+                        .limit(5)
+
     # Track view for authenticated users
     track_view(@library)
   end

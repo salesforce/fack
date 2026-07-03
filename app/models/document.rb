@@ -69,6 +69,14 @@ class Document < ApplicationRecord
     none
   }
 
+  # Full-text search scope backed by the GIN index on search_vector.
+  # Uses plainto_tsquery so plain user input is safely parsed into terms.
+  scope :full_text_match, lambda { |query|
+    return all if query.blank?
+
+    where("search_vector @@ plainto_tsquery('english', ?)", query)
+  }
+
   # Scope to find related documents by embedding with optional library filtering
   # _limit is the number of documents to return. Returning fewer is better since the most relevant documents are at the top.
   # Because of the ordering, having too many documents may cause the most relevant documents to be lost.

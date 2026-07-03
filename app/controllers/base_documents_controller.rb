@@ -15,7 +15,7 @@ class BaseDocumentsController < ApplicationController
                  elsif params[:show_deleted] == 'only'
                    Document.unscoped.includes(:library, :user).where.not(deleted_date: nil)
                  else
-                   Document.includes(:library, :user).not_deleted
+                   Document.includes(:library, :user)
                  end
 
     # Apply cheap filters first for better performance

@@ -78,7 +78,7 @@ class BaseDocumentsController < ApplicationController
     unless params[:similar_to].present?
       heavy = %w[embedding search_vector]
       list_columns = (Document.column_names - heavy).map { |c| "documents.#{c}" }
-      @documents = @documents.select(list_columns.join(", "))
+      @documents = @documents.reselect(list_columns.join(", "))
     end
 
     @documents = @documents.page(params[:page]).per(params[:per_page] || 10)

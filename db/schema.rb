@@ -10,9 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_12_110000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_03_183252) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
   enable_extension "vector"
 
@@ -147,8 +146,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_12_110000) do
     t.index ["deleted_date"], name: "index_documents_on_deleted_date"
     t.index ["embedding"], name: "index_documents_on_embedding", opclass: :vector_l2_ops, using: :hnsw
     t.index ["external_id"], name: "index_documents_on_external_id", unique: true
-    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_include_enabled", include: ["enabled"]
-    t.index ["library_id", "deleted_date"], name: "index_documents_on_library_deleted_where_embedding_null", where: "(embedding IS NULL)"
+    t.index ["library_id", "created_at"], name: "idx_documents_library_created_active", where: "(deleted_date IS NULL)"
+    t.index ["library_id", "updated_at"], name: "idx_documents_library_updated_active", order: { updated_at: :desc }, where: "(deleted_date IS NULL)"
     t.index ["library_id"], name: "index_documents_on_library_id"
     t.index ["questions_count"], name: "index_documents_on_questions_count"
     t.index ["search_vector"], name: "index_documents_on_search_vector", using: :gin
@@ -161,8 +160,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_12_110000) do
   create_table "documents_questions", id: false, force: :cascade do |t|
     t.bigint "document_id", null: false
     t.bigint "question_id", null: false
-    t.index ["document_id", "question_id"], name: "index_documents_questions_on_document_id_and_question_id"
-    t.index ["question_id", "document_id"], name: "index_documents_questions_on_question_id_and_document_id"
   end
 
   create_table "google_authorizations", force: :cascade do |t|
@@ -232,8 +229,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_12_110000) do
     t.string "source_url"
     t.string "library_ids_included", default: [], array: true
     t.datetime "generated_at"
-    t.integer "doc_lookback_days"
     t.virtual "search_vector", type: :tsvector, as: "to_tsvector('english'::regconfig, question)", stored: true
+    t.integer "doc_lookback_days"
     t.index ["created_at"], name: "index_questions_on_created_at"
     t.index ["embedding"], name: "index_questions_on_embedding", opclass: :vector_cosine_ops, using: :ivfflat
     t.index ["library_id"], name: "index_questions_on_library_id"

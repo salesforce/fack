@@ -58,11 +58,12 @@ class BaseDocumentsController < ApplicationController
       @documents = @documents.smart_search(params[:contains])
     elsif params[:similar_to].present?
       embedding = get_embedding(params[:similar_to])
-      # Get similar documents but preserve existing filters
-      @documents = @documents.related_by_embedding(embedding)
-
-      # Force pure distance ordering to keep nearest-neighbor queries index-friendly.
-      @documents = @documents.reorder('neighbor_distance ASC')
+      # Use a higher HNSW search breadth for filtered similarity queries.
+      # This improves recall on large libraries with additional date/library filters.
+      Document.transaction do
+        ActiveRecord::Base.connection.execute('SET LOCAL hnsw.ef_search = 1000')
+        @documents = @documents.related_by_embedding(embedding)
+      end
     else
       # Only apply default sorting if not doing similarity search
       @documents = if params[:sort] == 'questions'

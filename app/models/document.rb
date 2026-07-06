@@ -74,8 +74,7 @@ class Document < ApplicationRecord
   # Because of the ordering, having too many documents may cause the most relevant documents to be lost.
   scope :related_by_embedding, lambda { |embedding, limit = nil|
     limit ||= ENV.fetch('RELATED_DOCUMENTS_LIMIT', 25).to_i
-    scope = nearest_neighbors(:embedding, embedding, distance: 'euclidean')
-    scope.order(updated_at: :desc).limit(limit)
+    nearest_neighbors(:embedding, embedding, distance: 'euclidean').limit(limit)
   }
 
   # Default scope to only show non-deleted documents

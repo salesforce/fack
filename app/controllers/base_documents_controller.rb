@@ -61,8 +61,8 @@ class BaseDocumentsController < ApplicationController
       # Get similar documents but preserve existing filters
       @documents = @documents.related_by_embedding(embedding)
 
-      # Sort by neighbor_distance using SQL to maintain ActiveRecord relation
-      @documents = @documents.order('neighbor_distance ASC')
+      # Force pure distance ordering to keep nearest-neighbor queries index-friendly.
+      @documents = @documents.reorder('neighbor_distance ASC')
     else
       # Only apply default sorting if not doing similarity search
       @documents = if params[:sort] == 'questions'

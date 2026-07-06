@@ -60,9 +60,6 @@ class BaseDocumentsController < ApplicationController
       embedding = get_embedding(params[:similar_to])
       # Get similar documents but preserve existing filters
       @documents = @documents.related_by_embedding(embedding)
-
-      # Force pure distance ordering to keep nearest-neighbor queries index-friendly.
-      @documents = @documents.reorder('neighbor_distance ASC')
     else
       # Only apply default sorting if not doing similarity search
       @documents = if params[:sort] == 'questions'

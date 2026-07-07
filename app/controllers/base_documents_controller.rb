@@ -29,7 +29,7 @@ class BaseDocumentsController < ApplicationController
     if params[:since].present?
       begin
         since_date = parse_since_parameter(params[:since])
-        @documents = @documents.where('updated_at > ?', since_date)
+        @documents = @documents.where('documents.updated_at > ?', since_date)
       rescue ArgumentError => e
         respond_to do |format|
           format.html { redirect_to documents_path, alert: "Invalid date format for 'since' parameter: #{e.message}" }
@@ -43,7 +43,7 @@ class BaseDocumentsController < ApplicationController
     if params[:until].present?
       begin
         until_date = parse_since_parameter(params[:until])
-        @documents = @documents.where('updated_at < ?', until_date)
+        @documents = @documents.where('documents.updated_at < ?', until_date)
       rescue ArgumentError => e
         respond_to do |format|
           format.html { redirect_to documents_path, alert: "Invalid date format for 'until' parameter: #{e.message}" }

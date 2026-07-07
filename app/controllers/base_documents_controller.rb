@@ -60,9 +60,17 @@ class BaseDocumentsController < ApplicationController
       embedding = get_embedding(params[:similar_to])
       # Use a higher HNSW search breadth for filtered similarity queries.
       # This improves recall on large libraries with additional date/library filters.
+      similar_document_ids = []
       Document.transaction do
         ActiveRecord::Base.connection.execute('SET LOCAL hnsw.ef_search = 1000')
-        @documents = @documents.related_by_embedding(embedding)
+        similar_document_ids = @documents.related_by_embedding(embedding).pluck(:id)
+      end
+
+      if similar_document_ids.present?
+        # Preserve nearest-neighbor relevance order without interpolating SQL.
+        @documents = @documents.where(id: similar_document_ids).in_order_of(:id, similar_document_ids)
+      else
+        @documents = @documents.none
       end
     else
       # Only apply default sorting if not doing similarity search

@@ -12,7 +12,7 @@
   <!-- Search Form -->
   <div class="mt-3">
     <% action_path = @library.present? ? library_documents_path(@library) : documents_path %>
-    <%= form_with(url: action_path, method: :get, local: true, class: "w-full") do %>
+    <%= form_with(url: action_path, method: :get, local: true, class: "w-full", id: "documents-search-form") do %>
       <div class="flex flex-col space-y-3">
         <!-- Search Query + Mode -->
         <div class="flex items-end space-x-2">
@@ -26,6 +26,8 @@
           </div>
           <% query_value = params[:query].presence || params[:contains].presence || params[:similar_to].presence %>
           <input type="text" name="query" id="query" value="<%= query_value %>" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
+          <input type="hidden" name="contains" id="contains_hidden" value="<%= params[:contains] %>">
+          <input type="hidden" name="similar_to" id="similar_to_hidden" value="<%= params[:similar_to] %>">
           <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
         </div>
         <!-- Date Range Filters -->
@@ -44,6 +46,30 @@
       </div>
     <% end %>
   </div>
+  <script>
+    (function() {
+      var form = document.getElementById('documents-search-form');
+      if (!form) return;
+
+      form.addEventListener('submit', function() {
+        var mode = document.getElementById('search_mode');
+        var query = document.getElementById('query');
+        var containsHidden = document.getElementById('contains_hidden');
+        var similarToHidden = document.getElementById('similar_to_hidden');
+        var value = (query && query.value ? query.value.trim() : '');
+
+        if (!mode || !containsHidden || !similarToHidden) return;
+
+        if (mode.value === 'semantic') {
+          similarToHidden.value = value;
+          containsHidden.value = '';
+        } else {
+          containsHidden.value = value;
+          similarToHidden.value = '';
+        }
+      });
+    })();
+  </script>
   <div class="flex-grow flex items-center mt-3">
     <% if params[:sort].nil? %>
       <%= link_to 'Sort by Popularity', 

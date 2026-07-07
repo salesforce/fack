@@ -53,21 +53,17 @@ class BaseDocumentsController < ApplicationController
       end
     end
 
-    search_mode = params[:search_mode].presence
-    search_query = params[:query].presence
-    contains_query = params[:contains].presence
-    similar_to_query = params[:similar_to].presence
-
-    # Search mode from UI uses a single query parameter.
-    if search_query.present? && search_mode == 'keyword'
-      @documents = @documents.smart_search(search_query)
-    elsif search_query.present? && search_mode == 'semantic'
-      @documents = semantic_search_documents(@documents, search_query)
-    # Backward compatibility for existing API/query params.
-    elsif contains_query.present?
-      @documents = @documents.smart_search(contains_query)
-    elsif similar_to_query.present?
-      @documents = semantic_search_documents(@documents, similar_to_query)
+    # Contains should take priority and we shouldn't do similarity and contains
+    if params[:contains].present?
+      @documents = @documents.smart_search(params[:contains])
+    elsif params[:similar_to].present?
+      embedding = get_embedding(params[:similar_to])
+      # Use a higher HNSW search breadth for filtered similarity queries.
+      # This improves recall on large libraries with additional date/library filters.
+      Document.transaction do
+        ActiveRecord::Base.connection.execute('SET LOCAL hnsw.ef_search = 1000')
+        @documents = @documents.related_by_embedding(embedding)
+      end
     else
       # Only apply default sorting if not doing similarity search
       @documents = if params[:sort] == 'questions'
@@ -80,8 +76,7 @@ class BaseDocumentsController < ApplicationController
     end
 
     # Avoid loading heavy columns (document body, embedding vector, search_vector) for list
-    semantic_search_active = (search_query.present? && search_mode == 'semantic') || similar_to_query.present?
-    unless semantic_search_active
+    unless params[:similar_to].present?
       heavy = %w[embedding search_vector]
       list_columns = (Document.column_names - heavy).map { |c| "documents.#{c}" }
       @documents = @documents.select(list_columns.join(", "))
@@ -201,15 +196,6 @@ class BaseDocumentsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def document_params
     params.require(:document).permit(:document, :title, :enabled, :external_id, :url, :library_id, :source_url)
-  end
-
-  def semantic_search_documents(base_scope, query_text)
-    embedding = get_embedding(query_text)
-
-    Document.transaction do
-      ActiveRecord::Base.connection.execute('SET LOCAL hnsw.ef_search = 1000')
-      base_scope.related_by_embedding(embedding)
-    end
   end
 
   # Parse and validate the :since parameter

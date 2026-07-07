@@ -4,8 +4,16 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-# column: value
+one:
+  active: true
+  token: token_one
+  name: Token One
+  user: one
+  source: web
+
+two:
+  active: true
+  token: token_two
+  name: Token Two
+  user: two
+  source: web

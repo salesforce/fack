@@ -67,8 +67,8 @@ class BaseDocumentsController < ApplicationController
       end
 
       if similar_document_ids.present?
-        order_sql = similar_document_ids.each_with_index.map { |id, index| "WHEN #{id} THEN #{index}" }.join(' ')
-        @documents = @documents.where(id: similar_document_ids).order(Arel.sql("CASE documents.id #{order_sql} END"))
+        # Preserve nearest-neighbor relevance order without interpolating SQL.
+        @documents = @documents.where(id: similar_document_ids).in_order_of(:id, similar_document_ids)
       else
         @documents = @documents.none
       end

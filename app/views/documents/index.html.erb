@@ -14,9 +14,18 @@
     <% action_path = @library.present? ? library_documents_path(@library) : documents_path %>
     <%= form_with(url: action_path, method: :get, local: true, class: "w-full") do %>
       <div class="flex flex-col space-y-3">
-        <!-- Text Search -->
-        <div class="flex">
-          <input type="text" name="contains" id="contains" value="<%= params[:contains] %>" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
+        <!-- Search Query + Mode -->
+        <div class="flex items-end space-x-2">
+          <div class="w-52">
+            <label for="search_mode" class="block text-sm font-medium text-stone-700 mb-1">Search Mode:</label>
+            <select name="search_mode" id="search_mode" class="w-full rounded-lg p-2 border border-stone-300 text-sm">
+              <% selected_mode = params[:search_mode].presence || (params[:similar_to].present? ? 'semantic' : 'keyword') %>
+              <option value="keyword" <%= 'selected' if selected_mode == 'keyword' %>>Keyword</option>
+              <option value="semantic" <%= 'selected' if selected_mode == 'semantic' %>>Semantic</option>
+            </select>
+          </div>
+          <% query_value = params[:query].presence || params[:contains].presence || params[:similar_to].presence %>
+          <input type="text" name="query" id="query" value="<%= query_value %>" placeholder="Search documents..." class="flex-grow rounded-lg p-2 border border-stone-300">
           <button type="submit" class="ml-2 rounded-lg p-2 bg-white text-sky-500 border-sky-500 border">Search</button>
         </div>
         <!-- Date Range Filters -->

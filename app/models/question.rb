@@ -26,23 +26,38 @@ class Question < ApplicationRecord
                                tsvector_column: 'search_vector' } # This option allows partial matches
                   }
 
+  # Slack section blocks are limited to 3000 characters
+  SLACK_MAX_LENGTH = 3000
+
+  # Converts the markdown answer to Slack mrkdwn, truncated on a line boundary
   def slack_markdown_answer
     return if answer.nil?
 
-    # Regular expression to match Markdown links
-    # \[([^]]+)\] - Matches the link text inside square brackets
-    # \(http[^)]+\) - Matches the URL inside parentheses
-    markdown_regex = /\[([^\]]+)\]\((http[^)]+)\)/
+    in_code_block = false
+    text = answer.lines.map do |line|
+      if line.lstrip.start_with?('```')
+        in_code_block = !in_code_block
+        # Slack shows a fence language (```text) as literal text
+        next line.sub(/```\S*/, '```')
+      end
+      in_code_block ? line : slack_markdown_line(line)
+    end.join
 
-    # Replace each Markdown link with Slack's format
-    answer.truncate(3000).gsub(markdown_regex) do |_match|
-      link_text = ::Regexp.last_match(1)
-      url = ::Regexp.last_match(2)
-      "<#{url}|#{link_text}>"
-    end
+    text = text.truncate(SLACK_MAX_LENGTH - 4, separator: "\n")
+    text += "\n```" if text.scan('```').length.odd?
+    text
   end
 
   private
+
+  def slack_markdown_line(line)
+    line
+      .sub(/^[ \t]*\#{1,6}[ \t]+(.+?)[ \t]*$/, '*\1*') # headings
+      .sub(/^([ \t]*)[-*+][ \t]+/, '\1• ') # bullets
+      .gsub(/\*\*(.+?)\*\*/, '*\1*') # bold
+      .gsub(/\[([^\]]+)\]\((http[^)]+)\)/, '<\2|\1>') # [text](url)
+      .gsub(/\(([^()]+)\)\[(http[^\]]+)\]/, '<\2|\1>') # (text)[url], used by older answers
+  end
 
   def check_unable_to_answer
     return unless answer&.include?('I am unable to answer the question')

@@ -129,13 +129,19 @@ class Document < ApplicationRecord
 
   def calculate_length
     # Calculate the length of the 'document' column and store it in the 'length' column
+    # Source-backed documents may be created before their body is synced
+    return self.length ||= 0 if document.nil? && source_url.present?
     return unless document
 
     self.length = document.length
   end
 
   def calculate_tokens
-    self.token_count = (count_tokens(document) if document)
+    if document.nil? && source_url.present?
+      self.token_count ||= 0
+    else
+      self.token_count = (count_tokens(document) if document)
+    end
   end
 
   def calculate_hash

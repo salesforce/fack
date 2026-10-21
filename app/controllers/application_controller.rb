@@ -88,8 +88,12 @@ class ApplicationController < ActionController::Base
   end
 
   def user_not_authorized
-    flash[:alert] = 'You are not authorized to perform this action.'
-    redirect_back(fallback_location: root_path)
+    if request.format.json?
+      render json: { message: 'Permission denied.' }, status: :forbidden
+    else
+      flash[:alert] = 'You are not authorized to perform this action.'
+      redirect_back(fallback_location: root_path)
+    end
   end
 
   # Tracks a view for any viewable object (Document, Library, etc.)

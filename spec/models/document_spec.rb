@@ -27,4 +27,18 @@ RSpec.describe Document, type: :model do
       expect(document.check_hash).to eq(original_hash)
     end
   end
+
+  describe 'source-backed document without a body' do
+    it 'is valid on create with only a source_url' do
+      document = build(:document, document: nil, source_url: 'https://example.com/doc')
+      expect(document).to be_valid
+      expect(document.length).to eq(0)
+      expect(document.token_count).to eq(0)
+    end
+
+    it 'still requires a body when there is no source_url' do
+      document = build(:document, document: nil, source_url: nil)
+      expect(document).not_to be_valid
+    end
+  end
 end

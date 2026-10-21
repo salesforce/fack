@@ -138,6 +138,12 @@ RSpec.describe DocumentsController, type: :controller do
         post :create, params: { document: valid_attributes }
         expect(response).to have_http_status(302)
       end
+
+      it 'returns a 403 JSON error for JSON requests' do
+        post :create, params: { document: valid_attributes }, format: :json
+        expect(response).to have_http_status(:forbidden)
+        expect(response.parsed_body['message']).to eq('Permission denied.')
+      end
     end
   end
 

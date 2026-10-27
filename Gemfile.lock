@@ -446,7 +446,7 @@ GEM
       nokogiri (>= 1.13.10)
       rexml
     rubyzip (3.7.0)
-    savon (2.17.3)
+    savon (2.17.5)
       akami (~> 1.2)
       builder (>= 2.1.2)
       gyoku (~> 1.2)

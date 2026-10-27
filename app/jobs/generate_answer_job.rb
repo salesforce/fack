@@ -11,7 +11,7 @@ class GenerateAnswerJob < ApplicationJob
     question = Question.find(question_id)
 
     # Get embedding from GPT
-    question.embedding = get_embedding(question.question)
+    question.embedding = get_embedding!(question.question)
 
     related_docs = related_documents_from_embedding(question.embedding).where(enabled: true)
 

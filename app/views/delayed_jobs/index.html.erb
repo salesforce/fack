@@ -29,7 +29,7 @@
         <div class="mb-2">
           <strong>Last Error:</strong>
           <div class="text-xs text-red-600 overflow-ellipsis overflow-hidden">
-            <%= job.last_error %>
+            <%= job.last_error.to_s.lines.first&.strip %>
           </div>
         </div>
         <div class="mb-2">

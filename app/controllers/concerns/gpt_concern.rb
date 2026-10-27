@@ -8,6 +8,8 @@ require 'json'
 module GptConcern
   extend ActiveSupport::Concern
 
+  class EmbeddingError < StandardError; end
+
   # Helper to make secure prompts
   def replace_tag_with_random(input_string, tag)
     random_string = SecureRandom.hex(10)
@@ -20,6 +22,12 @@ module GptConcern
     else
       call_salesforce_connect_gpt_embedding(input)
     end
+  end
+
+  # Like get_embedding, but raises with the underlying API error so background jobs fail (and retry) with a useful message.
+  def get_embedding!(input)
+    @embedding_error = nil
+    get_embedding(input) || raise(EmbeddingError, "Embedding failed: #{@embedding_error || 'no embedding returned'}")
   end
 
   def get_generation(prompt)
@@ -50,6 +58,7 @@ module GptConcern
       response_data['data'][0]['embedding']
     else
       # Handle error
+      @embedding_error = "OpenAI #{response.code} - #{response.message}"
       Rails.logger.error("Error calling OpenAI API for embeddings: #{response.code} - #{response.message}")
       nil
     end
@@ -110,11 +119,21 @@ module GptConcern
       response_data = JSON.parse(response.body)
       return response_data['embeddings'][0]['embedding']
     else
-      error_data = JSON.parse(response.body)
-      Rails.logger.error("Error calling Salesforce Connect GPT: #{error_data['message']}")
+      @embedding_error = salesforce_error_message(response)
+      Rails.logger.error("Error calling Salesforce Connect GPT: #{@embedding_error}")
     end
 
     nil
+  end
+
+  # Salesforce REST errors are usually an array of {message, errorCode}, but may be a hash or non-JSON.
+  def salesforce_error_message(response)
+    data = JSON.parse(response.body)
+    data = data.first if data.is_a?(Array)
+    message = data.is_a?(Hash) ? data['message'] : data
+    "#{response.code if response.respond_to?(:code)} #{message}".strip
+  rescue JSON::ParserError, TypeError
+    "#{response.code if response.respond_to?(:code)} #{response.body.to_s.truncate(500)}".strip
   end
 
   def call_salesforce_connect_gpt_generation(prompt)

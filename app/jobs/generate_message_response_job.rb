@@ -68,7 +68,7 @@ class GenerateMessageResponseJob < ApplicationJob
       embedding_text = keywords.nil? || keywords.strip.empty? ? message_history_text : keywords.to_s + ',' + message.content.to_s + ',' + message.hidden_text.to_s
 
       # Get embedding from GPT
-      embedding = get_embedding(embedding_text)
+      embedding = get_embedding!(embedding_text)
 
       library_ids = message.chat.assistant.libraries.split(',')
       related_docs = related_documents_from_embedding(embedding).where(enabled: true, library_id: library_ids)

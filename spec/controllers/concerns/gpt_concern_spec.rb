@@ -40,6 +40,19 @@ RSpec.describe GptConcern do
     end
   end
 
+  describe '#get_embedding!' do
+    it 'returns the embedding on success' do
+      allow(instance).to receive(:get_embedding).and_return([0.1])
+      expect(instance.get_embedding!('x')).to eq([0.1])
+    end
+
+    it 'raises EmbeddingError carrying the API error message' do
+      allow(instance).to receive(:get_embedding) { instance.instance_variable_set(:@embedding_error, '503 limit reached') && nil }
+      expect { instance.get_embedding!('x') }
+        .to raise_error(GptConcern::EmbeddingError, 'Embedding failed: 503 limit reached')
+    end
+  end
+
   describe '#get_generation' do
     context 'when OPENAI_API_KEY is present' do
       before do
@@ -171,6 +184,20 @@ RSpec.describe GptConcern do
       allow(http).to receive(:request).and_return(error_response)
       result = instance.call_salesforce_connect_gpt_embedding('test input')
       expect(result).to be_nil
+    end
+
+    it 'returns nil and logs the message when the error body is a JSON array' do
+      array_error = double('response', is_a?: false, code: '401',
+                                       body: '[{"message": "Session expired", "errorCode": "INVALID_SESSION_ID"}]')
+      allow(http).to receive(:request).and_return(array_error)
+      expect(Rails.logger).to receive(:error).with(/Session expired/)
+      expect(instance.call_salesforce_connect_gpt_embedding('test input')).to be_nil
+    end
+
+    it 'returns nil when the error body is not JSON' do
+      html_error = double('response', is_a?: false, code: '503', body: '<html>Bad Gateway</html>')
+      allow(http).to receive(:request).and_return(html_error)
+      expect(instance.call_salesforce_connect_gpt_embedding('test input')).to be_nil
     end
   end
 

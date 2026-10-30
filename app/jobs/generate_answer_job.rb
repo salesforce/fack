@@ -7,6 +7,8 @@ class GenerateAnswerJob < ApplicationJob
 
   queue_as :default
 
+  DOC_RETRIEVAL_TIMEOUT_SECONDS = ENV.fetch('DOC_RETRIEVAL_TIMEOUT_SECONDS', '60').to_i
+
   def perform(question_id)
     question = Question.find(question_id)
 
@@ -31,6 +33,16 @@ class GenerateAnswerJob < ApplicationJob
     # return the right results
     # Will need to find a better solution later
     related_docs = related_docs.order(created_at: :desc).limit(100)
+
+    begin
+      related_docs = load_with_timeout(related_docs)
+    rescue ActiveRecord::QueryCanceled
+      Rails.logger.error("Document retrieval for question #{question.id} timed out after #{DOC_RETRIEVAL_TIMEOUT_SECONDS}s")
+      question.update(answer: "Document retrieval timed out after #{DOC_RETRIEVAL_TIMEOUT_SECONDS} seconds. " \
+                              'Try narrowing the question to a specific library.')
+      question.failed!
+      return
+    end
 
     token_count = 0
 
@@ -133,6 +145,16 @@ This is the cause of the problem.
       # TODO: add more error messaging
       Rails.logger.error("Error calling Salesforce Connect GPT to generate answer.#{e.inspect}")
       question.failed!
+    end
+  end
+
+  private
+
+  # Runs the query under a Postgres statement_timeout so slow vector searches are cancelled
+  def load_with_timeout(relation)
+    Document.transaction do
+      Document.connection.execute("SET LOCAL statement_timeout = #{DOC_RETRIEVAL_TIMEOUT_SECONDS.to_i * 1000}")
+      relation.to_a
     end
   end
 end

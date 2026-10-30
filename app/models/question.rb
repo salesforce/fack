@@ -16,6 +16,7 @@ class Question < ApplicationRecord
   validates :question, presence: true
   validates :doc_lookback_days, numericality: { greater_than_or_equal_to: 0, only_integer: true }, allow_nil: true
   belongs_to :user, optional: true
+  validate :library_present, on: :create
 
   before_save :check_unable_to_answer
 
@@ -49,6 +50,13 @@ class Question < ApplicationRecord
   end
 
   private
+
+  # Questions without a library search every document and time out, so require at least one
+  def library_present
+    return if library_id.present? || library_ids_included.any?(&:present?)
+
+    errors.add(:base, 'Select at least one library (library_id or library_ids_included) to ask a question.')
+  end
 
   def slack_markdown_line(line)
     line

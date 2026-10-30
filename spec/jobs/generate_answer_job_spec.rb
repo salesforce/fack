@@ -35,6 +35,19 @@ RSpec.describe GenerateAnswerJob, type: :job do
   end
 
   describe '#perform' do
+    context 'when document retrieval times out' do
+      before do
+        allow_any_instance_of(GenerateAnswerJob).to receive(:load_with_timeout).and_raise(ActiveRecord::QueryCanceled)
+      end
+
+      it 'marks the question failed with a timeout message' do
+        perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }
+        question.reload
+        expect(question.status).to eq('failed')
+        expect(question.answer).to include('timed out after 60 seconds')
+      end
+    end
+
     context 'with a valid question' do
       it 'generates an answer and updates the question' do
         perform_enqueued_jobs { GenerateAnswerJob.perform_later(question.id) }

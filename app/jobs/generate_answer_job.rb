@@ -153,7 +153,9 @@ This is the cause of the problem.
   # Runs the query under a Postgres statement_timeout so slow vector searches are cancelled
   def load_with_timeout(relation)
     Document.transaction do
-      Document.connection.execute("SET LOCAL statement_timeout = #{DOC_RETRIEVAL_TIMEOUT_SECONDS.to_i * 1000}")
+      Document.connection.execute(
+        Document.sanitize_sql_array(['SET LOCAL statement_timeout = ?', DOC_RETRIEVAL_TIMEOUT_SECONDS * 1000])
+      )
       relation.to_a
     end
   end

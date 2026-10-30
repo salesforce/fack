@@ -4,31 +4,48 @@ require 'rails_helper'
 
 RSpec.describe Question, type: :model do
   let(:user) { create(:user) }
+  let(:library) { create(:library) }
 
   it 'is valid with valid attributes' do
-    question = Question.new(question: 'What is Ruby?', prompt: 'Programming Language', user:)
+    question = Question.new(question: 'What is Ruby?', prompt: 'Programming Language', user:, library_id: library.id)
     expect(question).to be_valid
   end
 
+  it 'is not valid without a library' do
+    question = Question.new(question: 'What is Ruby?', user:)
+    expect(question).not_to be_valid
+    expect(question.errors.full_messages.first).to match(/library/i)
+  end
+
+  it 'is valid with only library_ids_included' do
+    question = Question.new(question: 'What is Ruby?', user:, library_ids_included: [library.id.to_s])
+    expect(question).to be_valid
+  end
+
+  it 'ignores blank library_ids_included' do
+    question = Question.new(question: 'What is Ruby?', user:, library_ids_included: [''])
+    expect(question).not_to be_valid
+  end
+
   it 'is not valid without a question' do
-    question = Question.new(question: nil, prompt: 'Programming Language', user:)
+    question = Question.new(question: nil, prompt: 'Programming Language', user:, library_id: library.id)
     expect(question).not_to be_valid
   end
 
   it 'is valid without a prompt' do
-    question = Question.new(question: 'What is Ruby?', prompt: nil, user:)
+    question = Question.new(question: 'What is Ruby?', prompt: nil, user:, library_id: library.id)
     expect(question).to be_valid
   end
 
   it 'sets able_to_answer to false if answer includes "I am unable"' do
     question = Question.create(question: 'What is Ruby?', prompt: 'Programming Language',
-                               answer: 'I am unable to answer the question', user:)
+                               answer: 'I am unable to answer the question', user:, library_id: library.id)
     expect(question.able_to_answer).to eq(false)
   end
 
   it 'keeps able_to_answer as true if answer does not include "I am unable"' do
     question = Question.create(question: 'What is Ruby?', prompt: 'Programming Language',
-                               answer: 'Ruby is a dynamic, open source programming language.', user:)
+                               answer: 'Ruby is a dynamic, open source programming language.', user:, library_id: library.id)
     expect(question.able_to_answer).to eq(true)
   end
 

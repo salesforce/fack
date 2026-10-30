@@ -8,3 +8,6 @@
 Rails.application.config.filter_parameters += %i[
   passw secret token _key crypt salt certificate otp ssn
 ]
+
+# Exact-match so keys like document_id stay visible; the bodies are huge and flood the log buffer
+Rails.application.config.filter_parameters += [/\Adocument\z/, /\Aquestion\z/]

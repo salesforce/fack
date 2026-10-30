@@ -39,7 +39,7 @@ class DocumentsController < BaseDocumentsController
 
     redirect_to action: :show if params[:flag] || params[:unflag] || params[:upvote] || params[:downvote] || params[:unvote]
 
-    @related_docs = related_documents(@document).first(5)
+    @related_docs = related_documents(@document).where(library_id: @document.library_id).first(5)
     @comments = @document.comments.includes(:user).ordered
   end
 end

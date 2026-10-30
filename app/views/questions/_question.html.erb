@@ -33,7 +33,13 @@
           </div>
         </div>
       <% else %>
-        <% if @question.able_to_answer %> <!-- No need to ask feedback if we couldn't answer -->
+        <% if @question.failed? %>
+          <div class="mb-2 text-red-700 font-bold flex items-center">
+            <%= render partial: 'question_status_icon', locals: {question: @question} %>
+            failed
+          </div>
+        <% end %>
+        <% if @question.able_to_answer && !@question.failed? %> <!-- No need to ask feedback if we couldn't answer -->
           <div class="pb-2 text-stone-500 text-sm border-stone-300">Is this answer helpful?</div>
           <% if (current_user.voted_for? @question) %>
             <a href="<%= "/questions/" + @question.id.to_s +  "?clear_helpful=1" %>">

@@ -15,6 +15,27 @@ RSpec.describe QuestionsController, type: :controller do
     allow_any_instance_of(QuestionsController).to receive(:current_user).and_return(user)
   end
 
+  describe 'failed questions' do
+    render_views
+
+    let!(:failed_question) do
+      Question.create!(valid_attributes.merge(user:, status: 'failed', answer: 'Document retrieval timed out'))
+    end
+
+    it 'shows a failed icon in the list' do
+      get :index
+      expect(response.body).to include('text-red-500')
+      expect(response.body).not_to include('text-green-500')
+    end
+
+    it 'shows the failure without the feedback prompt' do
+      get :show, params: { id: failed_question.id }
+      expect(response.body).to include('failed')
+      expect(response.body).to include('Document retrieval timed out')
+      expect(response.body).not_to include('Is this answer helpful?')
+    end
+  end
+
   describe 'GET #index' do
     it 'returns a success response' do
       Question.create! valid_attributes

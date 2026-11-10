@@ -104,7 +104,7 @@ gem 'net-imap', '>= 0.6.4'
 
 # Security: Fix GHSA-c4rq-3m3g-8wgx, GHSA-v2fc-qm4h-8hqv (nokogiri), CVE-2026-22860, CVE-2026-25500 (rack)
 gem 'nokogiri', '>= 1.19.3'
-gem 'rack', '~> 3.1.20'
+gem 'rack', '~> 3.1.23'
 
 # Security: Fix GHSA-pp92-crg2-gfv9 (oauth2 redirect/authority leak)
 gem 'oauth2', '>= 2.0.22'

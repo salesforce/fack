@@ -32,6 +32,8 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1 # v1.146.0
         with:
+          # ubuntu-latest only publishes the newest patch of each Ruby series.
+          ruby-version: '3.3'
           bundler-cache: true
 
       - name: Set up database schema
@@ -49,7 +51,8 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.8'
+          # ubuntu-latest only publishes the newest patch of each Ruby series.
+          ruby-version: '3.3'
           bundler-cache: true
       # Add or replace any other lints here
       - name: Security audit dependencies

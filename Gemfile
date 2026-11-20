@@ -3,10 +3,10 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.3.8'
+ruby '~> 3.3.8'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 8.1.3', '>= 8.1.3.1'
+gem 'rails', '~> 8.1.3', '>= 8.1.4.1'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem 'sprockets-rails'
@@ -15,7 +15,7 @@ gem 'sprockets-rails'
 gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem 'puma', '>= 7.2.1', '< 8.0'
+gem 'puma', '>= 7.2.2', '< 8.0'
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'importmap-rails'
@@ -96,18 +96,23 @@ gem 'httparty', '>= 0.24.0'
 gem 'faraday', '>= 2.14.2', '< 3.0'
 
 # Security: direct minimum versions to address current advisories
-gem 'addressable', '>= 2.9.0'
+gem 'addressable', '>= 2.9.1'
 gem 'jwt', '>= 2.10.3'
 gem 'rack-session', '>= 2.1.2'
 gem 'erb', '>= 6.0.4'
 gem 'net-imap', '>= 0.6.4'
 
 # Security: Fix GHSA-c4rq-3m3g-8wgx, GHSA-v2fc-qm4h-8hqv (nokogiri), CVE-2026-22860, CVE-2026-25500 (rack)
-gem 'nokogiri', '>= 1.19.3'
-gem 'rack', '~> 3.1.20'
+gem 'nokogiri', '>= 1.19.5'
+gem 'rack', '~> 3.1.23'
 
 # Security: Fix GHSA-pp92-crg2-gfv9 (oauth2 redirect/authority leak)
 gem 'oauth2', '>= 2.0.22'
+
+# Security: patched floors from bundler-audit (Rails 8.1.4.1 advisory set)
+gem 'loofah', '>= 2.25.3'
+gem 'msgpack', '>= 1.8.7'
+gem 'rails-html-sanitizer', '>= 1.7.2'
 
 # Markdown renderer
 gem 'redcarpet'

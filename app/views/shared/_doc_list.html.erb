@@ -56,7 +56,7 @@
         </summary>
         <div class="rounded-lg mt-4 bg-white font-light">
           <% cache document do %>
-            <%= render_markdown(document.document.gsub(/^\s*\n/, '')) if document.document %>
+            <%= render_markdown(document.document) if document.document %>
           <% end %>
         </div>
       </details>

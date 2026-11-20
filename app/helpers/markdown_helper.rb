@@ -77,9 +77,14 @@ end
 
 module MarkdownHelper
   def render_markdown(text)
-    renderer = CustomRender.new(escape_html: true, no_images: true)
-    # renderer = Redcarpet::Render::HTML.new(hard_wrap: true)
+    return ''.html_safe if text.blank?
 
+    # Drop only leading blank lines. Internal blank lines are what end lists
+    # and separate headings, so stripping them pulls the next heading into the
+    # previous list item as literal "##" text.
+    text = text.sub(/\A(?:[ \t]*\r?\n)+/, '')
+
+    renderer = CustomRender.new(escape_html: true, no_images: true)
     markdown = Redcarpet::Markdown.new(renderer, fenced_code_blocks: true, tables: true)
     markdown.render(text).html_safe
   end
